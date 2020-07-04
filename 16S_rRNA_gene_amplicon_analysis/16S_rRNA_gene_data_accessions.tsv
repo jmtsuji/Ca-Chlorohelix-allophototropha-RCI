@@ -1,0 +1,3 @@
+Name	ID	BioProject	BioSample	run_accession	R1_read_URL	R2_read_URL
+Chx_allophototropha_S01_amplicon	Capt_S01	PRJNA640240	SAMN15312056	SRR12115355	ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR121/005/SRR12115355/SRR12115355_1.fastq.gz	ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR121/005/SRR12115355/SRR12115355_2.fastq.gz
+Chloroheliales_L227_5C_S0_amplicon	L227_5C_S0	PRJNA640240	SAMN15312055	SRR12115354	ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR121/004/SRR12115354/SRR12115354_1.fastq.gz	ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR121/004/SRR12115354/SRR12115354_2.fastq.gz

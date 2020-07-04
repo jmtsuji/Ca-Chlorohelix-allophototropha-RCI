@@ -228,9 +228,41 @@ Curated genomes are available from NCBI (see the `Ca_Chloroheliales_genome_analy
 
 
 ## Unassembled read-based analyses
+Install FragGeneScanPlusPlus:
+```bash
+conda create -n FGSpp_Aug2019_9a203d8 -c bioconda bbmap=38.75
+conda activate FGSpp_9a203d8
+
+# Make a share folder
+mkdir -p "${CONDA_PREFIX}/share"
+cd "${CONDA_PREFIX}/share"
+
+# Add the repo
+git clone https://github.com/unipept/FragGeneScanPlusPlus.git
+cd FragGeneScanPlusPlus
+# commit 9a203d8 (Aug. 22, 2019)
+git checkout 9a203d8
+
+make
+
+# Final binary is `FGSpp` in this folder
+# Add the repo to the PATH
+mkdir -p "${CONDA_PREFIX}/etc/conda/activate.d"
+if [[ ! -f "${CONDA_PREFIX}/etc/conda/activate.d/env_vars.sh" ]]; then
+echo '#!/bin/sh' > "${CONDA_PREFIX}/etc/conda/activate.d/env_vars.sh"
+fi
+echo "export PATH=\${PATH}:${CONDA_PREFIX}/share/FragGeneScanPlusPlus" >> \
+"${CONDA_PREFIX}/etc/conda/activate.d/env_vars.sh"
+chmod 755 "${CONDA_PREFIX}/etc/conda/activate.d/env_vars.sh"
+# Now restart the env
+
+conda activate FGSpp_9a203d8
+```
+
 Predicted ORFs directly from short read data:
 ```bash
-conda activate FGSpp_Aug2019_9a203d8
+# Activate the conda env
+# conda activate FGSpp_9a203d8
 
 set -euo pipefail # So the code will fail if any of the FGS jobs have an error; code can be a bit sensitive.
 
@@ -288,7 +320,7 @@ curl -LOJ http://fungene.cme.msu.edu/hmm_download.spr?hmm_id=31
 mv rpoB.hmm unassembled_read_analysis/hmm_files
 ```
 
-Run MetAnnotate
+Run MetAnnotate v0.9.2
 ```bash
 work_dir="unassembled_read_analysis"
 # **MANUALLY provide the MetAnnotate data directory. If you haven't used MetAnnotate before, 
@@ -317,4 +349,7 @@ exit
 
 cd ../..
 ```
-Will now have a rpoB taxonomy file at `unassembled_read_analysis/hmm_files/rpoB_5_all_annotations_[random_code].tsv`.
+Will now have a rpoB taxonomy file at `unassembled_read_analysis/hmm_files/rpoB_[number]_all_annotations_[random_code].tsv`.  
+In this folder, you'll find the file `rpoB_all_annotations.tsv` as a reference copy of that file.
+
+Relative abundances of taxa from the enrichment cultures using both unassembled read-based methods and read mapping to genome bins (above) are used in Extended Data Fig. 1.

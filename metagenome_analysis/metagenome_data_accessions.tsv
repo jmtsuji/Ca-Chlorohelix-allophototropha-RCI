@@ -1,0 +1,4 @@
+Name	ID	BioProject	BioSample	run_accession	R1_read_URL	R2_read_URL
+Chx_allophototropha_S01_metagenome	Capt_S01	PRJNA640240	SAMN15312056	SRR12042537	ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR120/007/SRR12042537/SRR12042537_1.fastq.gz	ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR120/007/SRR12042537/SRR12042537_2.fastq.gz
+Chx_allophototropha_S15_metagenome	Capt_S15	PRJNA640240	SAMN15312057	SRR12042536	ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR120/006/SRR12042536/SRR12042536_1.fastq.gz	ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR120/006/SRR12042536/SRR12042536_2.fastq.gz
+Chloroheliales_L227_5C_S0_metagenome	L227_5C_S0	PRJNA640240	SAMN15312055	SRR12042538	ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR120/008/SRR12042538/SRR12042538_1.fastq.gz	ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR120/008/SRR12042538/SRR12042538_2.fastq.gz

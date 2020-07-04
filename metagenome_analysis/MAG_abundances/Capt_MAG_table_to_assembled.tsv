@@ -1,0 +1,9 @@
+MAG_ID	Cfx3_2018	Cfx3_2019	Domain	Phylum	Class	Order	Family	Genus	Species	Completeness	Contamination	Strain_heterogeneity
+MAG5	0.07453947350033678	38.285891316811224	Bacteria	Acidobacteriota	Holophagae	Holophagales	Holophagaceae	Geothrix	Unresolved_Geothrix	99.12	0.05	0.0
+MAG4	7.4313227891793385	0.0	Bacteria	Bacteroidota	Bacteroidia	Bacteroidales	BBW3	UBA8529	Unresolved_UBA8529	98.1	2.33	0.0
+MAG3	11.455671791546603	0.0	Bacteria	Bacteroidota	Bacteroidia	Bacteroidales	Lentimicrobiaceae	UBA4417	Unresolved_UBA4417	97.04	2.15	0.0
+MAG1	0.8087546849191022	16.603677057973783	Bacteria	Bacteroidota	Bacteroidia	Bacteroidales	Lentimicrobiaceae	Unresolved_Lentimicrobiaceae	Unresolved_Lentimicrobiaceae	98.91	6.94	55.56
+MAG8	39.14297772200438	43.63797038934463	Bacteria	Chloroflexota	Chloroflexia	54-19	54-19	Unresolved_54-19	Unresolved_54-19	99.08	1.38	0.0
+MAG6	0.5796862466705981	0.0	Bacteria	Patescibacteria	Paceibacteria	UBA9983_A	UBA9973	UBA8515	Unresolved_UBA8515	60.75	3.4	0.0
+MAG2	7.779858411333801	3.95663371186448e-05	Bacteria	Proteobacteria	Alphaproteobacteria	Rhizobiales	Xanthobacteraceae	Rhodopseudomonas	Unresolved_Rhodopseudomonas	98.4	1.41	0.0
+MAG7	2.1556497119875235	7.91326742372896e-05	Bacteria	Proteobacteria	Gammaproteobacteria	Burkholderiales	Burkholderiaceae	Rhodoferax	Unresolved_Rhodoferax	69.87	3.74	0.0

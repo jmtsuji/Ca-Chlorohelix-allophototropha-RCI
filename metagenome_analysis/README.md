@@ -68,7 +68,7 @@ cp "${binning_snakefile_path}" "${binning_snakefile_path}.backup"
 sed -i '/new_d\.to_csv/c\        new_d.to_csv(output[0],sep='\t',header=False)' "${binning_snakefile_path}"
 ```
 
-Done. Before running AXIOME3, make sure to activate the environment by running `conda activate axiome3_1ec1ea6`.
+Done. Before running ATLAS, make sure to activate the environment by running `conda activate atlas_2.2.0`.
 
 
 ## Process the metagenome data
@@ -78,7 +78,10 @@ If it is your first time using ATLAS, note that a large amount of database files
 ### Ca. Chloroheliales bin L227-5C
 Config files for the run have already been created. 
 If you want to create config files for yourself, you can use the `atlas init` command as documented in the ATLAS repo.  
-Note: make sure you modify the config.yaml file in the `atlas_L227_5C` folder so that `database_dir` is a real directory on your machine.
+
+Notes:
+- make sure you modify the config.yaml file in the `atlas_L227_5C` folder so that `database_dir` is a real directory on your machine.
+- you might have to modify the filepaths for the samples in the `samples.tsv` file so that they are correct on your system.
 
 Run the sample
 ```bash
@@ -156,7 +159,10 @@ wget -O - "${zenodo_url}" | gunzip > scaffolds.full.fasta
 ```
 
 #### Run ATLAS
-Note: make sure you modify the config.yaml file in the `atlas_Chx_allophototropha` folder so that `database_dir` is a real directory on your machine.
+Notes:
+- make sure you modify the config.yaml file in the `atlas_L227_5C` folder so that `database_dir` is a real directory on your machine.
+- you might have to modify the filepaths for the samples in the `samples.tsv` file so that they are correct on your system.
+
 ```bash
 # Activate the environment by running: 
 # conda activate atlas_2.2.0
@@ -197,12 +203,20 @@ cd atlas2-helpers
 git checkout 1e08f0a
 PATH=${PATH}:${PWD}/scripts
 
+cd ..
+
+# Create and activate a simple conda env containing pandas
+conda create -y -n pandas -c anaconda pandas
+conda activate pandas
+
 # Generated MAG tables based on assembled read counts
 source_dir_1="atlas_Chx_allophototropha"
 source_dir_2="atlas_L227_5C"
 output_dir="MAG_abundances"
 output_filepath_1="${output_dir}/Capt_MAG_table_to_assembled.tsv"
 output_filepath_2="${output_dir}/L227_5C_MAG_table_to_assembled.tsv"
+
+mkdir -p "${output_dir}"
 
 generate_MAG_table.py -o "${output_filepath_1}" \
   -a "${source_dir_1}" \
@@ -224,7 +238,7 @@ based on the `genomes/taxonomy/gtdb/gtdbtk.bac120.summary.tsv` file in each fold
 
 Then, I manually removed suspect scaffolds based on the methods described in the Supplementary Materials of the paper.
 
-Curated genomes are available from NCBI (see the `Ca_Chloroheliales_genome_analysis` folder in this repo for more).
+Curated genomes are available from NCBI (see the `Ca_Chloroheliales_genome_analysis` folder in this repo for more details).
 
 
 ## Unassembled read-based analyses

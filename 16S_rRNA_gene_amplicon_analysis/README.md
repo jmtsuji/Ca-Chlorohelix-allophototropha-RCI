@@ -2,6 +2,7 @@
 Part of the larger '_Ca._ Chlorohelix allophototropha' Type I reaction center paper  
 Copyright Jackson M. Tsuji, Neufeld Research Group, 2020
 
+**NOTE: for each code section provided below, the code ought to be run from within this `16S_rRNA_gene_amplicon_analysis` directory.**
 
 ## Data download
 You can download the data using the provided TSV file by running the following code in Bash in your working folder:
@@ -91,5 +92,5 @@ python 16S_pipeline.py Core_Analysis --local-scheduler 2>&1 | tee ../axiome3.log
 Once finished, the ASV table will be available at `AXIOME3/output/exported/ASV_table_combined.tsv`.
 
 
-**In lieu of uploading all intermediate analysis files, a summary of the non-rarefied amplicon sequencing variant (ASV) table is provided at `ASV_table_non_rarefied.tsv`. 
-ASV table data was used to generate Supplementary Data 1 in the manuscript.**
+**In lieu of uploading all intermediate analysis files, a summary of the non-rarefied amplicon sequencing variant (ASV) table is provided at `ASV_table_non_rarefied.tsv`. **
+**ASV table data was used to generate Supplementary Data 1 in the manuscript.**

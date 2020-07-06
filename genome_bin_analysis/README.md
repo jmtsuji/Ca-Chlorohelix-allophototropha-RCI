@@ -132,6 +132,8 @@ These PDB files can be opened in a protein structural viewer such as [UCSF Chime
 
 The full I-TASSER output for each gene can be found at the [Zenodo data repository corresponding to this code repo](https://doi.org/10.5281/zenodo.3930110).
 
+One of these homology models ('_Ca_. Chx. allophototropha' PscA-like protein) is shown in Figure 1c.
+
 
 ## Custom hidden Markov models
 Custom hidden Markov models (HMMs) were made for the PscA-like and FmoA genes of '_Ca_. Chloroheliales' members:
@@ -160,3 +162,72 @@ These HMMs are crude because they are only made with two sequences as input.
 They can be expanded further as the diversity of this clade becomes better understood.
 
 The HMM files are pre-made and provided in the `hidden_markov_models` directory for reference.
+
+## Gene context around the detected _pscA_-like genes
+Checked on the closest BLASTP hits against RefSeq for the 20 genes up/downstream of the detected _pscA_-like genes in the 
+two '_Ca._ Chloroheliales' genome bins.
+
+First, installed a convenient BLASTP wrapper:
+```bash
+# Create the conda env
+conda create -n blast -c bioconda blast=2.9.0 entrez-direct=11.0
+conda activate blast
+
+# Install the wrapper
+git clone https://github.com/jmtsuji/basic-sequence-analysis.git
+cd basic-sequence-analysis
+git checkout 447ccc3
+PATH="${PATH}:${PWD}/scripts"
+cd ..
+
+# Install a wrapper dependency
+git clone https://github.com/dib-lab/2018-ncbi-lineages.git
+cd 2018-ncbi-lineages
+git checkout 0d41546
+cd ..
+
+# Download the RefSeq database if you don't already have it
+#   For this paper, RefSeq was downloaded on Oct. 10th, 2019
+#   You might want to download this in a shared area on your server given that it is a large file and might be used by others
+#   See https://www.ncbi.nlm.nih.gov/books/NBK279680/
+output_dir="refseq_protein"
+mkdir -p "${output_dir}"
+cd "${output_dir}"
+
+# update_blastdb.pl version 581818
+#   Part of the entrez-direct conda install
+update_blastdb.pl \
+  --decompress \
+  --verbose \
+  refseq_protein 2>&1 | \
+  tee update_blastdb.log
+
+# Get taxonomy files
+update_blastdb.pl \
+  --decompress \
+  --verbose \
+  taxdb 2>&1 | \
+  tee update_blastdb_taxdb.log
+
+# Also get taxdump files; these are not used here but can be handy in some circumstances
+mkdir -p taxdump
+cd taxdump
+wget -O - ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz | tar -xvzf -
+cd ..
+
+# Lastly, set the hard-coded variables in the wrapper script to match the location of your BLAST DBs and 2018-ncbi-lineages repo
+which run_blastp_parallel.sh # get the file location
+# Then edit the global variables in the first few lines of the code using your favourite text editor.
+```
+
+Then run BLASTP on the provided ORF prediction subsets (that represent predicted proteins of the 20 up/downstream genes of pscA):
+```bash
+cd gene_context
+
+run_blastp_parallel.sh Capt_00887_context_20.faa Capt_00887_context_20_blastp.tsv 1e-10 5 10 \
+  2>&1 | tee run_blastp_parallel_Capt.log
+
+run_blastp_parallel.sh Chx_L227_5C_00166_context_20.faa Chx_L227_5C_00166_context_20_blastp.tsv 1e-10 5 10 \
+  2>&1 | tee run_blastp_parallel_L227_5C.log
+```
+The output TSV files (included in this folder) are then combined to make Supplementary Data 2.

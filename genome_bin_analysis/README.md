@@ -132,7 +132,8 @@ These PDB files can be opened in a protein structural viewer such as [UCSF Chime
 
 The full I-TASSER output for each gene can be found at the [Zenodo data repository corresponding to this code repo](https://doi.org/10.5281/zenodo.3930110).
 
-One of these homology models ('_Ca_. Chx. allophototropha' PscA-like protein) is shown in Figure 1c.
+One of these homology models ('_Ca_. Chx. allophototropha' PscA-like protein) is shown in Figure 2c.  
+Another ('_Ca_. Chx. allophototropha' putative CsmA protein) is shown at the bottom of Extended Data Fig. 4.
 
 
 ## Custom hidden Markov models

@@ -847,4 +847,4 @@ The resuting tree file `BchLNB_XYZ_aligned_masked.treefile` is plotted in Extend
 From the Annotree website, I exported a phylogeny of the Genome Tree Database, release 89, summarized to the class level, for an overview of 
 the tree of life. The raw SVG is available in `annotree/annotree_GTDB_r89_class_raw.svg`.
 
-This raw SVG was edited to produce Figure 1a.
+This raw SVG was edited to produce Figure 2a.

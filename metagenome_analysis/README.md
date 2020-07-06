@@ -369,3 +369,190 @@ Relative abundances of taxa from the enrichment cultures using both unassembled 
 Extended Data Fig. 1 shows the relative abundances of taxa in the enrichment cultures based on the unassembled read-based profiles and the MAG-based 
 read mapping profiles generated above. To make Extended Data Fig. 1, the R script `Figure_ED1_plotter.R` was used, which is in the 
 `relative_abundances` folder.
+
+## Scanning metagenomes containing potential '_Ca._ Chloroheliales' members for photosynthesis genes
+This was only briefly mentioned in the paper, but because two genomes from the GTDB were classified to the same order as '_Ca_. Chx. allophototropha', 
+I examined the corresponding raw metagenome files that those two genome bins were derived from to search for signs of Type I reaction center-associated 
+genes. I used the custom HMMs developed as decribed in the `genome_bin_analysis` folder.
+
+Downloaded the metagenomes
+```bash
+# NOTE: these are large in size (several GB)
+
+guide_filepath="other_metagenomes/other_metagenomes_accessions.tsv"
+output_dir="other_metagenomes/downloads"
+
+mkdir -p "${output_dir}"
+cd "${output_dir}"
+
+run_IDs=($(cut -d $'\t' -f 5 "${guide_filepath}" | tail -n +2))
+directions=($(cut -d $'\t' -f 6 "${guide_filepath}" | tail -n +2))
+urls=($(cut -d $'\t' -f 7 "${guide_filepath}" | tail -n +2))
+
+echo "[ $(date -u) ]: Downloading ${#run_IDs[@]} files"
+for i in $(seq 1 ${#run_IDs[@]}); do
+
+  # Set zero ordered
+  j=$((${i}-1))
+
+  # Get variables
+  run_ID=${run_IDs[${j}]}
+  direction=${directions[${j}]}
+  url=${urls[${j}]}
+
+  output_filename="${run_ID}_${direction}.fastq.gz"
+  echo "[ $(date -u) ]: Downloading '${output_filename}'"
+
+  wget -O "${output_filename}" "${url}"
+
+done
+echo "[ $(date -u) ]: Done."
+
+cd ../..
+```
+
+Then predicted short fragments for all files using a slightly modified version of the FGSpp code above (just change the output dir to other_metagenomes/faa_predictions and don't limit to R1 files in the 'find' search). But note that I had to set `-w` to 1 instead of 0 for the files from Kantor et al., 2015, possibly because 
+the program wasn't able to handle the longer 2x250 bp read lengths.
+
+Then used hmmsearch to scan for photosynthesis-associated genes:
+```bash
+work_dir="other_metagenomes"
+orf_dir="${work_dir}/faa_predictions"
+hmm_dir="../genome_bin_analysis/hidden_markov_models"
+output_dir="${work_dir}/hmmsearch"
+output_filepath="${output_dir}/hmm_hits.tsv"
+evalue=1e-1
+threads=20
+
+# Install hmmsearch using:
+# conda create -n hmmsearch_3.1b2 -c bioconda hmmer=3.1b2
+# conda activate hmmsearch_3.1b2
+
+mkdir -p "${output_dir}/raw"
+cd "${output_dir}"
+
+# Find input files
+hmm_files=($(find "${hmm_dir}" -type f -iname "*.hmm" | sort -h))
+orf_files=($(find "${orf_dir}" -type f -iname "*.faa" | sort -h))
+
+# Initialize output file
+printf "target\thmm_name\thmm_accession\tevalue\tscore\tbias\n" > "${output_filepath}"
+
+for orf_file in ${orf_files[@]}; do
+  orf_name="${orf_file##*/}"
+  orf_name="${orf_name%*.frag.faa}"
+
+  for hmm_file in ${hmm_files[@]}; do
+    hmm_name="${hmm_file##*/}"
+    hmm_name="${hmm_name%.*}"
+
+    echo "[ $(date -u) ]: ${hmm_name}: ${orf_name}"
+    # hmmsearch v3.1b2
+    hmmsearch -o /dev/null --tblout /dev/stdout -E ${evalue} --cpu ${threads} "${hmm_file}" "${orf_file}" | \
+      tee "raw/${hmm_name}_${orf_name}_raw.txt" | \
+      grep -v "^#" | tr -s " " "\t" | cut -f 1,3-7 >> "${output_filepath}"
+  done
+done
+
+echo "[ $(date -u) ]: Finished."
+```
+There were not many hits at all - just ~13 PscA hits. I pulled the predicted amino acid sequences for these hits and ran them against 
+RefSeq via online BLASTP (Mar. 11th, 2020), and all had close (>95%) identity to PSI from chloroplasts or to other known PSI/RCI genes.
+
+Lastly, checked the percent relative abundances of the detected genome bins within the metagenome to make sure that they are of sufficient 
+relative abundance to get reliable hits of phototrophy genes (if they indeed encode them).
+```bash
+# Downloaded the genome bins
+mkdir -p other_metagenomes/bins
+wget -O other_metagenomes/bins/Chloroflexi_bin_54-19.fna.gz ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/001/898/225/GCA_001898225.1_ASM189822v1/GCA_001898225.1_ASM189822v1_genomic.fna.gz
+wget -O other_metagenomes/bins/Chloroflexi_RRmetagenome_bin16.fna.gz ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/003/243/865/GCA_003243865.1_ASM324386v1/GCA_003243865.1_ASM324386v1_genomic.fna.gz
+
+# Then mapped the reads
+work_dir="other_metagenomes"
+output_dir="${work_dir}/read_mapping"
+source_dir="other_metagenomes/downloads"
+bin_dir="other_metagenomes/bins"
+threads=40
+
+# Need to use bbmap; install via:
+# conda create -n bbmap_38.75 -c bioconda bbmap=38.75
+# conda activate bbmap_38.75
+
+mkdir -p "${output_dir}"
+cd "${output_dir}"
+
+bins=($(find "${bin_dir}" -type f -iname "*.fna.gz" | sort -h))
+fastq_R1s=($(find "${source_dir}" -type f -iname "*_R1.fastq.gz" | sort -h))
+
+for bin in ${bins[@]}; do
+  bin_basename="${bin##*/}"
+  bin_basename="${bin_basename%.fna.gz}"
+
+  for fastq_R1 in ${fastq_R1s[@]}; do
+
+    fastq_basename="${fastq_R1##*/}"
+    fastq_basename="${fastq_basename%_R1.fastq.gz}"
+    fastq_R2="${fastq_R1%_R1.fastq.gz}_R2.fastq.gz"
+    outm="${bin_basename}_${fastq_basename}.sam"
+    outcov="${bin_basename}_${fastq_basename}_cov.txt"
+
+    echo "[ $(date -u) ]: ${bin_basename}: ${fastq_basepath}"
+
+    bbmap.sh -Xmx20g ref="${bin}" in="${fastq_R1}" in2="${fastq_R2}" outm="${outm}" covstats="${outcov}" \
+      minid=0.95 maxsites=5 nodisk=t threads=${threads} 2>&1 | tee "${fastq_basename}.log"
+  done
+done
+
+cd ../..
+```
+
+Results for the 54-19 bin for its corresponding metagenome (SRR3901702):
+```
+Percent mapped:                         0.852
+Percent proper pairs:                   0.830
+Average coverage:                       15.475
+Average coverage with deletions:        15.433
+Standard deviation:                     4.545
+Percent scaffolds with any coverage:    100.00
+Percent of reference bases covered:     100.00
+Total time:             150.129 seconds.
+```
+
+Results for the RRmetagenome_bin16 bin for its corresponding three metagenomes:
+```
+==> SRR5223441.log <==
+Percent mapped:                         3.124
+Percent proper pairs:                   3.005
+Average coverage:                       23.674
+Average coverage with deletions:        23.584
+Standard deviation:                     8.962
+Percent scaffolds with any coverage:    100.00
+Percent of reference bases covered:     99.92
+Total time:             35.155 seconds.
+
+==> SRR5223442.log <==
+Percent mapped:                         0.751
+Percent proper pairs:                   0.722
+Average coverage:                       5.782
+Average coverage with deletions:        5.746
+Standard deviation:                     3.084
+Percent scaffolds with any coverage:    100.00
+Percent of reference bases covered:     98.28
+Total time:             30.410 seconds.
+
+==> SRR5223443.log <==
+Percent mapped:                         1.635
+Percent proper pairs:                   1.569
+Average coverage:                       12.764
+Average coverage with deletions:        12.731
+Standard deviation:                     5.548
+Percent scaffolds with any coverage:    100.00
+Percent of reference bases covered:     99.88
+Total time:             29.782 seconds.
+```
+
+Both genome bins seem to have reasonable coverages. Thus, the lack of detection of PscA-like/FmoA sequences either means the HMMs do not cover 
+the full diversity of this clade or that these genome bins do not encode Type I reaction center-associated genes. Given that PSI genes of 
+possible chloroplasts were detected (which are highly divergent from the _Ca._ Chloroheliales RCI), the data imply that the HMMs (at least PscA) 
+are able to detect remote PSI/RCI homologs among short read data. This makes the latter hypothesis (i.e., no Type I reaction center-associated genes 
+in the bins) more likely.

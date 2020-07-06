@@ -1,0 +1,5 @@
+MAG_ID	L227_5C_S0	Domain	Phylum	Class	Order	Family	Genus	Species	Completeness	Contamination	Strain_heterogeneity
+MAG1	5.333137499	Bacteria	Bacteroidota	Bacteroidia	Bacteroidales	CG2-30-32-10	Unresolved_CG2-30-32-10	Unresolved_CG2-30-32-10	96.4	3.05	0
+MAG2	18.8597444	Bacteria	Chloroflexota	Chloroflexia	54-19	54-19	Unresolved_54-19	Unresolved_54-19	96.33	1.56	0
+MAG3	43.77877251	Bacteria	Proteobacteria	Alphaproteobacteria	Rhizobiales	Xanthobacteraceae	Rhodoplanes	Unresolved_Rhodoplanes	98.42	1.11	25
+MAG4	6.169009931	Bacteria	Desulfuromonadota	Desulfuromonadia	Geobacterales	Pelobacteraceae	Pelobacter_C	Unresolved_Pelobacter_C	97.4	0.97	0

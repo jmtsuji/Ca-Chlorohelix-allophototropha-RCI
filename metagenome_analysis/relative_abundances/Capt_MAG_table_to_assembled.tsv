@@ -1,0 +1,9 @@
+MAG_ID	Capt_S01	Capt_S15	Domain	Phylum	Class	Order	Family	Genus	Species	Completeness	Contamination	Strain_heterogeneity
+MAG5	0.074539474	38.28589132	Bacteria	Acidobacteriota	Holophagae	Holophagales	Holophagaceae	Geothrix	Unresolved_Geothrix	99.12	0.05	0
+MAG4	7.431322789	0	Bacteria	Bacteroidota	Bacteroidia	Bacteroidales	BBW3	UBA8529	Unresolved_UBA8529	98.1	2.33	0
+MAG3	11.45567179	0	Bacteria	Bacteroidota	Bacteroidia	Bacteroidales	Lentimicrobiaceae	UBA4417	Unresolved_UBA4417	97.04	2.15	0
+MAG1	0.808754685	16.60367706	Bacteria	Bacteroidota	Bacteroidia	Bacteroidales	Lentimicrobiaceae	Unresolved_Lentimicrobiaceae	Unresolved_Lentimicrobiaceae	98.91	6.94	55.56
+MAG8	39.14297772	43.63797039	Bacteria	Chloroflexota	Chloroflexia	54-19	54-19	Unresolved_54-19	Unresolved_54-19	99.08	1.38	0
+MAG6	0.579686247	0	Bacteria	Patescibacteria	Paceibacteria	UBA9983_A	UBA9973	UBA8515	Unresolved_UBA8515	60.75	3.4	0
+MAG2	7.779858411	3.96E-05	Bacteria	Proteobacteria	Alphaproteobacteria	Rhizobiales	Xanthobacteraceae	Rhodopseudomonas	Unresolved_Rhodopseudomonas	98.4	1.41	0
+MAG7	2.155649712	7.91E-05	Bacteria	Proteobacteria	Gammaproteobacteria	Burkholderiales	Burkholderiaceae	Rhodoferax	Unresolved_Rhodoferax	69.87	3.74	0

@@ -212,7 +212,7 @@ conda activate pandas
 # Generated MAG tables based on assembled read counts
 source_dir_1="atlas_Chx_allophototropha"
 source_dir_2="atlas_L227_5C"
-output_dir="MAG_abundances"
+output_dir="relative_abundances"
 output_filepath_1="${output_dir}/Capt_MAG_table_to_assembled.tsv"
 output_filepath_2="${output_dir}/L227_5C_MAG_table_to_assembled.tsv"
 
@@ -230,7 +230,7 @@ generate_MAG_table.py -o "${output_filepath_2}" \
   -t "${source_dir_2}/genomes/taxonomy/gtdb/gtdbtk.bac120.summary.tsv" \
   2>&1 | tee "${output_filepath_2%.tsv}.log"
 ```
-The output MAG abundance tables are provided in that folder for reference.
+The output MAG abundance tables are provided in that folder for reference and are used to generate Extended Data Fig. 1 (see below).
 
 ## Curation of the genome bins
 I identified the two '_Ca_. Chloroheliales' genome bins from the above ATLAS run folders by looking for the bins classified to the _Chloroflexota_ phylum 
@@ -300,22 +300,20 @@ if [[ ! -d train ]]; then
   ln -s "${train_file_dir}" .
 fi
 
-for source_dir in ${source_dirs[@]}; do
-  echo "[ $(date -u) ]: Source dir: '${source_dir}'" | tee -a "${logfile}"
 
-  fastq_filepaths=($(find -L "${source_dir}" -type f -name "*.fastq.gz" | sort -h))
-  echo "[ $(date -u) ]: Scanning ${#fastq_filepaths[@]} FastQ files:" | tee -a "${logfile}"
+fastq_filepaths=($(find -L "${source_dir}" -type f -name "*_R1.fastq.gz" | sort -h))
+echo "[ $(date -u) ]: Scanning ${#fastq_filepaths[@]} FastQ files:" | tee -a "${logfile}"
 
-  for fastq_filepath in ${fastq_filepaths[@]}; do
-    output_filepath="${output_dir}/${fastq_filepath##*/}"
-    output_filepath="${output_filepath%.fastq.gz}.frag.faa"
+for fastq_filepath in ${fastq_filepaths[@]}; do
+  output_filepath="${output_dir}/${fastq_filepath##*/}"
+  output_filepath="${output_filepath%.fastq.gz}.frag.faa"
 
-    echo "[ $(date -u) ]: ${fastq_filepath##*/}" | tee -a "${logfile}"
+  echo "[ $(date -u) ]: ${fastq_filepath##*/}" | tee -a "${logfile}"
 
-    reformat.sh in="${fastq_filepath}" out=stdout.fa t=${threads} fastawrap=0 trimreaddescription=t 2>/dev/null | \
-      FGSpp -s stdin -o stdout -w 0 -t illumina_10 -c ${chunk_size} -p ${threads} > "${output_filepath}"
-  done
+  reformat.sh in="${fastq_filepath}" out=stdout.fa t=${threads} fastawrap=0 trimreaddescription=t 2>/dev/null | \
+    FGSpp -s stdin -o stdout -w 0 -t illumina_10 -c ${chunk_size} -p ${threads} > "${output_filepath}"
 done
+
 echo "[ $(date -u) ]: Done." | tee -a "${logfile}"
 
 cd ../..
@@ -324,7 +322,6 @@ cd ../..
 
 Get HMM files
 ```bash
-
 mkdir -p unassembled_read_analysis/hmm_files
 
 # Get rpoB from FunGene
@@ -364,6 +361,11 @@ exit
 cd ../..
 ```
 Will now have a rpoB taxonomy file at `unassembled_read_analysis/hmm_files/rpoB_[number]_all_annotations_[random_code].tsv`.  
-In this folder, you'll find the file `rpoB_all_annotations.tsv` as a reference copy of that file.
+In this folder, you'll find the file `relative_abundances/rpoB_all_annotations.tsv` as a reference copy of that file.
 
 Relative abundances of taxa from the enrichment cultures using both unassembled read-based methods and read mapping to genome bins (above) are used in Extended Data Fig. 1.
+
+## Relative abundance plot
+Extended Data Fig. 1 shows the relative abundances of taxa in the enrichment cultures based on the unassembled read-based profiles and the MAG-based 
+read mapping profiles generated above. To make Extended Data Fig. 1, the R script `Figure_ED1_plotter.R` was used, which is in the 
+`relative_abundances` folder.

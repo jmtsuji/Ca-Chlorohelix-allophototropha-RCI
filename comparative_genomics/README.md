@@ -508,6 +508,8 @@ cd ../..
 The resuting tree file `CsmA_aligned_masked.treefile` is plotted in Extended Data Figure 8, and the multiple sequence alignment is shown 
 in Extended Data Figure 4.
 
+I also summarized the phylogenetic distances between the taxa in this phylogeny using the provided R script `CsmA_distances.R`.
+
 ### RuBisCO large subunit (CbbL)
 A set of 106 CbbL sequences were used for the phylogeny; accessions are summarized in `CbbL_accessions.tsv`.
 

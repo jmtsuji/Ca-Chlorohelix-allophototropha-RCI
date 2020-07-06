@@ -1,4 +1,4 @@
-setwd("D:/share/manuscripts/2020_04_14_Ca_Chx_allophototropha_paper/02_edits/05_github/Ca_Chlorohelix_allophototropha_RCI/alignments_and_phylogenies/CsmA/")
+# Set the working directory as the same directory that this script is in.
 library(ape)
 library(dplyr)
 library(tibble)

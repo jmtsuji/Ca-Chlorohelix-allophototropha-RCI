@@ -39,7 +39,6 @@ syntax errors were introduced along the way. If you notice that any code block d
 you as soon as possible. You can also post an issue if you have questions/concerns about an aspect of the data analysis.
 
 Enjoy!
-Enjoy!
 
 Jackson M. Tsuji  
 PhD Candidate, University of Waterloo, Canada

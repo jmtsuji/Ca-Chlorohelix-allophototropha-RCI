@@ -24,6 +24,9 @@ HMM development, are also included.
 of the _Chloroflexota_ phlylum.
   - Used to produce the bulk of the data presentations in the paper: Figure 2a-b; Figure 3 and Supplementary Data 3; Extended Data Figs. 2-8.
 
+In addition, the `data_presentations` folder contains the individual tables, figures (vector format where possible), and data files that are 
+included in the manuscript.
+
 ## How to use this repo
 Each of the four subfolders above contains a README file with the code used to analyze the data. Key intermediate files are included in folders 
 for your reference. Some key usage cases for the repo include:

@@ -1,13 +1,13 @@
 # Code repository for the cultivation of '_Ca._ Chlorohelix allophototropha'
 
 [![DOI](https://zenodo.org/badge/273164101.svg)](https://zenodo.org/badge/latestdoi/273164101)
-[![biorxiv](https://img.shields.io/badge/biorxiv-10.1101%2F2020.07.07.190934-green)](https://www.biorxiv.org/content/10.1101/2020.07.07.190934v1)
+[![biorxiv](https://img.shields.io/badge/biorxiv-10.1101%2F2020.07.07.190934-green)](https://doi.org/10.1101/2020.07.07.190934)
 
 Copyright Jackson M. Tsuji, Neufeld Research Group, 2020
 
 This Github repository provides additional intermediate data files and code related to the publication by Tsuji and colleagues, 2020, 
 "Anoxygenic phototrophic _Chloroflexota_ member uses a Type I reaction center", which is currently deposited in 
-[biorxiv](https://www.biorxiv.org/content/10.1101/2020.07.07.190934v1).
+[biorxiv](https://doi.org/10.1101/2020.07.07.190934).
 
 This repo also relies on a supplementary Zenodo data repository containing larger files, available [here](https://doi.org/10.5281/zenodo.3930110).
 

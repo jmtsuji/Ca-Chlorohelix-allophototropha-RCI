@@ -581,7 +581,10 @@ iqtree -s "${run_name}_aligned.faa" -nt ${threads} -pre "phylogeny_unmasked/${ru
 
 cd ../..
 ```
-The resuting tree file `CbbL_aligned_masked.treefile` is plotted in Extended Data Figure 5.
+The resulting tree file `CbbL_aligned_masked.treefile` is plotted in Extended Data Figure 5. Note that I realized after producing this phylogeny that 
+three pairs of sequences (between the reference genome set and the gene set derived from Tabita and colleagues, 2008) in the Group III CbbL set had 
+been duplicated: the CbbL sequences of _Hyperthermus butylicus_, _Methanocaldococcus jannaschii_, and _Archaeoglobus fulgidus_. I collapsed those 
+three branches into single nodes when producing the final figure for clarity.
 
 
 ### BchIDH concatenated primary sequence phylogeny

@@ -1,13 +1,20 @@
 # Code repository for the cultivation of '_Ca._ Chlorohelix allophototropha'
-Copyright Jackson M. Tsuji, Neufeld Research Group, 2020
 
-TODO: Add Zenodo button
+[![DOI](https://zenodo.org/badge/273164101.svg)](https://zenodo.org/badge/latestdoi/273164101)
+[![biorxiv](https://img.shields.io/badge/biorxiv-10.1101%2F2020.07.07.190934-green)](https://www.biorxiv.org/content/10.1101/2020.07.07.190934v1)
+
+Copyright Jackson M. Tsuji, Neufeld Research Group, 2020
 
 This Github repository provides additional intermediate data files and code related to the publication by Tsuji and colleagues, 2020, 
 "Anoxygenic phototrophic _Chloroflexota_ member uses a Type I reaction center", which is currently deposited in 
-[biorxiv]().
+[biorxiv](https://www.biorxiv.org/content/10.1101/2020.07.07.190934v1).
 
 This repo also relies on a supplementary Zenodo data repository containing larger files, available [here](https://doi.org/10.5281/zenodo.3930110).
+
+The main focus of this repo is the genomic analysis of '_Candidatus_ Chlorohelix allophototropha', the first cultivated representative of a novel 
+order (the '_Ca_. Chloroheliales') within the _Chloroflexota_ phylum. '_Ca_. Chx. allophototropha' -- and one of its relatives that we also managed 
+to cultivate for a short time -- uses Type I photosynthetic reaction centers instead of Type II RC's like other phototrophs in the _Chloroflexota_ 
+phylum, and this has important implications for the evolution of photosynthesis. (Take a look at the manuscript mentioned above for more details.)
 
 ## Repo contents
 The repo is organized into four main folders representing the analyses performed in this study:
@@ -23,6 +30,9 @@ HMM development, are also included.
 - `comparative_genomics`: phylogenetic and functional gene comparisons between the novel '_Ca_. Chloroheliales' bins and other phototrophs or members 
 of the _Chloroflexota_ phlylum.
   - Used to produce the bulk of the data presentations in the paper: Figure 2a-b; Figure 3 and Supplementary Data 3; Extended Data Figs. 2-8.
+
+In addition, the `data_presentations` folder contains the individual tables, figures (vector format where possible), and data files that are 
+included in the manuscript.
 
 ## How to use this repo
 Each of the four subfolders above contains a README file with the code used to analyze the data. Key intermediate files are included in folders 

@@ -11,8 +11,6 @@ In addition, download instructions are provided for the other genome bins recove
 ### Curated '_Ca_. Chloroheliales' genome bins
 You can download the genome files using the provided TSV file by running the following code in Bash in your working folder:
 
-**TODO**: Finish the `genome_bin_data_accessions.tsv` file once NCBI URLs are available.
-
 ```bash
 accession_data_filepath="genome_bin_data_accessions.tsv"
 output_dir="downloads/Ca_Chloroheliales"

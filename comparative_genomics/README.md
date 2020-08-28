@@ -273,11 +273,7 @@ do not have a corresponding NCBI full genome.
 ### Fe-S type reaction center (RCI/PSI)
 A set of 68 RCI/PSI sequences were used for the phylogeny; accessions are summarized in `RCI_PSI_accessions.tsv`.
 
-Download the sequences:  
-(NOTE: TODO: The _Ca_. Chloroheliales bins are still using prokka locus tags and thus will not be downloadable from NCBI. 
-Until the NCBI accessions are available, you will have to remove the _Ca_. Chloroheliales sequences from the TSV file before 
-running the code below, get the _Ca_. Chloroheliales sequences manually from the provided prokka-based ORF prediction files described 
-in the `genome_bin_analysis` folder, and then add them to the "${run_name}_renamed.faa" file after running the code below.)
+Download the sequences:
 ```bash
 run_name="PSI_RCI"
 cd "alignments_and_phylogenies/${run_name}"
@@ -352,11 +348,7 @@ The resuting tree file `PSI_RCI_aligned_masked.treefile` is plotted in Figure 2B
 ### FMO protein
 A set of 30 FMO sequences were used for the phylogeny; accessions are summarized in `FmoA_accessions.tsv`.
 
-Download the sequences:  
-(NOTE: TODO: The _Ca_. Chloroheliales bins are still using prokka locus tags and thus will not be downloadable from NCBI. 
-Until the NCBI accessions are available, you will have to remove the _Ca_. Chloroheliales sequences from the TSV file before 
-running the code below, get the _Ca_. Chloroheliales sequences manually from the provided prokka-based ORF prediction files described 
-in the `genome_bin_analysis` folder, and then add them to the "${run_name}_renamed.faa" file after running the code below.)
+Download the sequences:
 ```bash
 run_name="FmoA"
 cd "alignments_and_phylogenies/${run_name}"
@@ -431,11 +423,7 @@ The resuting tree file `FmoA_aligned_masked.treefile` is plotted in Figure S3.
 ### Chlorosom protein (CsmA)
 A set of 41 CsmA sequences were used for the phylogeny; accessions are summarized in `CsmA_accessions.tsv`.
 
-Download the sequences:  
-(NOTE: TODO: The _Ca_. Chloroheliales bins are still using prokka locus tags and thus will not be downloadable from NCBI. 
-Until the NCBI accessions are available, you will have to remove the _Ca_. Chloroheliales sequences from the TSV file before 
-running the code below, get the _Ca_. Chloroheliales sequences manually from the provided prokka-based ORF prediction files described 
-in the `genome_bin_analysis` folder, and then add them to the "${run_name}_renamed.faa" file after running the code below.)
+Download the sequences:
 ```bash
 run_name="CsmA"
 cd "alignments_and_phylogenies/${run_name}"
@@ -513,11 +501,7 @@ I also summarized the phylogenetic distances between the taxa in this phylogeny 
 ### RuBisCO large subunit (CbbL)
 A set of 106 CbbL sequences were used for the phylogeny; accessions are summarized in `CbbL_accessions.tsv`.
 
-Download the sequences:  
-(NOTE: TODO: The _Ca_. Chloroheliales bins are still using prokka locus tags and thus will not be downloadable from NCBI. 
-Until the NCBI accessions are available, you will have to remove the _Ca_. Chloroheliales sequences from the TSV file before 
-running the code below, get the _Ca_. Chloroheliales sequences manually from the provided prokka-based ORF prediction files described 
-in the `genome_bin_analysis` folder, and then add them to the "${run_name}_renamed.faa" file after running the code below.)
+Download the sequences:
 ```bash
 run_name="CbbL"
 cd "alignments_and_phylogenies/${run_name}"
@@ -591,10 +575,6 @@ three branches into single nodes when producing the final figure for clarity.
 A set of 82 groups of three BchIDH sequences were used for the phylogeny; accessions are summarized in `BchIDH_accessions.tsv`.
 
 Download the sequences:  
-(NOTE: TODO: The _Ca_. Chloroheliales bins are still using prokka locus tags and thus will not be downloadable from NCBI. 
-Until the NCBI accessions are available, you will have to remove the _Ca_. Chloroheliales sequences from the TSV file before 
-running the code below, get the _Ca_. Chloroheliales sequences manually from the provided prokka-based ORF prediction files described 
-in the `genome_bin_analysis` folder, and then add them to the "${run_name}_renamed.faa" file after running the code below.)
 ```bash
 run_name="BchIDH"
 gene_list=(BchI BchD BchH)
@@ -699,11 +679,7 @@ The resuting tree file `BchIDH_aligned_masked.treefile` is plotted in Figure S6.
 ### BchLNB/BchXYZ
 This is the most complex phylogeny. BchX/L, BchN/Y, and BchB/Z will be co-aligned, and then those files will be concatenated to produce the final figure.
 
-Download the sequences:  
-(NOTE: TODO: The _Ca_. Chloroheliales bins are still using prokka locus tags and thus will not be downloadable from NCBI. 
-Until the NCBI accessions are available, you will have to remove the _Ca_. Chloroheliales sequences from the TSV file before 
-running the code below, get the _Ca_. Chloroheliales sequences manually from the provided prokka-based ORF prediction files described 
-in the `genome_bin_analysis` folder, and then add them to the "${run_name}_renamed.faa" file after running the code below.)
+Download the sequences:
 ```bash
 run_name="BchLNB_XYZ"
 gene_list=(BchL BchN BchB BchX BchY BchZ)

@@ -75,7 +75,7 @@ Done. Before running ATLAS, make sure to activate the environment by running `co
 If it is your first time using ATLAS, note that a large amount of database files will be auto-downloaded during the run.
 
 
-### Ca. Chloroheliales bin L227-5C
+### Ca. Chloroheliaceae bin L227-5C
 Config files for the run have already been created. 
 If you want to create config files for yourself, you can use the `atlas init` command as documented in the ATLAS repo.  
 

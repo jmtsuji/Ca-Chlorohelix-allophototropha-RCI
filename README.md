@@ -25,7 +25,7 @@ read-based analysis are also performed. Lastly, additional environmental metagen
 - `genome_bin_analysis`: download of all genome bins produced in this study, including the two bins classified to the novel '_Ca_. Chloroheliales' order. 
 Analysis of the '_Ca_. Chloroheliales' genome bins, including detection of the novel Type I reaction center-associated genes, homology modelling, and 
 HMM development, are also included.
-  - Used to produce Fig. 2c and the bottom portion of Fig. S4.
+  - Used to produce Fig. 2C and the bottom portion of Fig. S4.
 - `comparative_genomics`: phylogenetic and functional gene comparisons between the novel '_Ca_. Chloroheliales' bins and other phototrophs or members 
 of the _Chloroflexota_ phlylum.
   - Used to produce the bulk of the data presentations in the paper: Fig. 2A-B; Fig. 3 and Tables S1/S3; Figs. S2-S8 and Table S2.

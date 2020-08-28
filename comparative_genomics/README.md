@@ -259,7 +259,7 @@ mv "${heatmap_script}.backup" "${heatmap_script}"
 ```
 
 The four raw plots (Blues, Purples, Greens, Oranges) are then manually combined to produce Figure 3. 
-The `blast_tables_combined.csv` file is modified to produce Supplementary Data 3.
+The `blast_tables_combined.csv` file is modified to produce the data summary `supporting_files/bidirectional_BLASTP_results.xlsx`.
 
 ## Alignments and phylogenies of photosynthesis-associated genes
 In reality, I scanned the downloaded genomes above (in `genomes_by_category`) via BackBLAST to search for the genes of interest. 
@@ -273,11 +273,7 @@ do not have a corresponding NCBI full genome.
 ### Fe-S type reaction center (RCI/PSI)
 A set of 68 RCI/PSI sequences were used for the phylogeny; accessions are summarized in `RCI_PSI_accessions.tsv`.
 
-Download the sequences:  
-(NOTE: TODO: The _Ca_. Chloroheliales bins are still using prokka locus tags and thus will not be downloadable from NCBI. 
-Until the NCBI accessions are available, you will have to remove the _Ca_. Chloroheliales sequences from the TSV file before 
-running the code below, get the _Ca_. Chloroheliales sequences manually from the provided prokka-based ORF prediction files described 
-in the `genome_bin_analysis` folder, and then add them to the "${run_name}_renamed.faa" file after running the code below.)
+Download the sequences:
 ```bash
 run_name="PSI_RCI"
 cd "alignments_and_phylogenies/${run_name}"
@@ -347,16 +343,12 @@ iqtree -s "${run_name}_aligned.faa" -nt ${threads} -pre "phylogeny_unmasked/${ru
 
 cd ../..
 ```
-The resuting tree file `PSI_RCI_aligned_masked.treefile` is plotted in Figure 2b and Extended Data Figure 2
+The resuting tree file `PSI_RCI_aligned_masked.treefile` is plotted in Figure 2B and Figure S2.
 
 ### FMO protein
 A set of 30 FMO sequences were used for the phylogeny; accessions are summarized in `FmoA_accessions.tsv`.
 
-Download the sequences:  
-(NOTE: TODO: The _Ca_. Chloroheliales bins are still using prokka locus tags and thus will not be downloadable from NCBI. 
-Until the NCBI accessions are available, you will have to remove the _Ca_. Chloroheliales sequences from the TSV file before 
-running the code below, get the _Ca_. Chloroheliales sequences manually from the provided prokka-based ORF prediction files described 
-in the `genome_bin_analysis` folder, and then add them to the "${run_name}_renamed.faa" file after running the code below.)
+Download the sequences:
 ```bash
 run_name="FmoA"
 cd "alignments_and_phylogenies/${run_name}"
@@ -426,16 +418,12 @@ iqtree -s "${run_name}_aligned.faa" -nt ${threads} -pre "phylogeny_unmasked/${ru
 
 cd ../..
 ```
-The resuting tree file `FmoA_aligned_masked.treefile` is plotted in Extended Data Figure 3.
+The resuting tree file `FmoA_aligned_masked.treefile` is plotted in Figure S3.
 
 ### Chlorosom protein (CsmA)
 A set of 41 CsmA sequences were used for the phylogeny; accessions are summarized in `CsmA_accessions.tsv`.
 
-Download the sequences:  
-(NOTE: TODO: The _Ca_. Chloroheliales bins are still using prokka locus tags and thus will not be downloadable from NCBI. 
-Until the NCBI accessions are available, you will have to remove the _Ca_. Chloroheliales sequences from the TSV file before 
-running the code below, get the _Ca_. Chloroheliales sequences manually from the provided prokka-based ORF prediction files described 
-in the `genome_bin_analysis` folder, and then add them to the "${run_name}_renamed.faa" file after running the code below.)
+Download the sequences:
 ```bash
 run_name="CsmA"
 cd "alignments_and_phylogenies/${run_name}"
@@ -505,19 +493,15 @@ iqtree -s "${run_name}_aligned.faa" -nt ${threads} -pre "phylogeny_unmasked/${ru
 
 cd ../..
 ```
-The resuting tree file `CsmA_aligned_masked.treefile` is plotted in Extended Data Figure 8, and the multiple sequence alignment is shown 
-in Extended Data Figure 4.
+The resuting tree file `CsmA_aligned_masked.treefile` is plotted in Figure S8, and the multiple sequence alignment is shown 
+in Figure S4.
 
 I also summarized the phylogenetic distances between the taxa in this phylogeny using the provided R script `CsmA_distances.R`.
 
 ### RuBisCO large subunit (CbbL)
 A set of 106 CbbL sequences were used for the phylogeny; accessions are summarized in `CbbL_accessions.tsv`.
 
-Download the sequences:  
-(NOTE: TODO: The _Ca_. Chloroheliales bins are still using prokka locus tags and thus will not be downloadable from NCBI. 
-Until the NCBI accessions are available, you will have to remove the _Ca_. Chloroheliales sequences from the TSV file before 
-running the code below, get the _Ca_. Chloroheliales sequences manually from the provided prokka-based ORF prediction files described 
-in the `genome_bin_analysis` folder, and then add them to the "${run_name}_renamed.faa" file after running the code below.)
+Download the sequences:
 ```bash
 run_name="CbbL"
 cd "alignments_and_phylogenies/${run_name}"
@@ -581,7 +565,7 @@ iqtree -s "${run_name}_aligned.faa" -nt ${threads} -pre "phylogeny_unmasked/${ru
 
 cd ../..
 ```
-The resulting tree file `CbbL_aligned_masked.treefile` is plotted in Extended Data Figure 5. Note that I realized after producing this phylogeny that 
+The resulting tree file `CbbL_aligned_masked.treefile` is plotted in Figure S5. Note that I realized after producing this phylogeny that 
 three pairs of sequences (between the reference genome set and the gene set derived from Tabita and colleagues, 2008) in the Group III CbbL set had 
 been duplicated: the CbbL sequences of _Hyperthermus butylicus_, _Methanocaldococcus jannaschii_, and _Archaeoglobus fulgidus_. I collapsed those 
 three branches into single nodes when producing the final figure for clarity.
@@ -591,10 +575,6 @@ three branches into single nodes when producing the final figure for clarity.
 A set of 82 groups of three BchIDH sequences were used for the phylogeny; accessions are summarized in `BchIDH_accessions.tsv`.
 
 Download the sequences:  
-(NOTE: TODO: The _Ca_. Chloroheliales bins are still using prokka locus tags and thus will not be downloadable from NCBI. 
-Until the NCBI accessions are available, you will have to remove the _Ca_. Chloroheliales sequences from the TSV file before 
-running the code below, get the _Ca_. Chloroheliales sequences manually from the provided prokka-based ORF prediction files described 
-in the `genome_bin_analysis` folder, and then add them to the "${run_name}_renamed.faa" file after running the code below.)
 ```bash
 run_name="BchIDH"
 gene_list=(BchI BchD BchH)
@@ -694,16 +674,12 @@ cp "phylogeny/${run_name}_aligned_masked.treefile" .
 
 cd ../..
 ```
-The resuting tree file `BchIDH_aligned_masked.treefile` is plotted in Extended Data Figure 6.
+The resuting tree file `BchIDH_aligned_masked.treefile` is plotted in Figure S6.
 
 ### BchLNB/BchXYZ
 This is the most complex phylogeny. BchX/L, BchN/Y, and BchB/Z will be co-aligned, and then those files will be concatenated to produce the final figure.
 
-Download the sequences:  
-(NOTE: TODO: The _Ca_. Chloroheliales bins are still using prokka locus tags and thus will not be downloadable from NCBI. 
-Until the NCBI accessions are available, you will have to remove the _Ca_. Chloroheliales sequences from the TSV file before 
-running the code below, get the _Ca_. Chloroheliales sequences manually from the provided prokka-based ORF prediction files described 
-in the `genome_bin_analysis` folder, and then add them to the "${run_name}_renamed.faa" file after running the code below.)
+Download the sequences:
 ```bash
 run_name="BchLNB_XYZ"
 gene_list=(BchL BchN BchB BchX BchY BchZ)
@@ -844,10 +820,10 @@ cp "phylogeny/${run_name}_aligned_masked.treefile" .
 
 cd ../..
 ```
-The resuting tree file `BchLNB_XYZ_aligned_masked.treefile` is plotted in Extended Data Figure 7.
+The resuting tree file `BchLNB_XYZ_aligned_masked.treefile` is plotted in Figure S7.
 
 ## Annotree GTDB visualization
 From the Annotree website, I exported a phylogeny of the Genome Tree Database, release 89, summarized to the class level, for an overview of 
 the tree of life. The raw SVG is available in `annotree/annotree_GTDB_r89_class_raw.svg`.
 
-This raw SVG was edited to produce Figure 2a.
+This raw SVG was edited to produce Figure 2A.

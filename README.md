@@ -19,20 +19,21 @@ phylum, and this has important implications for the evolution of photosynthesis.
 ## Repo contents
 The repo is organized into four main folders representing the analyses performed in this study:
 - `16S_rRNA_gene_amplicon_analysis`: download and analysis of 16S rRNA gene amplicon data from '_Ca_. Chloroheliales' enrichment cultures
-  - Used to produce Supplementary Data 1
 - `metagenome_analysis`: download, assembly, and binning of metagenome data from '_Ca_. Chloroheliales' enrichment cultures. Unassembled 
 read-based analysis are also performed. Lastly, additional environmental metagenomes are also scanned for '_Ca_. Chloroheliales' sequences.
-  - Used to produce Extended Data Fig. 1
+  - Used to produce Fig. S1
 - `genome_bin_analysis`: download of all genome bins produced in this study, including the two bins classified to the novel '_Ca_. Chloroheliales' order. 
 Analysis of the '_Ca_. Chloroheliales' genome bins, including detection of the novel Type I reaction center-associated genes, homology modelling, and 
 HMM development, are also included.
-  - Used to produce Supplementary Data 2, Figure 2c, and the bottom portion of Extended Data Fig. 4.
+  - Used to produce Fig. 2C and the bottom portion of Fig. S4.
 - `comparative_genomics`: phylogenetic and functional gene comparisons between the novel '_Ca_. Chloroheliales' bins and other phototrophs or members 
 of the _Chloroflexota_ phlylum.
-  - Used to produce the bulk of the data presentations in the paper: Figure 2a-b; Figure 3 and Supplementary Data 3; Extended Data Figs. 2-8.
+  - Used to produce the bulk of the data presentations in the paper: Fig. 2A-B; Fig. 3 and Tables S1/S3; Figs. S2-S8 and Table S2.
 
-In addition, the `data_presentations` folder contains the individual tables, figures (vector format where possible), and data files that are 
-included in the manuscript.
+In addition, summary folders contain data of particular relevance to readers:
+- The `data_presentations` folder contains the individual tables and figures (vector format where possible) that are 
+included in the manuscript, and
+- The `supporting_files` folder contains raw data summaries that are referenced in the manuscript (such as ASV tables and raw results of bidirectional BLASTP).
 
 ## How to use this repo
 Each of the four subfolders above contains a README file with the code used to analyze the data. Key intermediate files are included in folders 

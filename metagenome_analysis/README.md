@@ -230,7 +230,7 @@ generate_MAG_table.py -o "${output_filepath_2}" \
   -t "${source_dir_2}/genomes/taxonomy/gtdb/gtdbtk.bac120.summary.tsv" \
   2>&1 | tee "${output_filepath_2%.tsv}.log"
 ```
-The output MAG abundance tables are provided in that folder for reference and are used to generate Figure S1 (see below).
+The output MAG abundance tables are provided in that folder for reference and are used to generate Extended Data Fig. 1 (see below).
 
 ## Curation of the genome bins
 I identified the two '_Ca_. Chloroheliales' genome bins from the above ATLAS run folders by looking for the bins classified to the _Chloroflexota_ phylum 
@@ -363,11 +363,11 @@ cd ../..
 Will now have a rpoB taxonomy file at `unassembled_read_analysis/hmm_files/rpoB_[number]_all_annotations_[random_code].tsv`.  
 In this folder, you'll find the file `relative_abundances/rpoB_all_annotations.tsv` as a reference copy of that file.
 
-Relative abundances of taxa from the enrichment cultures using both unassembled read-based methods and read mapping to genome bins (above) are used in Figure S1.
+Relative abundances of taxa from the enrichment cultures using both unassembled read-based methods and read mapping to genome bins (above) are used in Extended Data Fig. 1.
 
 ## Relative abundance plot
-Figure S1 shows the relative abundances of taxa in the enrichment cultures based on the unassembled read-based profiles and the MAG-based 
-read mapping profiles generated above. To make Figure S1, the R script `Figure_S1_plotter.R` was used, which is in the 
+Extended Data Fig. 1 shows the relative abundances of taxa in the enrichment cultures based on the unassembled read-based profiles and the MAG-based 
+read mapping profiles generated above. To make Extended Data Fig. 1, the R script `Figure_ED1_plotter.R` was used, which is in the 
 `relative_abundances` folder.
 
 ## Scanning metagenomes containing potential '_Ca._ Chloroheliales' members for photosynthesis genes

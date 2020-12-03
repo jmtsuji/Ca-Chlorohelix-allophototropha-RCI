@@ -92,5 +92,5 @@ python 16S_pipeline.py Core_Analysis --local-scheduler 2>&1 | tee ../axiome3.log
 Once finished, the ASV table will be available at `AXIOME3/output/exported/ASV_table_combined.tsv`.
 
 
-In lieu of uploading all intermediate analysis files, a summary of the non-rarefied amplicon sequencing variant (ASV) table is provided at `ASV_table_non_rarefied.tsv`.  
-**ASV table data was used to generate the summary table `supporting_files/ASV_table.xlsx`.**
+**In lieu of uploading all intermediate analysis files, a summary of the non-rarefied amplicon sequencing variant (ASV) table is provided at `ASV_table_non_rarefied.tsv`. **
+**ASV table data was used to generate Supplementary Data 1 in the manuscript.**

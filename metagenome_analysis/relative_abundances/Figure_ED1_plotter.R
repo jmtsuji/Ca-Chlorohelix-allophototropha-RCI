@@ -1,4 +1,4 @@
-# Figure S1 plotter
+# Figure ED1 plotter
 
 # Load libraries
 library(metannoviz) # Used v1.0.2
@@ -15,7 +15,7 @@ bin_table_allophototropha_filepath <- "Capt_MAG_table_to_assembled.tsv"
 bin_table_L227_5C_filepath <- "L227_5C_MAG_table_to_assembled.tsv"
 bin_table_sample_naming_info_filepath <- "guides/dataset_info_MAGs.tsv"
 output_metannotate_info_filepath <- "output/metannotate_data_processed.tsv"
-output_plot_filepath <- "output/Figure_S1_raw.pdf"
+output_plot_filepath <- "output/Figure_ED1_raw.pdf"
 
 # N.B., the two MetAnnotate guide files here, your `raw_name` column might have slight spelling differences depending on the details of your MetAnnotate run. You can just look at the first few columns of the "rpoB_all_annotations.tsv" to check.
 hmm_info_filepath <- "guides/hmm_info_metannotate.tsv"

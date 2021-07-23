@@ -3,7 +3,7 @@
 [![DOI](https://zenodo.org/badge/273164101.svg)](https://zenodo.org/badge/latestdoi/273164101)
 [![biorxiv](https://img.shields.io/badge/biorxiv-10.1101%2F2020.07.07.190934-green)](https://doi.org/10.1101/2020.07.07.190934)
 
-Copyright Jackson M. Tsuji, Neufeld Research Group, 2020
+Copyright Jackson M. Tsuji, Neufeld Research Group, 2021
 
 This Github repository provides additional intermediate data files and code related to the publication by Tsuji and colleagues, 2020, 
 "'_Candidatus_ Chlorohelix allophototropha,' the first anoxygenic phototrophic _Chloroflexota_ member to use a Type I photosynthetic 
@@ -19,17 +19,19 @@ phylum, and this has important implications for the evolution of photosynthesis.
 ## Repo contents
 The repo is organized into four main folders representing the analyses performed in this study:
 - `16S_rRNA_gene_amplicon_analysis`: download and analysis of 16S rRNA gene amplicon data from '_Ca_. Chloroheliales' enrichment cultures
-  - Used to produce Supplementary Data 1
+  - Used to produce Supplementary Data 6
 - `metagenome_analysis`: download, assembly, and binning of metagenome data from '_Ca_. Chloroheliales' enrichment cultures. Unassembled 
 read-based analysis are also performed. Lastly, additional environmental metagenomes are also scanned for '_Ca_. Chloroheliales' sequences.
   - Used to produce Extended Data Fig. 1
 - `genome_bin_analysis`: download of all genome bins produced in this study, including the two bins classified to the novel '_Ca_. Chloroheliales' order. 
 Analysis of the '_Ca_. Chloroheliales' genome bins, including detection of the novel Type I reaction center-associated genes, homology modelling, and 
 HMM development, are also included.
-  - Used to produce Supplementary Data 2, Figure 2c and the bottom portion of Extended Data Fig. 4.
+  - Used to produce Supplementary Data 1, Fig. 1c and the bottom portion of Extended Data Fig. 5.
 - `comparative_genomics`: phylogenetic and functional gene comparisons between the novel '_Ca_. Chloroheliales' bins and other phototrophs or members 
 of the _Chloroflexota_ phlylum.
-  - Used to produce the bulk of the data presentations in the paper: Fig. 2a-b; Fig. 3, Supplementary Data 3, and Extended Data Table 1; Extended Data Figs. 2-8, and Extended Data Table 2.
+  - Used to produce the bulk of the data presentations in the paper: Fig. 1a-b; Fig. 2, Supplementary Data 2, and Extended Data Table 1; Extended Data Figs. 2,4-6,8-10, and Extended Data Table 2.
+- `lake_survey_analysis`: analyze Boreal Shield lake metagenome and metatranscriptome data
+  - Used to produce Fig. 3, Extended Data Fig. 7, and Supplementary Data 3-5
 
 In addition, summary folders contain data of particular relevance to readers:
 - The `data_presentations` folder contains the individual tables and figures (vector format where possible) that are 
@@ -52,5 +54,4 @@ you as soon as possible. You can also post an issue if you have questions/concer
 
 Enjoy!
 
-Jackson M. Tsuji  
-PhD Candidate, University of Waterloo, Canada
+Jackson M. Tsuji, PhD

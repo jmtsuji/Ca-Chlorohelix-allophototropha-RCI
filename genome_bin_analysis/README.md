@@ -1,6 +1,6 @@
 # Genome bin analysis
 Part of the larger '_Ca._ Chlorohelix allophototropha' Type I reaction center paper  
-Copyright Jackson M. Tsuji, Neufeld Research Group, 2020
+Copyright Jackson M. Tsuji, Neufeld Research Group, 2021
 
 **NOTE: for each code section provided below, the code ought to be run from within this `genome_bin_analysis` directory.**
 
@@ -130,7 +130,7 @@ These PDB files can be opened in a protein structural viewer such as [UCSF Chime
 
 The full I-TASSER output for each gene can be found at the [Zenodo data repository corresponding to this code repo](https://doi.org/10.5281/zenodo.3930110).
 
-One of these homology models ('_Ca_. Chx. allophototropha' PscA-like protein) is shown in Figure 2c.  
+One of these homology models ('_Ca_. Chx. allophototropha' PscA-like protein) is shown in Fig. 1c.
 Another ('_Ca_. Chx. allophototropha' putative CsmA protein) is shown at the bottom of Extended Data Fig. 4.
 
 
@@ -229,4 +229,4 @@ run_blastp_parallel.sh Capt_00887_context_20.faa Capt_00887_context_20_blastp.ts
 run_blastp_parallel.sh Chx_L227_5C_00166_context_20.faa Chx_L227_5C_00166_context_20_blastp.tsv 1e-10 5 10 \
   2>&1 | tee run_blastp_parallel_L227_5C.log
 ```
-The output TSV files (included in this folder) are then combined to make Supplementary Data 2.
+The output TSV files (included in this folder) are then combined to make Supplementary Data 1.

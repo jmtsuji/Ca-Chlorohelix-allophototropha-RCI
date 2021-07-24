@@ -5,7 +5,7 @@ Copyright Jackson M. Tsuji, Neufeld Research Group, 2021
 This folder contains supplementary data files referenced in the manuscript text that could be particularly helpful to understand the analyses performed:
 - `Data_01_RCI_gene_context.xlsx` - Gene context of the the novel _pscA_-like genes detected among '_Ca_. Chloroheliales' members. BLASTP results are shown of the predicted primary sequences of 20 genes up/downstream of the novel _pscA_-like genes.
 - `Data_02_bidirectional_BLASTP_results.xlsx` - Raw results of the data presented in Fig. 2 in the manuscript
-- `Data_03_MAG_relative_abundance_tables.xlsx` - Relative abundances of environmental MAGs based on read recruitment to the set of 44 lake metagenomes.
+- `Data_03_MAG_relative_abundance_table.xlsx` - Relative abundances of environmental MAGs based on read recruitment to the set of 44 lake metagenomes.
 - `Data_04_MAG_expression_tables.xlsx` - Relative expression of environmental MAGs based on read recruitment to the three lake metatranscriptomes (each with three replicates)
 - `Data_05_Chloroheliales_MAG_gene_expression.xlsx` - Gene up/down regulation relative to the single-copy marker gene _dnaK_ for the two environmental MAGs classified to the "_Ca._ Chloroheliales" order, based on read recruitment from Lake 221/304 metatranscriptomes
 - `Data_06_ASV_table.xlsx` - results of 16S rRNA gene amplicon sequencing of the enrichment cultures presented in this study

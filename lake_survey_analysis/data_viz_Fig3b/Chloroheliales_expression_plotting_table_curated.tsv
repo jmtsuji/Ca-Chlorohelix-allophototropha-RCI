@@ -1,0 +1,129 @@
+MAG	ORF	Name	Category	axis_labels_curated
+MAG319	MAG319_27_22	Extracellular ligand-binding receptor	Other	Extracellular ligand-binding receptor (MAG319_27_22)
+MAG319	MAG319_39_1	oppA	Other	oppA (MAG319_39_1)
+MAG729	MAG729_240_2	atpE	Other	atpE (MAG729_240_2)
+MAG729	MAG729_240_3	atpF	Other	atpF (MAG729_240_3)
+MAG319	MAG319_12_2	lacD	Other	lacD (MAG319_12_2)
+MAG319	MAG319_5_125	Solute-binding protein	Other	Solute-binding protein (MAG319_5_125)
+MAG729	MAG729_88_3	lacD	Other	lacD (MAG729_88_3)
+MAG319	MAG319_10_2	ACS	Other	ACS (MAG319_10_2)
+MAG319	MAG319_23_32	cbbX	CBB cycle	cbbX (MAG319_23_32)
+MAG319	MAG319_23_33	cbbS	CBB cycle	cbbS (MAG319_23_33)
+MAG319	MAG319_23_43	cbbL	CBB cycle	cbbL (MAG319_23_43)
+MAG729	MAG729_228_2	cbbL	CBB cycle	cbbL (MAG729_228_2)
+MAG729	MAG729_228_3	cbbX	CBB cycle	cbbX (MAG729_228_3)
+MAG729	MAG729_228_4	cbbS	CBB cycle	cbbS (MAG729_228_4)
+MAG729	MAG729_322_8	Methyltransferase, type 11	Other	Methyltransferase, type 11 (MAG729_322_8)
+MAG319	MAG319_18_52	fdxA	Other	fdxA (MAG319_18_52)
+MAG319	MAG319_2_139		Other	MAG319_2_139
+MAG319	MAG319_2_153	aceA	Other	aceA (MAG319_2_153)
+MAG319	MAG319_2_64	atpB	Other	atpB (MAG319_2_64)
+MAG319	MAG319_2_65	atpE	Other	atpE (MAG319_2_65)
+MAG319	MAG319_2_66	atpF	Other	atpF (MAG319_2_66)
+MAG319	MAG319_20_1	coxB	Other	coxB (MAG319_20_1)
+MAG319	MAG319_31_10	Radical SAM domain protein	Other	Radical SAM domain protein (MAG319_31_10)
+MAG729	MAG729_119_1	aceA	Other	aceA (MAG729_119_1)
+MAG729	MAG729_416_2	RBR	Other	RBR (MAG729_416_2)
+MAG729	MAG729_661_2	aceA	Other	aceA (MAG729_661_2)
+MAG319	MAG319_20_30	gvpA	Gas vesicle	gvpA (MAG319_20_30)
+MAG729	MAG729_107_3	gvpA	Gas vesicle	gvpA (MAG729_107_3)
+MAG729	MAG729_107_4	gvpA	Gas vesicle	gvpA (MAG729_107_4)
+MAG729	MAG729_129_10	gvpA	Gas vesicle	gvpA (MAG729_129_10)
+MAG319	MAG319_17_63	Cadherin	Other	Cadherin (MAG319_17_63)
+MAG319	MAG319_27_23	Cadherin	Other	Cadherin (MAG319_27_23)
+MAG319	MAG319_3_25	arsA	Other	arsA (MAG319_3_25)
+MAG319	MAG319_60_6	pstS	Other	pstS (MAG319_60_6)
+MAG729	MAG729_309_2	arsA	Other	arsA (MAG729_309_2)
+MAG729	MAG729_343_5	pstS	Other	pstS (MAG729_343_5)
+MAG729	MAG729_186_6		Other	MAG729_186_6
+MAG319	MAG319_31_31	accP	Other	accP (MAG319_31_31)
+MAG729	MAG729_505_1	SDR	Other	SDR (MAG729_505_1)
+MAG729	MAG729_80_4	acpP	Other	acpP (MAG729_80_4)
+MAG319	MAG319_1_176	rpsA	Other	rpsA (MAG319_1_176)
+MAG729	MAG729_230_4	Phage tail protein	Other	Phage tail protein (MAG729_230_4)
+MAG729	MAG729_230_5	Tail sheath protein	Other	Tail sheath protein (MAG729_230_5)
+MAG319	MAG319_28_36	fmoA	Phototrophy	fmoA (MAG319_28_36)
+MAG319	MAG319_58_2	pscA-like	Phototrophy	pscA-like (MAG319_58_2)
+MAG729	MAG729_211_4	fmoA	Phototrophy	fmoA (MAG729_211_4)
+MAG729	MAG729_211_5	pscA-like	Phototrophy	pscA-like (MAG729_211_5)
+MAG319	MAG319_12_67	Glutaredoxin-like protein	Other	Glutaredoxin-like protein (MAG319_12_67)
+MAG319	MAG319_3_100	groL	Other	groL (MAG319_3_100)
+MAG319	MAG319_3_99	groS	Other	groS (MAG319_3_99)
+MAG729	MAG729_322_5	Glutaredoxin-like protein, YruB-family	Other	Glutaredoxin-like protein, YruB-family (MAG729_322_5)
+MAG729	MAG729_322_9	Glutaredoxin	Other	Glutaredoxin (MAG729_322_9)
+MAG729	MAG729_429_1	groL	Other	groL (MAG729_429_1)
+MAG729	MAG729_899_1	trdR	Other	trdR (MAG729_899_1)
+MAG319	MAG319_24_54	rplJ	Other	rplJ (MAG319_24_54)
+MAG319	MAG319_24_59	rpmG	Other	rpmG (MAG319_24_59)
+MAG319	MAG319_31_38	rpmF	Other	rpmF (MAG319_31_38)
+MAG319	MAG319_41_7	rplI	Other	rplI (MAG319_41_7)
+MAG729	MAG729_101_6	rpmB	Other	rpmB (MAG729_101_6)
+MAG729	MAG729_245_5	Ribosomal protein S30EA	Other	Ribosomal protein S30EA (MAG729_245_5)
+MAG319	MAG319_59_14	rbpA	Other	rbpA (MAG319_59_14)
+MAG729	MAG729_664_1	rbpA	Other	rbpA (MAG729_664_1)
+MAG319	MAG319_56_18	Stage V sporulation protein S	Other	Stage V sporulation protein S (MAG319_56_18)
+MAG729	MAG729_30_14	Stage V sporulation protein S	Other	Stage V sporulation protein S (MAG729_30_14)
+MAG319	MAG319_34_1	cspA	Other	cspA (MAG319_34_1)
+MAG729	MAG729_454_3	cspA	Other	cspA (MAG729_454_3)
+MAG319	MAG319_12_68	Rhodanese	Other	Rhodanese (MAG319_12_68)
+MAG319	MAG319_2_137	Rhodanese	Other	Rhodanese (MAG319_2_137)
+MAG729	MAG729_322_7	pspE	Other	pspE (MAG729_322_7)
+MAG319	MAG319_6_24	pqqE	Other	pqqE (MAG319_6_24)
+MAG319	MAG319_7_50	padR-like	Other	padR-like (MAG319_7_50)
+MAG729	MAG729_338_4		Other	MAG729_338_4
+MAG729	MAG729_383_4	padR-like	Other	padR-like (MAG729_383_4)
+MAG319	MAG319_16_54	TUF	Other	TUF (MAG319_16_54)
+MAG319	MAG319_16_57	rpsL	Other	rpsL (MAG319_16_57)
+MAG319	MAG319_5_115	rpsO	Other	rpsO (MAG319_5_115)
+MAG729	MAG729_13_8	rpsL	Other	rpsL (MAG729_13_8)
+MAG319	MAG319_57_6	actP	Other	actP (MAG319_57_6)
+MAG319	MAG319_11_44	Unclassified	Unknown	MAG319_11_44
+MAG319	MAG319_11_75	Unclassified	Unknown	MAG319_11_75
+MAG319	MAG319_12_11	Unclassified	Unknown	MAG319_12_11
+MAG319	MAG319_15_72	Unclassified	Unknown	MAG319_15_72
+MAG319	MAG319_16_89	Unclassified	Unknown	MAG319_16_89
+MAG319	MAG319_2_173	Unclassified	Unknown	MAG319_2_173
+MAG319	MAG319_21_13	Unclassified	Unknown	MAG319_21_13
+MAG319	MAG319_23_44	Unclassified	Unknown	MAG319_23_44
+MAG319	MAG319_28_37	Unclassified	Unknown	MAG319_28_37
+MAG319	MAG319_3_142	Unclassified	Unknown	MAG319_3_142
+MAG319	MAG319_3_26	Unclassified	Unknown	MAG319_3_26
+MAG319	MAG319_37_5	Unclassified	Unknown	MAG319_37_5
+MAG319	MAG319_38_28	Unclassified	Unknown	MAG319_38_28
+MAG319	MAG319_49_12	Unclassified	Unknown	MAG319_49_12
+MAG319	MAG319_53_4	Unclassified	Unknown	MAG319_53_4
+MAG319	MAG319_57_5	Unclassified	Unknown	MAG319_57_5
+MAG319	MAG319_7_49	Unclassified	Unknown	MAG319_7_49
+MAG319	MAG319_8_62	Unclassified	Unknown	MAG319_8_62
+MAG729	MAG729_107_5	Unclassified	Unknown	MAG729_107_5
+MAG729	MAG729_11_11	Unclassified	Unknown	MAG729_11_11
+MAG729	MAG729_164_3	Unclassified	Unknown	MAG729_164_3
+MAG729	MAG729_186_4	Unclassified	Unknown	MAG729_186_4
+MAG729	MAG729_186_5	Unclassified	Unknown	MAG729_186_5
+MAG729	MAG729_211_6	Unclassified	Unknown	MAG729_211_6
+MAG729	MAG729_216_6	Unclassified	Unknown	MAG729_216_6
+MAG729	MAG729_230_6	Unclassified	Unknown	MAG729_230_6
+MAG729	MAG729_277_2	Unclassified	Unknown	MAG729_277_2
+MAG729	MAG729_309_3	Unclassified	Unknown	MAG729_309_3
+MAG729	MAG729_31_7	Unclassified	Unknown	MAG729_31_7
+MAG729	MAG729_322_4	Unclassified	Unknown	MAG729_322_4
+MAG729	MAG729_322_6	Unclassified	Unknown	MAG729_322_6
+MAG729	MAG729_338_3	Unclassified	Unknown	MAG729_338_3
+MAG729	MAG729_360_3	Unclassified	Unknown	MAG729_360_3
+MAG729	MAG729_383_5	Unclassified	Unknown	MAG729_383_5
+MAG729	MAG729_388_2	Unclassified	Unknown	MAG729_388_2
+MAG729	MAG729_389_6	Unclassified	Unknown	MAG729_389_6
+MAG729	MAG729_471_3	Unclassified	Unknown	MAG729_471_3
+MAG729	MAG729_55_6	Unclassified	Unknown	MAG729_55_6
+MAG729	MAG729_594_3	Unclassified	Unknown	MAG729_594_3
+MAG729	MAG729_66_11	Unclassified	Unknown	MAG729_66_11
+MAG729	MAG729_666_2	Unclassified	Unknown	MAG729_666_2
+MAG729	MAG729_7_6	Unclassified	Unknown	MAG729_7_6
+MAG729	MAG729_7_7	Unclassified	Unknown	MAG729_7_7
+MAG729	MAG729_7_8	Unclassified	Unknown	MAG729_7_8
+MAG729	MAG729_7_9	Unclassified	Unknown	MAG729_7_9
+MAG729	MAG729_759_2	Unclassified	Unknown	MAG729_759_2
+MAG729	MAG729_91_5	Unclassified	Unknown	MAG729_91_5
+MAG319	MAG319_20_31	CEP250	Other	CEP250 (MAG319_20_31)
+MAG729	MAG729_216_2	CoA-binding domain protein	Other	CoA-binding domain protein (MAG729_216_2)
+MAG729	MAG729_30_15	ymdB	Other	ymdB (MAG729_30_15)

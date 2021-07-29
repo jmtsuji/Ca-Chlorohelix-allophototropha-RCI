@@ -89,6 +89,9 @@ If you just want the genome bins, you can skip running ATLAS yourself and just d
 Run the GTDB taxonomy classifier on the samples after completing the ATLAS run:
 ```bash
 TODO
+# Install via conda
+
+# Run to classify genome bins
 ```
 
 
@@ -119,11 +122,26 @@ I also included a few raw output files in the `lake_metagenomes/summary` folder 
 - `gtdbtk.bac120.summary.tsv` and `gtdbtk.ar122.summary.tsv`: GTDB taxonomy for the bacterial and archaeal MAGs, respectively
 
 ### Summary statistics
-To generate Supplementary Data 3 with the relative abundances of the MAGs, I ran a simple script to combine various ATLAS output files and calculate relative abundances:
+To generate Supplementary Data 3 with the relative abundances of the MAGs, I ran a simple personal script to combine various ATLAS output files and calculate relative abundances:
 
 ```bash
-generate_MAG_table.py \
-# TODO
+cd lake_metagenomes/summary`
+git clone https://github.com/jmtsuji/atlas2-helpers
+cd atlas2-helpers
+git checkout ______TODO____
+cd ..
+
+conda create pandas python=3.6 pandas=0.24 # TODO - check versions
+conda activate pandas
+
+# CheckM and GTDB files are the same as used for metagenomes
+atlas2-helpers/scripts/generate_MAG_table.py \
+  -o MAG_table_DNA_to_assembled.tsv \
+  -g raw_counts_genomes.tsv \
+  -R combined_contig_stats.tsv \
+  -t gtdbtk.bac120.summary.tsv gtdbtk.ar122.summary.tsv \
+  -c completeness_checkm.tsv \
+  2>&1 | tee MAG_table_DNA_to_assembled.tsv
 ```
 
 
@@ -234,6 +252,8 @@ atlas2-helpers/scripts/generate_MAG_table.py \
   -t ../../lake_metagenomes/summary/gtdbtk.bac120.summary.tsv ../../lake_metagenomes/summary/gtdbtk.ar122.summary.tsv \
   -c ../../lake_metagenomes/summary/completeness_checkm.tsv \
   2>&1 | tee MAG_table_RNA_to_unassembled.tsv
+  
+cd ../..
 ```
 Note: in reality the L227 samples were done independently here, and the resulting MAG tables were merged, but this is shown as a single command for simplicity (should not change the result).
 

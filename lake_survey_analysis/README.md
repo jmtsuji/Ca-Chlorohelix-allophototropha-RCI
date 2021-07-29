@@ -214,16 +214,30 @@ I included a few raw output files in the `lake_metatranscriptomes/summary` folde
   - This file contains the raw gene counts for each metatranscriptome against each protein-coding gene in each of the 756 MAGs.
 
 ### Summary statistics
-To generate Supplementary Data 4 with the relative expressions of the MAGs, I ran a simple script to combine various ATLAS output files and calculate relative abundances:
+To generate Supplementary Data 4 with the relative expressions of the MAGs, I ran a simple, personal script to combine various ATLAS output files and calculate relative abundances:
 
 ```bash
-generate_MAG_table.py \
-# TODO
+cd lake_metatranscriptomes/summary`
+git clone https://github.com/jmtsuji/atlas2-helpers
+cd atlas2-helpers
+git checkout 1e08f0a # version 0.1.0
+cd ..
+
+conda create pandas python=3.6 pandas=0.24
+conda activate pandas
 
 # CheckM and GTDB files are the same as used for metagenomes
+atlas2-helpers/scripts/generate_MAG_table.py \
+  -o MAG_table_RNA_to_unassembled.tsv \
+  -g raw_counts_genomes.tsv \
+  -r read_counts_QC.tsv \
+  -t ../../lake_metagenomes/summary/gtdbtk.bac120.summary.tsv ../../lake_metagenomes/summary/gtdbtk.ar122.summary.tsv \
+  -c ../../lake_metagenomes/summary/completeness_checkm.tsv \
+  2>&1 | tee MAG_table_RNA_to_unassembled.tsv
 ```
+Note: in reality the L227 samples were done independently here, and the resulting MAG tables were merged, but this is shown as a single command for simplicity (should not change the result).
 
-I then re-normalized this table afterwards to be normalized by the total read counts to all MAGs instead of to the total number of metatranscriptome reads, as described in the methods in the paper. Then, I performed some simple mean/standard deviation stats on these output tables in Excel to make Supplementary Data 4.
+The resulting `MAG_table_RNA_to_unassembled.tsv` became the basis for Supplementary Data 4. I had re-normalize `MAG_table_RNA_to_unassembled.tsv` in Excel, such that MAG relative abundances were normalized based on the total read counts to all MAGs (instead of being based on the total number of metatranscriptome reads), as described in the methods in the paper. I also performed some simple mean/standard deviation stats on these output tables in Excel to utimately make Supplementary Data 4.
 
 ## Generation of Figure 3
 
@@ -231,10 +245,13 @@ I then re-normalized this table afterwards to be normalized by the total read co
 The Jupyter notebook, `data_viz_Fig3a/Fig_3a_plotter.ipynb`, summarizes read mapping stats and generates Fig. 3a. 
 Input files are in `data_viz_Fig3a/input_data`.
 
+After production, the resulting raw PDF `Figure_3a_raw.pdf` was edited in Inkscape (e.g., to clean up axis labels and modify the bubble colour scheme).
 
 ### Figure 3b (and Extended Data Fig. 7): up/down regulation of genes in the two "_Ca._ Chloroheliales" MAGs
 The Jupyter notebook, `data_viz_Fig3b/Fig_3b_plotter.ipynb`, summarizes read count normalization methods and plotting of both figures.  
 
 Input files need to be downloaded (as a `.tar.gz` file) from the Zenodo repo [using this link](https://zenodo.org/record/5131685/files/lake_survey_Ca_Chloroheliales_MAGs_info.tar.gz?download=1). The tarball should be extracted, and the contents should be saved in `data_viz_Fig3b/input_data`. You're then ready to run the Jupyter notebook.
 
-Data from these analyses was also summarized to make Supplementary Data 5.
+The resulting raw PDFs, `Figure_3b_raw.pdf` and `Figure_ED7_raw.pdf`, are in the folder. These received minor edits via Inkscape to finalize.
+
+Data from these analyses were also summarized to make Supplementary Data 5.

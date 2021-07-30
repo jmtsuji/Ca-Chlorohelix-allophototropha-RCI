@@ -4,6 +4,9 @@ Copyright Jackson M. Tsuji, Neufeld Research Group, 2021
 
 **NOTE: for each code section provided below, the code ought to be run from within this `lake_survey` directory.**
 
+This README describes how lake metagenome/metatranscriptome survey data were analyzed, including generation of 
+figures and supplementary data files.
+
 ## Data download
 You can download the metagenome data using the provided TSV file by running the following code in Bash in your working folder:
 
@@ -47,6 +50,13 @@ To download the metatranscriptome data from NCBI, repeat the above code block us
 in place of `metagenome_data_accessions_ncbi.tsv`.
 
 ## Lake metagenome analysis
+In this paper, the main purpose of the lake metagenome analyses was to:
+- Recover metagenome-assembled genomes (MAGs) from the lakes to search for RCI-encoding relatives of "_Ca_. Chx. allophototropha"
+  - Those MAGs will then be used as the basis for RNA read mapping work with metatranscriptome data
+- Determine the relative abundances of "_Ca_. Chx. allophototropha" relatives in Boreal Shield lakes
+
+To analyze the metagenomes, I ran them through the [ATLAS](https://github.com/metagenome-atlas/atlas) pipeline and then did 
+a few post-run analyses.
 
 ### Install ATLAS
 [ATLAS](https://github.com/metagenome-atlas/atlas) is a metagenome QC, assembly, and binning workflow.  
@@ -74,13 +84,16 @@ Note that I had to modify two of the ATLAS code files in order to run the sample
   - Thus, I disabled CAT taxonomy classification within ATLAS
   - I made a single edit to the `Snakefile` by simply commenting out `"genomes/taxonomy/taxonomy.tsv",` under `rule genomes`.
 
+(Both of these issues were addressed in future releases of ATLAS.)
+
 ### Process the metagenome data
 A config file and sampel ID file for the run have already been created at `lake_metagenomes/config.yaml` and `lake_metagenomes/samples.tsv`.   
 If you want to create config files for yourself, you can use the `atlas init` command as documented in the ATLAS repo.  
 
 Notes:
 - make sure you modify the `config.yaml` file in the `lake_metagenomes` folder so that `database_dir` is a real directory on your machine.
-- you might have to modify the filepaths for the samples in the `samples.tsv` file so that they are correct on your system.
+  - You will also want to check that the memory and thread counts match what you hope to use on your server.
+- you might also have to modify the filepaths for the samples in the `samples.tsv` file so that they are correct on your system.
 
 Start the ATLAS run
 ```bash
@@ -94,8 +107,9 @@ atlas run -w . -c config.yaml -j 50 all --reason --keep-going 2>&1 | tee atlas_r
 
 cd ..
 ```
-Note this might take several weeks of computational runtime and considerable (e.g., 200 GB) RAM!! 
-If you just want the genome bins, you can skip running ATLAS yourself and just directly download the bins (see below).
+This might take several weeks of computational runtime and considerable (e.g., 200 GB) RAM!! 
+If you just want the genome bins, you can skip running ATLAS yourself and just directly download the bins from 
+the [Zenodo repo associated with this code repository](https://doi.org/10.5281/zenodo.3930110). Specifically, look for `lake_survey_MAGs.tar.gz`.
 
 Note that the above ATLAS run will get you close to the end of the pipeline but will run into two errors and stop. 
 You then have to work around those errors and keep going. (These errors were fixed in subsequent versions of ATLAS.)
@@ -112,6 +126,7 @@ mv genomes/genomes genomes/Genomes
 atlas run -w . -c config.yaml -j 50 genomes --reason --config genome_dir=genomes/Genomes 2>&1 | tee atlas_run_part2.log
 
 # genomes module is now done. Continue to the genecatalog module
+# Note that I changed to 20 threads here because there were other jobs running on our server, but you do not need to do this. (I had to temporarily change the thread requirements in the config file to 20 threads as well.)
 atlas run -w . -c config.yaml -j 20 genecatalog --reason 2>&1 | tee atlas_run_part3.log
 # you'll then run into the error fixed by "Fix 2" below.
 
@@ -204,16 +219,22 @@ All done! (Whew.) You should have a complete ATLAS run now.
 #### Taxonomy classification
 Run the GTDB taxonomy classifier on the samples after completing the ATLAS run:
 
-Install:
+I used GTDBTk version `0.3.2` with database release 89, which can be installed as follows:
 ```bash
 # Install the GTDB classifier via conda
 # Using GTDBTk `v0.3.2`, database release 89
 # Note that the DB download will take some time!
 
-TODO
-```
+conda create -n gtdbtk_0.3.2 -c bioconda -c conda-forge gtdbtk=0.3.2
+conda activate gtdbtk_0.3.2
 
-Run:
+# Download the GTDBTk database, release 89
+download-db.sh
+```
+Note that the GTDBTk version `0.3.2` and/or the DB release 89 might no longer be active due to rapid development of the GTDBTK, however. 
+For future analyses, I recommend installing the latest version of the GTDBTk with the newest database.
+
+Run the classifier:
 ```bash
 atlas_dir="lake_metagenomes"
 genome_dir="${atlas_dir}/genomes/Genomes"
@@ -222,6 +243,9 @@ genome_extension=fasta
 output_prefix=gtdbtk
 min_percent_aa=10 # 10 is the default
 threads=40
+
+# Activate the conda env by running:
+# conda activate gtdbtk_0.3.2
 
 mkdir -p "${out_dir}"
 gtdbtk classify_wf \
@@ -256,7 +280,7 @@ cd ..
 conda create pandas python=3.6 pandas=0.24
 conda activate pandas
 
-# CheckM and GTDB files are the same as used for metagenomes
+# Normalized to assembled reads, using GTDB taxonomy
 atlas2-helpers/scripts/generate_MAG_table.py \
   -o MAG_table_DNA_to_assembled.tsv \
   -g raw_counts_genomes.tsv \
@@ -264,29 +288,29 @@ atlas2-helpers/scripts/generate_MAG_table.py \
   -t gtdbtk.bac120.summary.tsv gtdbtk.ar122.summary.tsv \
   -c completeness_checkm.tsv \
   2>&1 | tee MAG_table_DNA_to_assembled.tsv
+  
+# Normalized to total metagenome reads (not used in this paper, but provided here for reference)
+atlas2-helpers/scripts/generate_MAG_table.py \
+  -o MAG_table_DNA_to_unassembled.tsv \
+  -g raw_counts_genomes.tsv \
+  -r read_counts.tsv \
+  -t gtdbtk.bac120.summary.tsv gtdbtk.ar122.summary.tsv \
+  -c completeness_checkm.tsv \
+  2>&1 | tee MAG_table_DNA_to_unassembled.tsv
+
+cd ../..
 ```
+`MAG_table_DNA_to_assembled.tsv` was then opened in Excel, and the visual appearance of the table was cleaned up to make Supplementary Data 3. 
+This table nicely summarizes the taxonomy of all MAGs and their percent relative abundances in all metagenome samples.
 
-TODO - integrate with above (check log files)
-```bash
-# Normalized to unassmembled reads, using GTDB taxonomy
-generate_MAG_table.py -o MAG_table_to_unassembled.tsv -a ${atlas_dir} \
--T ${atlas_dir}/genomes/taxonomy_gtdbtk/gtdbtk.bac120.summary.tsv \
-${atlas_dir}/genomes/taxonomy_gtdbtk/gtdbtk.ar122.summary.tsv \
-2>&1 | tee MAG_table_to_unassembled.log
-
-# Normalized to assembled reads, using GTDB taxonomy
-generate_MAG_table.py -o MAG_table_to_assembled.tsv -a ${atlas_dir} \
--T ${atlas_dir}/genomes/taxonomy_gtdbtk/gtdbtk.bac120.summary.tsv \
-${atlas_dir}/genomes/taxonomy_gtdbtk/gtdbtk.ar122.summary.tsv \
--R ${atlas_dir}/stats/combined_contig_stats.tsv \
-2>&1 | tee MAG_table_to_assembled.log
-```
-
+Done! Metagenome assembly work is done.
 
 ## Lake metatranscriptome analysis
+Lake metatranscriptome data was mapped to the set of MAGs generated from metagenome data (above) to determine the relative gene expression 
+of "_Ca_. Chx. allophototropha" relatives in Boreal Shield lakes.
 
 ### Install ATLAS
-Here, we'll use ATLAS commit 59da38f to perform sample QC. This commit was made about two weeks before the full release of ATLAS version 2.2.0
+Here, we'll use ATLAS commit 59da38f to perform sample QC. This commit was made about two weeks before the full release of ATLAS version 2.2.0.
 
 Note that you will need to have pre-installed [miniconda (e.g., miniconda3)](https://docs.conda.io/en/latest/miniconda.html).
 ```bash
@@ -308,7 +332,8 @@ cd ..
 One minor typo had to be fixed in the code in order for it to run. I had to edit line 39 of `atlas/rules/cat_taxonomy.smk` from `java_mem` to `mem`. This rule is not even used in this ATLAS run, but it prevents ATLAS from starting due to the typo.
 
 ### Analyze metatranscriptome data
-A config file for the run and sample ID guide file are included at `lake_metatranscriptomes/config.yaml` and `lake_metatranscriptomes/samples.tsv`
+A config file for the run and sample ID guide file are included at `lake_metatranscriptomes/config.yaml` and `lake_metatranscriptomes/samples.tsv`. 
+Like mentioned for metagenome data, you will need to set the database directory path, raw read filepaths, and thread/memory requirements to match your server setup.
 
 Perform QC on the metatranscriptome reads using ATLAS `59da38f`:
 ```bash
@@ -335,7 +360,11 @@ There is a hanging bracket that needs to be replaced with a comma in line 239 of
 (i.e., `"feature_counts":"genomes/expression/gene_counts.tsv"}` should be changed to `"feature_counts":"genomes/expression/gene_counts.tsv",`). 
 This issue is fixed in the subsequent commit `001e417`, which you are welcome to use in place of `96e47df` if you'd like.
 
-Then, perform RNA read mapping. Note that we will use the same config.yaml and samples.tsv files as the first step. As one important point, one variable in the config file, `genome_dir`, points to the location of the MAGs generated in the lake metagenome analysis above. It has been set in the config file to `../lake_metagenomes/genomes/Genomes`, but you might need to change this if you've put the MAGs in a different directory. I am also not sure if the relative path will work here in the config file; I used an absolute path in reality when running this code, but I changed it to relative here so that filepaths are kept contained within the Github repo.
+Then, perform RNA read mapping. Note that we will use the same config.yaml and samples.tsv files as the first step. 
+As one important point, one variable in the config file, `genome_dir`, points to the location of the MAGs generated in the lake metagenome analysis 
+above. It has been set in the config file to `../lake_metagenomes/genomes/Genomes`, but you might need to change this if you've put the MAGs in 
+a different directory. I am also not sure if the relative path will work here in the config file; I used an absolute path in reality when running 
+this code, but I changed it to relative here so that filepaths are kept contained within the Github repo.
 ```bash
 # Activate the environment by running:
 # conda activate atlas_2.2.0-dev1
@@ -359,12 +388,16 @@ What's going on under the hood here:
   4. Rule `split_feature_counts_table`: split the featureCounts table to make a single table for each MAG, in case helpful.
   5. Rule `summarize_gene_counts`: touch an empty output file to signify that all steps are complete.
 
-### Run notes
-The above ATLAS code is a streamlined version of the code that was used to analyze the data. Here I note a few important points about the actual data analysis that was performed:
+### Post-run analysis
+In order to calculate read mapping statistics needed for Figure 3a, I had to do a couple analyses outside of ATLAS.
 
-- The QC read counts to each metatranscriptome failed to generate during the ATLAS run, like was mentioned above for the metagenome ATLAS run. I counted the number of QC reads for each metatranscriptome after the ATLAS run and then created a `read_counts_QC.tsv` file with format matching the typical report file output by ATLAS. If you run the commands like shown above, though, you should generate `read_counts.tsv` without issue.
-- The `raw_counts_genomes.tsv` file also not auto-generated as part of the maprna rule. I manually generated that by summarizing the mapped reads against each contig using the BAM files output by ATLAS and then summing those counts for the MAGs those contigs belonged to. Specifically, I ran the following code:
+Firstly, in my case, the `read_counts.tsv` file failed to generate during the ATLAS run. This was a simple mistake on my end and should not happen in your case if you run the code as presented above. 
+I had to manually generate that file by counting the number of entries in the QC-processed metatranscriptome files. 
+I summarized these counts in `read_counts_QC.tsv` (provided in the `summary` folder), which mimics the format of the real `read_counts.tsv` file.
 
+Secondly, the `raw_counts_genomes.tsv` file is not auto-generated as part of the maprna rule. 
+I manually generated that file by counting the mapped reads against each contig, based on the BAM files output by ATLAS. 
+I then summed those counts for each MAG. The code to do this analysis is actually fairly simple:
 ```bash
 cd lake_metatranscriptomes/genomes/alignments
 mkdir -p summarize_genome_counts
@@ -402,16 +435,18 @@ Where `count` is the number of mapped reads to a contig. Thankfully, ATLAS label
 This makes it easy to convert this file into total RNA counts per genome. 
 I implement this conversion in the iPython notebook `generate_raw_counts_genomes.ipynb`, which is included in the `summary` folder along with `read_counts_contigs.tsv.gz` (gzipped for space savings).
 
+With these files in place, you are now ready for all downstream statistics work.
 
-### Output summary
-I included a few raw output files in the `lake_metatranscriptomes/summary` folder for reference and to show how the run stats were calculated (below):
+### ATLAS output summary
+I included key ATLAS output files and post-analysis files in the `lake_metatranscriptomes/summary` folder, namely:
 - `read_counts_QC.tsv`: Read counts for metatranscriptomes after QC
 - `raw_counts_genomes.tsv`: number of mapped reads on each MAG
-- **One file, `lake_survey_MAGs_featureCounts.tsv.gz`, was put in the [Zenodo repo associated with this code repository](https://doi.org/10.5281/zenodo.3930110) due to its large size**
+- One file, `lake_survey_MAGs_featureCounts.tsv.gz`, was put in the [Zenodo repo associated with this code repository](https://doi.org/10.5281/zenodo.3930110) due to its large size
   - This file contains the raw gene counts for each metatranscriptome against each protein-coding gene in each of the 756 MAGs.
 
 ### Summary statistics
-To generate Supplementary Data 4 with the relative expressions of the MAGs, I ran a simple, personal script to combine various ATLAS output files and calculate relative abundances:
+To generate Supplementary Data 4 with the relative expressions of the MAGs, I ran a simple, personal script to combine various ATLAS 
+output files and calculate relative abundances of MAGs based on RNA-seq data:
 
 ```bash
 cd lake_metatranscriptomes/summary`
@@ -434,9 +469,14 @@ atlas2-helpers/scripts/generate_MAG_table.py \
   
 cd ../..
 ```
-Note: in reality the L227 samples were done independently here, and the resulting MAG tables were merged, but this is shown as a single command for simplicity (should not change the result).
+Note: in reality the L227 samples were done independently here, and the resulting MAG tables were merged, but this is shown as a single 
+command for simplicity (should not change the result).
 
-The resulting `MAG_table_RNA_to_unassembled.tsv` became the basis for Supplementary Data 4. I had re-normalize `MAG_table_RNA_to_unassembled.tsv` in Excel, such that MAG relative abundances were normalized based on the total read counts to all MAGs (instead of being based on the total number of metatranscriptome reads), as described in the methods in the paper. I also performed some simple mean/standard deviation stats on these output tables in Excel to utimately make Supplementary Data 4.
+The resulting `MAG_table_RNA_to_unassembled.tsv` became the basis for Supplementary Data 4. 
+Like mentioned in the paper, I re-normalized `MAG_table_RNA_to_unassembled.tsv` in Excel, such that MAG relative abundances 
+summed to 100% for each sample (i.e., were normalized based on the total read counts to all MAGs instead of being 
+normalized based on the total number of metatranscriptome reads for each sample).
+I also performed some simple mean/standard deviation stats on these output tables in Excel when making Supplementary Data 4.
 
 ## Generation of Figure 3
 
@@ -449,8 +489,11 @@ After production, the resulting raw PDF `Figure_3a_raw.pdf` was edited in Inksca
 ### Figure 3b (and Extended Data Fig. 7): up/down regulation of genes in the two "_Ca._ Chloroheliales" MAGs
 The Jupyter notebook, `data_viz_Fig3b/Fig_3b_plotter.ipynb`, summarizes read count normalization methods and plotting of both figures.  
 
-Input files need to be downloaded (as a `.tar.gz` file) from the Zenodo repo [using this link](https://zenodo.org/record/5131685/files/lake_survey_Ca_Chloroheliales_MAGs_info.tar.gz?download=1). The tarball should be extracted, and the contents should be saved in `data_viz_Fig3b/input_data`. You're then ready to run the Jupyter notebook.
+Input files need to be downloaded (as a `.tar.gz` file) from the Zenodo repo [using this link](https://zenodo.org/record/5131685/files/lake_survey_Ca_Chloroheliales_MAGs_info.tar.gz?download=1). 
+The tarball should be extracted, and the contents should be saved in `data_viz_Fig3b/input_data`. You're then ready to run the Jupyter notebook.
 
 The resulting raw PDFs, `Figure_3b_raw.pdf` and `Figure_ED7_raw.pdf`, are in the folder. These received minor edits via Inkscape to finalize.
 
 Data from these analyses were also summarized to make Supplementary Data 5.
+
+Done!

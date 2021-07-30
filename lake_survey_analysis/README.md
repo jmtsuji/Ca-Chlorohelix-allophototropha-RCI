@@ -40,7 +40,8 @@ echo "[$(date -u)]: Finished."
 You now have FastQ files for several of the metagenome datasets.  
 
 Unfortunately, some of the metagenomes are stored in the JGI database, and there is not a simple programmatic way to download these. 
-See `metagenome_data_accessions_jgi.tsv` for the IMG Genome IDs of each of these metagenomes, if you wish to manually download them.
+See `metagenome_data_accessions_jgi.tsv` for the IMG Genome IDs of each of these metagenomes, if you wish to manually download them. 
+In my case, when I downloaded the files, they were in interleaved FastQ format, and I had to de-interleave the FastQ files before starting ATLAS.
 
 To download the metatranscriptome data from NCBI, repeat the above code block using the `metatranscriptome_data_accessions.tsv` file 
 in place of `metagenome_data_accessions_ncbi.tsv`.
@@ -63,6 +64,16 @@ Done. Before running ATLAS, make sure to activate the environment by running `co
 
 If it is your first time using ATLAS, note that a large amount of database files will be auto-downloaded during the run.
 
+Note that I had to modify two of the ATLAS code files in order to run the samples:
+- `tree.py` had to be modified to work (parses the CheckM tree - I do not actually use the results of this in the paper, I think, but this bug had to be fixed for ATLAS to run.)
+  - Specifically, `tree.py` could not find `parsers_checkm.py` for import. This appears to be a relative filepath issue. I did a somewhat hacky fix:
+    - Copied the contents of `parsers_checkm.py` to the top of the `tree.py` file so that `parsers_checkm.py` no longer needed to be called.
+    - Removed the import statement of `parsers_checkm`
+    - Removed the `parsers_checkm` module call (and just directly called the `parsers_checkm` function) in `if __name__ == "__main__"`
+- CAT taxonomy is slow -- it would take weeks to taxonomically classify the genome bins from this study. I decided to use GTDB taxonomy instead.
+  - Thus, I disabled CAT taxonomy classification within ATLAS
+  - I made a single edit to the `Snakefile` by simply commenting out `"genomes/taxonomy/taxonomy.tsv",` under `rule genomes`.
+
 ### Process the metagenome data
 A config file and sampel ID file for the run have already been created at `lake_metagenomes/config.yaml` and `lake_metagenomes/samples.tsv`.   
 If you want to create config files for yourself, you can use the `atlas init` command as documented in the ATLAS repo.  
@@ -79,36 +90,147 @@ Start the ATLAS run
 cd lake_metagenomes
 # Notice that samples.tsv and config.yaml files are provided here
 
-atlas run -w . -c config.yaml -j 50 all --reason 2>&1 | tee atlas_run.log
+atlas run -w . -c config.yaml -j 50 all --reason --keep-going 2>&1 | tee atlas_run_part1.log
 
 cd ..
 ```
 Note this might take several weeks of computational runtime and considerable (e.g., 200 GB) RAM!! 
 If you just want the genome bins, you can skip running ATLAS yourself and just directly download the bins (see below).
 
+Note that the above ATLAS run will get you close to the end of the pipeline but will run into two errors and stop. 
+You then have to work around those errors and keep going. (These errors were fixed in subsequent versions of ATLAS.)
+
+#### Fix 1: move the genomes directory
+```
+# Issue is documented at https://github.com/metagenome-atlas/atlas/issues/231
+# ATLAS summarizes the genome bins (after dereplication) in genomes/genomes, but then it cannot recognize genomes/genomes for downstream steps
+# Thus you need to rename the genomes/genomes folder, specify the new name as a config parameter, and keep going
+
+cd lake_metagenomes
+mv genomes/genomes genomes/Genomes
+
+atlas run -w . -c config.yaml -j 50 genomes --reason --config genome_dir=genomes/Genomes 2>&1 | tee atlas_run_part2.log
+
+# genomes module is now done. Continue to the genecatalog module
+atlas run -w . -c config.yaml -j 20 genecatalog --reason 2>&1 | tee atlas_run_part3.log
+# you'll then run into the error fixed by "Fix 2" below.
+
+cd ..
+```
+
+#### Fix 2: Work around an issue in Genecatalog's `rule cluster_genes` (and related rules).  
+The rule looks for an output file that does not exist. 
+Rather than fixing the snakemake code, I instead just ran the exact commands run by ATLAS manually on the command line, then kept going.
+```
+# Activate the MMSeqs conda env created by Snakemake. Yours might be in a different location.
+# You can find it by going to the `conda_envs` folder within your ATLAS database directory and searching for which of the .yaml files mentions MMSeqs
+# Then, to get the path of that conda env, just use the path to the .yaml file without the .yaml suffix.
+# i.e., in my case, the correct environment was specified by /Data/reference_databases/atlas/2.1.x/conda_envs/d5bf8789.yaml, so I ran:
+conda activate /Data/reference_databases/atlas/2.1.x/conda_envs/d5bf8789
+
+cd lake_metagenomes
+
+### Step 1: manually finish `rule cluster_genes`
+mmseqs createdb Genecatalog/all_genes/predicted_genes.faa Genecatalog/all_genes/predicted_genes.db \
+  > >(tee  logs/Genecatalog/clustering/cluster_proteins.log)
+
+mkdir -p atlas_tmp/mmseqs
+
+mmseqs linclust -c 0.9 \
+  --min-seq-id 0.99 \
+  --threads 20 Genecatalog/all_genes/predicted_genes.db Genecatalog/clustering/protein_clusters.db \
+  atlas_tmp \
+  > >(tee -a  logs/Genecatalog/clustering/cluster_proteins.log)
+
+rm -fr  atlas_tmp \
+  > >(tee -a  logs/Genecatalog/clustering/cluster_proteins.log)
+
+
+### Step 2: manually finish `rule get_rep_proteins`
+mmseqs createtsv Genecatalog/all_genes/predicted_genes.db \
+  Genecatalog/all_genes/predicted_genes.db \
+  Genecatalog/clustering/protein_clusters.db \
+  Genecatalog/orf2gene_oldnames.tsv  > >(tee   logs/Genecatalog/clustering/get_rep_proteins.log)
+
+mmseqs result2repseq Genecatalog/all_genes/predicted_genes.db Genecatalog/clustering/protein_clusters.db \
+  Genecatalog/protein_catalog.db  > >(tee -a  logs/Genecatalog/clustering/get_rep_proteins.log)
+
+mmseqs result2flat Genecatalog/all_genes/predicted_genes.db Genecatalog/all_genes/predicted_genes.db \
+  Genecatalog/protein_catalog.db Genecatalog/representatives_of_clusters.fasta  \
+  > >(tee -a  logs/Genecatalog/clustering/get_rep_proteins.log)
+
+
+### Step 3: manually finish `rule rename_protein_catalog`
+# Switch back to the main conda env for ATLAS
+conda activate atlas_2.1.4
+
+## Then start python
+python
+
+#####################
+## Within python, run:
+import pandas as pd
+
+# From utils.py
+def gen_names_for_range(N,prefix='',start=1):
+    """generates a range of IDS with leading zeros so sorting will be ok"""
+    n_leading_zeros= len(str(N))
+    format_int=prefix+'{:0'+str(n_leading_zeros)+'d}'
+    return [format_int.format(i) for i in range(start,N+start)]
+
+gene2proteins= pd.read_csv("Genecatalog/orf2gene_oldnames.tsv", index_col=1, header=None,sep='\t')
+protein_clusters_old_names= gene2proteins[0].unique()
+map_names = dict(zip(protein_clusters_old_names, gen_names_for_range(len(protein_clusters_old_names),'Gene')))
+gene2proteins['Gene'] = gene2proteins[0].map(map_names)
+gene2proteins.index.name='ORF'
+gene2proteins['Gene'].to_csv("Genecatalog/clustering/orf2gene.tsv",sep='\t',header=True)
+exit()
+#####################
+
+### Step 4: Final post-run cleanup
+rm Genecatalog/orf2gene_oldnames.tsv
+rm Genecatalog/all_genes/predicted_genes.db*
+rm Genecatalog/clustering/protein_clusters.db.*
+rm Genecatalog/protein_catalog.db.*
+
+### Step 5: Resume ATLAS and finish the analysis
+atlas run -w . -c config.yaml -j 20 genecatalog --reason 2>&1 | tee atlas_run_part4.log
+
+# Final cleanup
+rm Genecatalog/representatives_of_clusters.fasta
+```
+All done! (Whew.) You should have a complete ATLAS run now.
+
+#### Taxonomy classification
 Run the GTDB taxonomy classifier on the samples after completing the ATLAS run:
+
+Install:
 ```bash
+# Install the GTDB classifier via conda
+# Using GTDBTk `v0.3.2`, database release 89
+# Note that the DB download will take some time!
+
 TODO
-# Install via conda
-
-# Run to classify genome bins
 ```
 
+Run:
+```bash
+atlas_dir="lake_metagenomes"
+genome_dir="${atlas_dir}/genomes/Genomes"
+out_dir="${atlas_dir}/genomes/taxonomy_gtdbtk"
+genome_extension=fasta
+output_prefix=gtdbtk
+min_percent_aa=10 # 10 is the default
+threads=40
 
-### Notes from my ATLAS runs
-The above command (i.e., a single `atlas run` command) is a simplified version of how ATLAS was actually run when analyzing the data for this paper. 
-When working on this paper, the ATLAS analysis was actually spread across several different ATLAS run attempts rather than run in a single ATLAS 
-command. For transparency's sake, here are a few major notes from those ATLAS runs:
-
-```
-- In actuality, I ran the QC and assembly modules of ATLAS in several batches as different metagenomes became available. Then combined all runs to perform the subsequent steps in the pipeline such as genome binning.
-- Ran JGI metagenomes in `interleaved` mode for the QC portion of the pipeline
-- Had to manually generate the read counts of each metagenome file following QC. Sometimes the read counts file failed to generate because of how I specified the ATLAS rules.
-- ATLAS 2.1.4 had an error where the 'genomes/genomes' output folder could not be recognized as input to subsequent post-dereplication steps in the pipeine. I changed the name to 'genome/Genomes' and updated the genome directory specifier in the config file to get around this issue.
-
-CONFIRM:
-- I wonder if I actually fixed the read counts issue??
-- Were some assembled using a different assembler?
+mkdir -p "${out_dir}"
+gtdbtk classify_wf \
+   --genome_dir "${genome_dir}" \
+   --out_dir "${out_dir}" \
+   -x ${genome_extension} \
+   --min_perc_aa ${min_percent_aa} \
+   --prefix ${output_prefix} \
+   --cpus ${threads}
 ```
 
 ### Output summary
@@ -128,10 +250,10 @@ To generate Supplementary Data 3 with the relative abundances of the MAGs, I ran
 cd lake_metagenomes/summary`
 git clone https://github.com/jmtsuji/atlas2-helpers
 cd atlas2-helpers
-git checkout ______TODO____
+git checkout f461ba3
 cd ..
 
-conda create pandas python=3.6 pandas=0.24 # TODO - check versions
+conda create pandas python=3.6 pandas=0.24
 conda activate pandas
 
 # CheckM and GTDB files are the same as used for metagenomes
@@ -142,6 +264,22 @@ atlas2-helpers/scripts/generate_MAG_table.py \
   -t gtdbtk.bac120.summary.tsv gtdbtk.ar122.summary.tsv \
   -c completeness_checkm.tsv \
   2>&1 | tee MAG_table_DNA_to_assembled.tsv
+```
+
+TODO - integrate with above (check log files)
+```bash
+# Normalized to unassmembled reads, using GTDB taxonomy
+generate_MAG_table.py -o MAG_table_to_unassembled.tsv -a ${atlas_dir} \
+-T ${atlas_dir}/genomes/taxonomy_gtdbtk/gtdbtk.bac120.summary.tsv \
+${atlas_dir}/genomes/taxonomy_gtdbtk/gtdbtk.ar122.summary.tsv \
+2>&1 | tee MAG_table_to_unassembled.log
+
+# Normalized to assembled reads, using GTDB taxonomy
+generate_MAG_table.py -o MAG_table_to_assembled.tsv -a ${atlas_dir} \
+-T ${atlas_dir}/genomes/taxonomy_gtdbtk/gtdbtk.bac120.summary.tsv \
+${atlas_dir}/genomes/taxonomy_gtdbtk/gtdbtk.ar122.summary.tsv \
+-R ${atlas_dir}/stats/combined_contig_stats.tsv \
+2>&1 | tee MAG_table_to_assembled.log
 ```
 
 
@@ -192,6 +330,11 @@ git checkout 96e47df
 cd ..
 ```
 
+One more typo needs to be fixed in the code in order for it to run. 
+There is a hanging bracket that needs to be replaced with a comma in line 239 of `atlas/Snakefile` 
+(i.e., `"feature_counts":"genomes/expression/gene_counts.tsv"}` should be changed to `"feature_counts":"genomes/expression/gene_counts.tsv",`). 
+This issue is fixed in the subsequent commit `001e417`, which you are welcome to use in place of `96e47df` if you'd like.
+
 Then, perform RNA read mapping. Note that we will use the same config.yaml and samples.tsv files as the first step. As one important point, one variable in the config file, `genome_dir`, points to the location of the MAGs generated in the lake metagenome analysis above. It has been set in the config file to `../lake_metagenomes/genomes/Genomes`, but you might need to change this if you've put the MAGs in a different directory. I am also not sure if the relative path will work here in the config file; I used an absolute path in reality when running this code, but I changed it to relative here so that filepaths are kept contained within the Github repo.
 ```bash
 # Activate the environment by running:
@@ -219,10 +362,46 @@ What's going on under the hood here:
 ### Run notes
 The above ATLAS code is a streamlined version of the code that was used to analyze the data. Here I note a few important points about the actual data analysis that was performed:
 
+- The QC read counts to each metatranscriptome failed to generate during the ATLAS run, like was mentioned above for the metagenome ATLAS run. I counted the number of QC reads for each metatranscriptome after the ATLAS run and then created a `read_counts_QC.tsv` file with format matching the typical report file output by ATLAS. If you run the commands like shown above, though, you should generate `read_counts.tsv` without issue.
+- The `raw_counts_genomes.tsv` file also not auto-generated as part of the maprna rule. I manually generated that by summarizing the mapped reads against each contig using the BAM files output by ATLAS and then summing those counts for the MAGs those contigs belonged to. Specifically, I ran the following code:
+
+```bash
+cd lake_metatranscriptomes/genomes/alignments
+mkdir -p summarize_genome_counts
+
+printf "count\tcontig-id\trep-id\n" > summarize_genome_counts/L221_L304_RNA_read_counts_contigs.tsv
+
+alignment_files=(Jun2018_L221_05m_A.bam Jun2018_L221_05m_B.bam Jun2018_L221_05m_C.bam 
+Jun2018_L304_06m_A.bam Jun2018_L304_06m_B.bam Jun2018_L304_06m_C.bam
+Sep2017_L227_04m_A.bam Sep2017_L227_04m_B.bam Sep2017_L227_04m_C.bam)
+
+for alignment_file in ${alignment_files[@]}; do
+  echo "${alignment_file}"
+  
+  samtools view "${alignment_file}" | \
+    cut -f 3 | \
+    uniq -c | \
+    sed "s/^ \+//g" | \
+    sed "s/$/ ${alignment_file%.bam}/g" | \
+    tr -s ' ' $'\t' \
+    > summarize_genome_counts/${alignment_file%.bam}_contig_counts.tsv
+    
+  cat summarize_genome_counts/${alignment_file%.bam}_contig_counts.tsv >> summarize_genome_counts/read_counts_contigs.tsv
+    
+done
 ```
-- The QC read counts to each metatranscriptome failed to generate during the ATLAS run, like was mentioned above for the metagenome ATLAS run. I counted the number of QC reads for each metatranscriptome after the ATLAS run and then created a `read_counts_QC.tsv` file with format matching the typical report file output by ATLAS
-- The `raw_counts_genomes.tsv` file also did not generate because of how I specified the maprna rule. I manually generated that by summarizing the mapped reads against each contig using the BAM files output by ATLAS and then summing those counts for the MAGs those contigs belonged to.
+
+The output file `read_counts_contigs.tsv` has a format like:
 ```
+count	contig-id	rep-id
+538	MAG001_40	Jun2018_L221_05m_A
+2	MAG001_73	Jun2018_L221_05m_A
+12	MAG001_121	Jun2018_L221_05m_A
+```
+Where `count` is the number of mapped reads to a contig. Thankfully, ATLAS labels all contigs by the MAG ID, then an underscore, then the contig ID. 
+This makes it easy to convert this file into total RNA counts per genome. 
+I implement this conversion in the iPython notebook `generate_raw_counts_genomes.ipynb`, which is included in the `summary` folder along with `read_counts_contigs.tsv.gz` (gzipped for space savings).
+
 
 ### Output summary
 I included a few raw output files in the `lake_metatranscriptomes/summary` folder for reference and to show how the run stats were calculated (below):

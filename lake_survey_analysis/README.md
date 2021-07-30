@@ -435,6 +435,9 @@ Where `count` is the number of mapped reads to a contig. Thankfully, ATLAS label
 This makes it easy to convert this file into total RNA counts per genome. 
 I implement this conversion in the iPython notebook `generate_raw_counts_genomes.ipynb`, which is included in the `summary` folder along with `read_counts_contigs.tsv.gz` (gzipped for space savings).
 
+(Note: in reality the L227 samples were processed independently from the 221/304 samples here, and the resulting `raw_counts_genomes.tsv` tables 
+were merged, but everything is summarized a single code block here for simplicity (should not change the result).)
+
 With these files in place, you are now ready for all downstream statistics work.
 
 ### ATLAS output summary

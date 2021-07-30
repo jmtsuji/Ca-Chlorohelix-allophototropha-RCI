@@ -141,7 +141,7 @@ maximum_counted_map_sites: 10
 ########################
 # Binning
 ########################
-genome_dir: /Analysis/jmtsuji/Documents/02_Active_workfolders/49_190205_DNAseq_ELA1718_analysis/07_atlas_2.1.4_vs1a/02a_run_01/genomes/Genomes
+genome_dir: ../lake_metagenomes/genomes/Genomes
 
 
 final_binner: DASTool             # [DASTool or one of the binner, e.g. maxbin]

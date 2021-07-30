@@ -1,6 +1,6 @@
 # Comparative genomics
 Part of the larger '_Ca._ Chlorohelix allophototropha' Type I reaction center paper  
-Copyright Jackson M. Tsuji, Neufeld Research Group, 2020
+Copyright Jackson M. Tsuji, Neufeld Research Group, 2021
 
 **NOTE: for each code section provided below, the code ought to be run from within this `comparative_genomics` directory.**
 
@@ -219,8 +219,8 @@ backblast generate_heatmap \
   -w 400 -z 250 \
   ${tree_filepath} \
   ${output_dir}/blast_tables_combined.csv \
-  ${output_dir}/Figure_03_raw_Blues.pdf 2>&1 | \
-  tee ${output_dir}/Figure_03_raw_Blues.log
+  ${output_dir}/Figure_02_raw_Blues.pdf 2>&1 | \
+  tee ${output_dir}/Figure_02_raw_Blues.log
 ```
 
 ### Custom plots
@@ -250,16 +250,16 @@ for pal in ${palettes[@]}; do
     -w 400 -z 250 \
     ${tree_filepath} \
     ${output_dir}/blast_tables_combined.csv \
-    ${output_dir}/Figure_03_raw_${pal}.pdf 2>&1 | \
-    tee ${output_dir}/Figure_03_raw_${pal}.log
+    ${output_dir}/Figure_02_raw_${pal}.pdf 2>&1 | \
+    tee ${output_dir}/Figure_02_raw_${pal}.log
 done
 
 # Restore the original script
 mv "${heatmap_script}.backup" "${heatmap_script}"
 ```
 
-The four raw plots (Blues, Purples, Greens, Oranges) are then manually combined to produce Figure 3. 
-The `blast_tables_combined.csv` file is modified to produce Supplementary Data 3.
+The four raw plots (Blues, Purples, Greens, Oranges) are then manually combined to produce Fig. 2. 
+The `blast_tables_combined.csv` file is modified to produce Supplementary Data 2.
 
 ## Alignments and phylogenies of photosynthesis-associated genes
 In reality, I scanned the downloaded genomes above (in `genomes_by_category`) via BackBLAST to search for the genes of interest. 
@@ -343,7 +343,7 @@ iqtree -s "${run_name}_aligned.faa" -nt ${threads} -pre "phylogeny_unmasked/${ru
 
 cd ../..
 ```
-The resuting tree file `PSI_RCI_aligned_masked.treefile` is plotted in Figure 2b and Extended Data Figure 2.
+The resuting tree file `PSI_RCI_aligned_masked.treefile` is plotted in Fig. 1b and Extended Data Fig. 2.
 
 ### FMO protein
 A set of 30 FMO sequences were used for the phylogeny; accessions are summarized in `FmoA_accessions.tsv`.
@@ -418,7 +418,7 @@ iqtree -s "${run_name}_aligned.faa" -nt ${threads} -pre "phylogeny_unmasked/${ru
 
 cd ../..
 ```
-The resuting tree file `FmoA_aligned_masked.treefile` is plotted in Extended Data Figure 3.
+The resuting tree file `FmoA_aligned_masked.treefile` is plotted in Extended Data Fig. 4.
 
 ### Chlorosom protein (CsmA)
 A set of 41 CsmA sequences were used for the phylogeny; accessions are summarized in `CsmA_accessions.tsv`.
@@ -493,8 +493,8 @@ iqtree -s "${run_name}_aligned.faa" -nt ${threads} -pre "phylogeny_unmasked/${ru
 
 cd ../..
 ```
-The resuting tree file `CsmA_aligned_masked.treefile` is plotted in Extended Data Figure 8, and the multiple sequence alignment is shown 
-in Extended Data Figure 4.
+The resuting tree file `CsmA_aligned_masked.treefile` is plotted in Extended Data Fig. 8, and the multiple sequence alignment is shown 
+in Extended Data Fig. 5.
 
 I also summarized the phylogenetic distances between the taxa in this phylogeny using the provided R script `CsmA_distances.R`.
 
@@ -565,7 +565,7 @@ iqtree -s "${run_name}_aligned.faa" -nt ${threads} -pre "phylogeny_unmasked/${ru
 
 cd ../..
 ```
-The resulting tree file `CbbL_aligned_masked.treefile` is plotted in Extended Data Figure 5. Note that I realized after producing this phylogeny that 
+The resulting tree file `CbbL_aligned_masked.treefile` is plotted in Extended Data Fig. 6. Note that I realized after producing this phylogeny that 
 three pairs of sequences (between the reference genome set and the gene set derived from Tabita and colleagues, 2008) in the Group III CbbL set had 
 been duplicated: the CbbL sequences of _Hyperthermus butylicus_, _Methanocaldococcus jannaschii_, and _Archaeoglobus fulgidus_. I collapsed those 
 three branches into single nodes when producing the final figure for clarity.
@@ -674,7 +674,7 @@ cp "phylogeny/${run_name}_aligned_masked.treefile" .
 
 cd ../..
 ```
-The resuting tree file `BchIDH_aligned_masked.treefile` is plotted in Extended Data Figure 6.
+The resuting tree file `BchIDH_aligned_masked.treefile` is plotted in Extended Data Fig. 9..
 
 ### BchLNB/BchXYZ
 This is the most complex phylogeny. BchX/L, BchN/Y, and BchB/Z will be co-aligned, and then those files will be concatenated to produce the final figure.
@@ -820,10 +820,10 @@ cp "phylogeny/${run_name}_aligned_masked.treefile" .
 
 cd ../..
 ```
-The resuting tree file `BchLNB_XYZ_aligned_masked.treefile` is plotted in Extended Data Figure 7.
+The resuting tree file `BchLNB_XYZ_aligned_masked.treefile` is plotted in Extended Data Fig. 10.
 
 ## Annotree GTDB visualization
 From the Annotree website, I exported a phylogeny of the Genome Tree Database, release 89, summarized to the class level, for an overview of 
 the tree of life. The raw SVG is available in `annotree/annotree_GTDB_r89_class_raw.svg`.
 
-This raw SVG was edited to produce Figure 2a.
+This raw SVG was edited to produce Fig. 1a.

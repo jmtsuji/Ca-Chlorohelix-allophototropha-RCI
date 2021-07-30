@@ -33,9 +33,9 @@ of the _Chloroflexota_ phlylum.
   - Used to produce Fig. 3, Extended Data Fig. 7, and Supplementary Data 3-5
 
 In addition, summary folders contain data of particular relevance to readers:
-- The `data_presentations` folder contains the individual tables and figures (vector format where possible) that are 
-included in the manuscript, and
+- The `data_presentations` folder contains the individual tables and figures (vector format where possible) that are included in the manuscript. 
 - The `supplementary_files` folder contains Suppementary Data summaries that are referenced in the manuscript (such as ASV tables and raw results of bidirectional BLASTP).
+  - **You can also look here for directions on where to find key sequence alignments or structural models you might be interested in.**
 
 ## How to use this repo
 Each of the four subfolders above contains a README file with the code used to analyze the data. Key intermediate files are included in folders 

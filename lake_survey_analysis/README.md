@@ -225,7 +225,7 @@ I used GTDBTk version `0.3.2` with database release 89, which can be installed a
 # Using GTDBTk `v0.3.2`, database release 89
 # Note that the DB download will take some time!
 
-conda create -n gtdbtk_0.3.2 -c bioconda -c conda-forge gtdbtk=0.3.2
+conda create -n gtdbtk_0.3.2 -c bioconda gtdbtk=0.3.2
 conda activate gtdbtk_0.3.2
 
 # Download the GTDBTk database, release 89

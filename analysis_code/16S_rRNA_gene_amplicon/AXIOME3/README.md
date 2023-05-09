@@ -4,41 +4,6 @@ Copyright Jackson M. Tsuji, Neufeld Research Group, 2021
 
 **NOTE: for each code section provided below, the code ought to be run from within this `16S_rRNA_gene_amplicon_analysis` directory.**
 
-## Data download
-You can download the data using the provided TSV file by running the following code in Bash in your working folder:
-
-```bash
-accession_data_filepath="16S_rRNA_gene_data_accessions.tsv"
-output_dir="downloads"
-
-mkdir -p "${output_dir}"
-
-# Read selected table columns
-sample_ids=($(cat "${accession_data_filepath}" | cut -f 2 | tail -n +2))
-r1_urls=($(cat "${accession_data_filepath}" | cut -f 6 | tail -n +2))
-r2_urls=($(cat "${accession_data_filepath}" | cut -f 7 | tail -n +2))
-
-# Iternatively download the FastQ files
-for i in $(seq 1 ${#sample_ids[@]}); do
-  # Make a zero-ordered counter
-  j=$((${i}-1))
-
-  # Get variables
-  sample_id=${sample_ids[${j}]}
-  r1_url=${r1_urls[${j}]}
-  r2_url=${r2_urls[${j}]}
-
-  # Download
-  echo "[$(date -u)]: Downloading '${sample_id}'"
-  wget -O "${output_dir}/${sample_id}_R1.fastq.gz" "${r1_url}"
-  wget -O "${output_dir}/${sample_id}_R2.fastq.gz" "${r2_url}"
-done
-
-echo "[$(date -u)]: Finished."
-```
-
-You now have FastQ files for the two datasets.
-
 ## Install AXIOME3
 [AXIOME3](https://github.com/neufeld/axiome3) is a convenient workflow for analyzing gene amplicon sequencing data using QIIME2.  
 

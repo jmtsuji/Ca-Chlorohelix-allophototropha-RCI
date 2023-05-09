@@ -55,6 +55,8 @@ A few other genomes were also collected manually from various databases:
 - Chloranaerofilum_corporosum_YNP-MS-B-OTU-15 -- from RAST
 - Roseilinea_gracile_YNP-MS-B-OTU-6 -- from RAST
 - Chlorothrix_halophila -- from the JGI GOLD database
+- "Ca. Vulcanimicrobium alpinus" WC8-2 -- from NCBI Genbank (no assemby entry): see https://www.ncbi.nlm.nih.gov/nuccore/AP025523.1
+  - This was later made available under the NCBI assembly accession GCA_027923555.1 (so it can be downloaded like standard NCBI entries in future)
 
 For _Chlorothrix halophila_, I had to export the contigs only and then predict the genes manually, using prokka 1.13.3 with default 
 settings with respect to gene prediction.
@@ -674,15 +676,15 @@ cp "phylogeny/${run_name}_aligned_masked.treefile" .
 
 cd ../..
 ```
-The resuting tree file `BchIDH_aligned_masked.treefile` is plotted in Extended Data Fig. 9..
+The resuting tree file `BchIDH_aligned_masked.treefile` is plotted in Extended Data Fig. 9.
 
-### BchLNB/BchXYZ
-This is the most complex phylogeny. BchX/L, BchN/Y, and BchB/Z will be co-aligned, and then those files will be concatenated to produce the final figure.
+### BchLNB concatenated primary sequence phylogeny
+A set of 90 groups of three BchLNB sequences were used for the phylogeny; accessions are summarized in `BchLNB_accessions.tsv`.
 
-Download the sequences:
+Download the sequences:  
 ```bash
-run_name="BchLNB_XYZ"
-gene_list=(BchL BchN BchB BchX BchY BchZ)
+run_name="BchLNB"
+gene_list=(BchL BchN BchB)
 
 # **MANUALLY enter your NCBI API key here to ensure your download is faster and less interrupted:
 # API_KEY=[INSERT_HERE]
@@ -727,12 +729,12 @@ done
 cd ../..
 ```
 
-Align, mask, and make the phylogenies for each of BchL, BchN, BchB, BchX, BchY, and BchZ:
+Align, mask, and make the phylogenies for each of BchL, BchN, and BchB:
 ```bash
 # User variables
 threads=10
-run_name="BchLNB_XYZ"
-gene_list=(BchL BchN BchB BchX BchY BchZ)
+run_name="BchLNB"
+gene_list=(BchL BchN BchB)
 
 cd "alignments_and_phylogenies/${run_name}"
 
@@ -764,52 +766,11 @@ done
 cd ../..
 ```
 
-Appended BchL+X, BchN+Y, and BchB+Z, then re-aligned, masked, and made phylogenies
-```bash
-# User variables
-threads=10
-run_name="BchLNB_XYZ"
-gene_list=(BchLX BchNY BchBZ)
-
-cat BchL/BchL_renamed.faa BchX/BchX_renamed.faa > BchLX/BchLX_renamed.faa
-cat BchN/BchN_renamed.faa BchY/BchY_renamed.faa > BchNY/BchNY_renamed.faa
-cat BchB/BchB_renamed.faa BchZ/BchZ_renamed.faa > BchBZ/BchBZ_renamed.faa
-
-cd "alignments_and_phylogenies/${run_name}"
-
-for gene in ${gene_list[@]}; do
-
-# Tree generation below is not needed per se, but I generated them anyway and checked them manually against the final concatenated tree for reference.
-
-echo "[ $(date -u) ]: Working on gene ${gene}"
-
-  # Align using Clustal Omega v.1.2.3
-  clustalo -i "${gene}/${gene}_renamed.faa" -o "${gene}/${gene}_aligned.faa" --threads=${threads} -v -v 2>&1 | tee "${gene}/${gene}_aligned.log"
-
-  # Mask using Gblocks v0.91b
-  Gblocks "${gene}/${gene}_aligned.faa" -t=p -b3=40 -b4=4 -b5=h -e=_GB01 \
-    2>&1 | tee "${gene}/${gene}_aligned_masked.log"
-  mv "${gene}/${gene}_aligned.faa_GB01" "${gene}/${gene}_aligned_masked.faa"
-
-  # Made maximum likelihood phylogeny using IQ-TREE v1.6.11
-  mkdir -p "${gene}/phylogeny"
-  iqtree -s "${gene}/${gene}_aligned_masked.faa" -nt ${threads} -pre "${gene}/phylogeny/${gene}_aligned_masked" -bb 1000 -m TEST
-  cp "${gene}/phylogeny/${gene}_aligned_masked.treefile" .
-
-  # Supplement: try tree again with no mask for comparison
-  mkdir -p "${gene}/phylogeny_unmasked"
-  iqtree -s "${gene}/${gene}_aligned.faa" -nt ${threads} -pre "${gene}/phylogeny_unmasked/${gene}_aligned" -bb 1000 -m TEST
-
-done
-
-cd ../..
-```
-
-Concatenated the multiple sequence alignments into a single alignment via `concatenate_alignment_BchLNB_XYZ.ipynb`, which was run in a Jupyter notebook. Ran this code to produce `${run_name}_aligned_masked.faa`.  
+Concatenated the multiple sequence alignments into a single alignment via `concatenate_alignment_BchLNB.ipynb`, which was run in a Jupyter notebook. Ran this code to produce `${run_name}_aligned_masked.faa`.  
 
 Then built a tree from this concatenated alignment:
 ```bash
-run_name="BchLNB_XYZ"
+run_name="BchLNB"
 cd "alignments_and_phylogenies/${run_name}"
 threads=26
 
@@ -820,7 +781,112 @@ cp "phylogeny/${run_name}_aligned_masked.treefile" .
 
 cd ../..
 ```
-The resuting tree file `BchLNB_XYZ_aligned_masked.treefile` is plotted in Extended Data Fig. 10.
+The resuting tree file `BchLNB_aligned_masked.treefile` is plotted in Extended Data Fig. 10.
+
+### BchXYZ concatenated primary sequence phylogeny
+A set of 67 groups of three BchXYZ sequences were used for the phylogeny; accessions are summarized in `BchXYZ_accessions.tsv`.
+
+Download the sequences:  
+```bash
+run_name="BchXYZ"
+gene_list=(BchX BchY BchZ)
+
+# **MANUALLY enter your NCBI API key here to ensure your download is faster and less interrupted:
+# API_KEY=[INSERT_HERE]
+
+cd "alignments_and_phylogenies/${run_name}"
+
+for gene in ${gene_list[@]}; do
+
+  # Make a file specific for those hits
+  mkdir -p "${gene}"
+  head -n 1 "${run_name}_accessions.tsv" > "${gene}/${gene}_accessions.tsv"
+  grep "^${gene}" "${run_name}_accessions.tsv" >> "${gene}/${gene}_accessions.tsv"
+
+  # Summarize gene hits
+  filenames=($(cut -f 1 "${gene}/${gene}_accessions.tsv" | tail -n +2))
+  accessions=($(cut -f 2 "${gene}/${gene}_accessions.tsv" | tail -n +2))
+
+  output_filepath_1="${gene}/${gene}_raw.faa"
+  output_filepath_2="${gene}/${gene}_renamed.faa"
+  printf "" > "${output_filepath_1}"
+  printf "" > "${output_filepath_2}"
+
+  # You'll need to instal seqtk; I used version 1.3-r106
+  # conda create -n seqtk -c bioconda seqtk=1.3
+  # conda activate seqtk
+
+  for i in $(seq 1 ${#filenames[@]}); do
+    j=$((${i}-1))
+    file=${filenames[${j}]}
+    acc=${accessions[${j}]}
+    echo "[ $(date -u) ]: ${file}: ${acc}"
+  
+    # If you don't want to use an API key, then just remove the '&api_key=${API_KEY}' part of the URL below.
+    url="https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=protein&id=${acc}&rettype=fasta&retmode=text&api_key=${API_KEY}"
+    echo "[ $(date -u) ]: ${gene}: ${file}: ${url}"
+  
+    wget -nv -O - "${url}" | seqtk seq | tee -a "${output_filepath_1}" | sed -e "1s/^>.*$/>${file}__${acc}/g" >> "${output_filepath_2}"
+  done
+  
+done
+
+cd ../..
+```
+
+Align, mask, and make the phylogenies for each of BchX, BchY, and BchZ:
+```bash
+# User variables
+threads=10
+run_name="BchXYZ"
+gene_list=(BchX BchY BchZ)
+
+cd "alignments_and_phylogenies/${run_name}"
+
+for gene in ${gene_list[@]}; do
+
+# Tree generation below is not needed per se, but I generated them anyway and checked them manually against the final concatenated tree for reference.
+
+echo "[ $(date -u) ]: Working on gene ${gene}"
+
+  # Align using Clustal Omega v.1.2.3
+  clustalo -i "${gene}/${gene}_renamed.faa" -o "${gene}/${gene}_aligned.faa" --threads=${threads} -v -v 2>&1 | tee "${gene}/${gene}_aligned.log"
+
+  # Mask using Gblocks v0.91b
+  Gblocks "${gene}/${gene}_aligned.faa" -t=p -b3=40 -b4=4 -b5=h -e=_GB01 \
+    2>&1 | tee "${gene}/${gene}_aligned_masked.log"
+  mv "${gene}/${gene}_aligned.faa_GB01" "${gene}/${gene}_aligned_masked.faa"
+
+  # Made maximum likelihood phylogeny using IQ-TREE v1.6.11
+  mkdir -p "${gene}/phylogeny"
+  iqtree -s "${gene}/${gene}_aligned_masked.faa" -nt ${threads} -pre "${gene}/phylogeny/${gene}_aligned_masked" -bb 1000 -m TEST
+  cp "${gene}/phylogeny/${gene}_aligned_masked.treefile" .
+
+  # Supplement: try tree again with no mask for comparison
+  mkdir -p "${gene}/phylogeny_unmasked"
+  iqtree -s "${gene}/${gene}_aligned.faa" -nt ${threads} -pre "${gene}/phylogeny_unmasked/${gene}_aligned" -bb 1000 -m TEST
+
+done
+
+cd ../..
+```
+
+Concatenated the multiple sequence alignments into a single alignment via `concatenate_alignment_BchXYZ.ipynb`, which was run in a Jupyter notebook. Ran this code to produce `${run_name}_aligned_masked.faa`.  
+
+Then built a tree from this concatenated alignment:
+```bash
+run_name="BchXYZ"
+cd "alignments_and_phylogenies/${run_name}"
+threads=26
+
+# Made maximum likelihood phylogeny using IQ-TREE v1.6.11
+mkdir -p "phylogeny"
+iqtree -s "${run_name}_aligned_masked.faa" -nt ${threads} -pre "phylogeny/${run_name}_aligned_masked" -bb 1000 -m TEST
+cp "phylogeny/${run_name}_aligned_masked.treefile" .
+
+cd ../..
+```
+The resuting tree file `BchXYZ_aligned_masked.treefile` is plotted in Extended Data Fig. 10.
 
 ## Annotree GTDB visualization
 From the Annotree website, I exported a phylogeny of the Genome Tree Database, release 89, summarized to the class level, for an overview of 

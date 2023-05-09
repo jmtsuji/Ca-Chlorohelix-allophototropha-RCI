@@ -49,19 +49,29 @@ done
 ```
 
 ### Summarized genomes of interest not available on NCBI
-Manually added the two '_Ca_. Chloroheliales' bins mentioned in the `genome_bin_analysis` folder.
-
 A few other genomes were also collected manually from various databases:
-- Chloranaerofilum_corporosum_YNP-MS-B-OTU-15 -- from RAST
-- Roseilinea_gracile_YNP-MS-B-OTU-6 -- from RAST
-- Chlorothrix_halophila -- from the JGI GOLD database
-- "Ca. Vulcanimicrobium alpinus" WC8-2 -- from NCBI Genbank (no assemby entry): see https://www.ncbi.nlm.nih.gov/nuccore/AP025523.1
+- `Chloranaerofilum_corporosum_YNP-MS-B-OTU-15` -- from RAST
+- `Roseilinea_gracile_YNP-MS-B-OTU-6` -- from RAST
+- `Chlorothrix_halophila` -- from the JGI GOLD database
+- `Vulcanimicrobium_alpinus_WC8-2` -- from NCBI Genbank (no assemby entry): see https://www.ncbi.nlm.nih.gov/nuccore/AP025523.1
   - This was later made available under the NCBI assembly accession GCA_027923555.1 (so it can be downloaded like standard NCBI entries in future)
 
 For _Chlorothrix halophila_, I had to export the contigs only and then predict the genes manually, using prokka 1.13.3 with default 
 settings with respect to gene prediction.
 
 Save unzipped files in `downloads/genome_collection/manual_downloads` with the extension `.faa` for the code below to work.
+
+### Summarized Ca. Chloroheliales genomes
+These genomes were prepared as part of this specific study. Get the predicted amino acid files:
+
+- `Ca_Chx_allophototropha_L227-S17`: using the PGAP annotated version of the complete genome
+
+- `Ca_Chloroheliaceae_bin_L227_5C`: using the PGAP annotated version of the manually curated genome bin
+  - Note: this genome can now also be downloaded from NCBI assembly accession `GCA_013390945.1`
+
+TODO: in future, point to how to download the L227-S17 genome from here.
+
+As above, save unzipped files in `downloads/genome_collection/manual_downloads` with the extension `.faa` for the code below to work.
 
 ### Made full summary directory with ORF predictions only
 Then combined into the same directory:

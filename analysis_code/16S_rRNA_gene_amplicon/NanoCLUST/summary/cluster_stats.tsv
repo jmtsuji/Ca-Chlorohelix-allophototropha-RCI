@@ -1,0 +1,9 @@
+sample	reads_in_cluster	reads_in_cluster	reads_in_cluster	reads_in_cluster	cluster_count	cluster_count	cluster_count	cluster_count
+	raw	cutadapt	otu_clustering	chimera_removal	raw	cutadapt	otu_clustering	chimera_removal
+20211112_barcode21	28321	28321	28321	28321	3	3	1	1
+20220216_barcode08	54451	54424	54424	53805	13	12	9	2
+20220216_barcode11	51861	51804	51804	50792	13	12	10	2
+20220216_barcode12	61995	61971	61971	61971	6	5	4	4
+20220216_barcode13	67120	66675	66675	65971	14	13	8	2
+20220216_barcode14	63787	63787	63787	63787	2	2	2	2
+20221116_barcode08	17411	17398	17398	17398	5	4	1	1

@@ -34,7 +34,7 @@ conda env create --name axiome3_1ec1ea6 --file conda_env_file/qiime2-2019.10_AXI
 Done. Before running AXIOME3, make sure to activate the environment by running `conda activate axiome3_1ec1ea6`.
 
 ### Get the data
-TODO
+See the `source_data` directory, specifically `culture_early_16S_rRNA_gene_data_accessions.tsv`, for download details (along with the README).
 
 ### Analyze the data
 Analysis is done within the AXIOME3 folder cloned from Github above (a subfolder of the main `AXIOME3` directory).
@@ -75,33 +75,28 @@ Once finished, the ASV table will be available at `AXIOME3/AXIOME3/output/export
 Code will be run within the `direct_QIIME2` directory.
 
 ### Get the data
-Data files will be made available online at BioProject ___TODO___ before the paper is published.
+Data files will be made available online at BioProject PRJNA640240 before the paper is published.
 
 TODO - add download instructions once publicly available.
 
-Got FastQ files
-```bash
-mdkir -p "input"
-```
-Put files `Chx_S21.2c_R1.fastq.gz` and `Chx_S21.2c_R2.fastq.gz` here.
+After download, put files `Chx_S21.2c_R1.fastq.gz` and `Chx_S21.2c_R2.fastq.gz` here.
 
 ### Analyze with QIIME2
-Code is adapted from that used for the MGnify amplicon analyses in around Oct. 2022.
+Assumes you have already installed QIIME2 2022.8 based on the instructions on the QIIME2 website (link [here](https://docs.qiime2.org/2022.8/install/native/#miniconda))
 
 Make manifest
 ```
 sample-id	forward-absolute-filepath	reverse-absolute-filepath
-CS20	/Analysis/jmtsuji/projects/culture/2023_01_11_Chx_S20.2c_MiSeq_16S_analysis/01_raw_fastq/CS20_R1.fastq.gz	/Analysis/jmtsuji/projects/culture/2023_01_11_Chx_S20.2c_MiSeq_16S_analysis/01_raw_fastq/CS20_R2.fastq.gz
+CS21	input/Chx_S21.2c_R1.fastq.gz	input/Chx_S21.2c_R2.fastq.gz
 ```
+Note that you might need absolute paths instead of relative paths.
 
-Saved as `manifest.tsv` in `/Analysis/jmtsuji/projects/culture/2023_01_11_Chx_S20.2c_MiSeq_16S_analysis` as shown below.
+Saved as `manifest.tsv` in `direct_QIIME2`.
 
 Run
 ```bash
-work_dir="/Analysis/jmtsuji/projects/culture/2023_01_11_Chx_S20.2c_MiSeq_16S_analysis"
-manifest_dir="${work_dir}"
-classifier_path="/Data/databases/qiime2/classifier/SILVA_138.1_SSURef_NR99/silva-138-ssu-nr99-classifier-uniq_515_806.qza"
-bioproject_id="CS20"
+classifier_path="[ ADD PATH TO CLASSIFIER QZA FILE ]" # E.g., download 'Silva 138 99% OTUs from 515F/808R region of sequences' from the QIIME2 website: https://docs.qiime2.org/2023.2/data-resources/
+bioproject_id="CS21"
 primer_seq_f="GTGCCAGCMGCCGCGGTAA"
 primer_seq_r="GGACTACHVGGGTWTCTAAT"
 trunc_len_f=200
@@ -110,13 +105,13 @@ threads=20
 
 conda activate qiime2-2022.8
 
-mkdir -p "${work_dir}/${bioproject_id}" && cd "$_"
+mkdir -p "qiime2" && cd "$_"
 mkdir -p "export" "analyze"
 
 # Import FastQ
 qiime tools import \
   --type 'SampleData[PairedEndSequencesWithQuality]' \
-  --input-path "${manifest_dir}/manifest.tsv" \
+  --input-path "../manifest.tsv" \
   --output-path "01_demux.qza" \
   --input-format PairedEndFastqManifestPhred33V2
 
@@ -144,8 +139,9 @@ qiime demux summarize \
   --i-data "02_trim.qza" \
   --o-visualization "02_qual.qzv"
 qiime tools export --input-path 02_qual.qzv --output-path export/cutadapt_qual_stats
+# Take a look at the resulting .qzv file at https://view.qiime2.org/ to identify good truncation lengths for preserving sequence regions before the sequence quality drops. Those lengths are set as trunc_len_f=200 and trunc_len_r=140 above (based on my manual inspection of the reads when I ran the analysis for the manuscript)
 
-# Denoise
+# Denoise (using the truncation lengths set above)
 qiime dada2 denoise-paired \
   --i-demultiplexed-seqs "02_trim.qza" \
   --o-table "03_table.qza" \
@@ -187,7 +183,7 @@ git checkout 1275e4a
 cd ..
 
 conda deactivate
-conda activate jupyterlab
+conda activate pandas # make this conda env with the following programs installed:
 # python 3.9.2, pandas 1.2.3
 
 qiime2-helpers/scripts/generate_combined_feature_table.py \
@@ -197,25 +193,30 @@ qiime2-helpers/scripts/generate_combined_feature_table.py \
   -o export/combined_feature_table.tsv \
   -S 2>&1 | \
   tee export/combined_feature_table.log
+
+cd ..
 ```
 
-DADA2 stats
+DADA2 stats - most of the reads passed the pipeline, which is good.
 ```
 sample-id  input    filtered  percentage of input passed filter  denoised  merged   percentage of input merged  non-chimeric  percentage of input non-chimeric
 #q2:types  numeric  numeric   numeric                            numeric   numeric  numeric                     numeric       numeric
-CS20       57318    53649     93.6                               53629     53386    93.14                       49950         87.15
+CS21       57318    53649     93.6                               53629     53386    93.14                       49950         87.15
 ```
 
+The `combined_feature_table.tsv` shown above is included in this repo and has the raw amplicon analysis results.
+
 ### Post analysis
-OTU clustering (99%)
+There were a few low-count ASVs included in the data. Here, I check if those might be artefacts of high sequencing depth.
+
+OTU clustering (99%) - as proof of concept that the low count ASVs are similar to the two high-count ones.
 
 ```bash
-mkdir -p "/Analysis/jmtsuji/projects/culture/2023_01_11_Chx_S20.2c_MiSeq_16S_analysis/03_post_analysis/otu_clustering" && cd "$_"
+mkdir -p "otu_clustering" && cd "$_"
 
-conda activate general2
-# mmseqs 13.45111
+conda activate clustering # make this conda env with mmseqs 13.45111
 
-mmseqs easy-cluster "../../CS20/export/seqs/dna-sequences.fasta" p99c99 tmp \
+mmseqs easy-cluster "../qiime2/export/seqs/dna-sequences.fasta" p99c99 tmp \
   -c 0.99 --cov-mode 5 --cluster-mode 2 --min-seq-id 0.99 --threads 10 2>&1 | \
   tee p99c99.log
 
@@ -234,45 +235,51 @@ Repseq summary (`column -t p99c99_cluster.tsv `)
 07f4ce10c67f5c9585c783f63c14fdef  b193ceb50cc19bb9ac1e7397aeb46537
 07f4ce10c67f5c9585c783f63c14fdef  e04ee9556220165f6cfda8d2350708f1
 ```
-Combined this with the ASV table to make a 99% clustered file.
+In other words, the two high count ASVs became representative sequences, and the four low-count ASVs map to them at >99% identity.
 
-Checked against refs. Put `ref_sequences.fasta` in there with the 2 L227-G1 seqs (from `Geothrix_16S_rRNA_genes_ren_rc.fasta`) and the 1 Chx seq, full-length.
-```bash
-conda activate general2
-# blast v2.12.0
+Checked the ASV sequences against reference 16S rRNA gene sequences of "_Ca_. Chx. allophototropha" and _Geothrix_ sp. L227-G1 from their closed genomes.
 
-blastn -query repseqs.fasta -subject ref_sequences.fasta -perc_identity 99 -qcov_hsp_perc 90 > repseqs_vs_refs.blastn.txt
-```
 Results: the `50997d1e6c398e7abaceb666004a2456` OTU is 100% identical across full length to both L227-G1 seqs.
          the `07f4ce10c67f5c9585c783f63c14fdef` OTU is 100% identical across full length to Ca. Chx. allophototropha's 16S seq.
+         the other 4 low count sequences each has 1 bp mismatch to the high-count ASVs shown above.
 
-Exported pie chart from Excel as SVG for relative abundances. About 50:50, two species.
+I thus made a judgement call that, given the high sequencing depth of this sample, the 4 low-count sequences are likely just a collection of sequencing errors that couldn't be accurately corrected during ASV calling. I thus combined all the data into two ASVs based on >99% identity mapping to the "_Ca._ Chx. allophototropha" and _Geothrix_ L227-G1 reference sequences.
+
+Made a simple pie chart in Excel using this collapsed data and exported it as a SVG (`pie-chart-CS21.svg`). This was added to Extended Data Fig. 1.
 
 ## NanoCLUST
-Workflow:
-- Basecalling
+Code will be run in the `NanoCLUST` subfolder.
+
+Workflow overview:
+- Get the data
 - Run NanoCLUST
 - Trim adapters and fix orientations using two rounds of cutadapt
 - Cluster at 99% threshold
 - Filter chimeric sequences
+- Calculate relative abundances
 
-### Basecalling
-Most samples were basecalled real-time using Guppy ____ with the SUP model.
+### Get the data
+The basecalled reads will be available at BioProject PRJNA640240 upon publication.
 
-One sample (2022/11/21 16S barcoding run) has to be basecalled after the run.
+TODO: add info and download instructions once ready.
 
-Performed basecalling using Guppy 5.0.16 with the SUP model:
+#### A note on basecalling
+The basecalled reads will be downloaded directly from NCBI, but here I'll leave a few notes about how basecalling was performed that are outside of what is mentioned in the manuscript text.
+
+Most samples were basecalled real-time using Guppy 5.1.12 with the SUP model.
+
+One sample (2022.11.21 16S barcoding run for Chx S19.9) had to be basecalled after the run. Performed basecalling using Guppy 5.0.16 with the SUP model:
 ```bash
-mkdir -p /home/microeco2021/nanoclust/211112_DNA_cultures/guppy5 && cd "$_"
+mkdir -p guppy5 && cd "$_"
 
-# Make list of input fast5 files
+# Make list of input fast5 files - assumes that the raw Fast5 files are in an adjacent folder called `raw`
 find ../raw -name "*.fast5" | sort -h > fast5_input.list
 
-# Assumes guppy is already installed via instructions on Nanopore website
-/home/microeco2021/guppy_5.0.16/ont-guppy/bin/guppy_basecaller \
+# Assumes guppy is already installed at the location shown below... see instructions on Nanopore website
+../ont-guppy/bin/guppy_basecaller \
   --input_file_list fast5_input.list \
   --save_path . \
-  --config /home/microeco2021/guppy_5.0.16/ont-guppy/data/dna_r9.4.1_450bps_sup.cfg \
+  --config ../ont-guppy/data/dna_r9.4.1_450bps_sup.cfg \
   --num_callers 12 \
   --device 'auto' \
   --compress_fastq \
@@ -282,26 +289,19 @@ find ../raw -name "*.fast5" | sort -h > fast5_input.list
   2>&1 | tee guppy5.log
 ```
 
-### Prepare NanoCLUST inputs
-#### Prepare input reads
-Download samples and rename
-```bash
-TODO
-```
-
 #### Prepare metadata
-Sample metadata
+Sample metadata - TODO - make sure this matches the NCBI download names once the files are available online.
 ```
 sample-id	culture-id
-20221112_barcode21  Chx-S18.9
-20220216_barcode08	Chx-S20.2c
-20220216_barcode11	Chx-S21.2a
-20220216_barcode12	Chx-S21.2b
-20220216_barcode13	Chx-S21.2c
-20220216_barcode14	Chx-S21.2d
-20221116_barcode08	G1-S5.1b
+20211112_barcode21	Chx-S19.9
+20220216_barcode08	Chx-S21.2c
+20220216_barcode11	Chx-S22.2a
+20220216_barcode12	Chx-S22.2b
+20220216_barcode13	Chx-S22.2c
+20220216_barcode14	Chx-S22.2d
+20221116_barcode08	G1-5.1b
 ```
-Saved as `sample-metadata.tsv` in `/Analysis/jmtsuji/projects/culture/2022_12_28_Chx_Nanopore_16S_summary_NatMicro/02_combined_fastq`
+Save as `sample-metadata.tsv`.
 
 TODO - make the reduced version shown above as a file in the repo directly.
 
@@ -309,31 +309,23 @@ TODO - make the reduced version shown above as a file in the repo directly.
 #### Downloads
 Download the Git repo:
 ```bash
-cd "/Analysis/jmtsuji/projects/culture/2022_12_28_Chx_Nanopore_16S_summary_NatMicro"
-
 git clone https://github.com/jmtsuji/NanoCLUST.git
 cd NanoCLUST
 git checkout expose_multithreading # commit a09991c
 cd ..
 ```
 
-Get BLAST 16S DB (downloaded on Dec. 28th 2022):
+Get BLAST 16S DB:
 ```bash
-cd "/Analysis/jmtsuji/projects/culture/2022_12_28_Chx_Nanopore_16S_summary_NatMicro/NanoCLUST"
-
-# mkdir -p "db/taxdb"
-# cd db
-# wget -O - https://ftp.ncbi.nlm.nih.gov/blast/db/16S_ribosomal_RNA.tar.gz | tar -xzvf -
-# cd taxdb
-# wget -O - https://ftp.ncbi.nlm.nih.gov/blast/db/taxdb.tar.gz | tar -xzvf -
-
-# Re-using DB downloaded previously (need to look up old README for this)
-rsync -a ../../2022_02_17_Chx3_NatMicro_16S_barcoding/NanoCLUST/db_220216 .
-mv db_220216 db
+mkdir -p "db/taxdb"
+cd db
+wget -O - https://ftp.ncbi.nlm.nih.gov/blast/db/16S_ribosomal_RNA.tar.gz | tar -xzvf -
+cd taxdb
+wget -O - https://ftp.ncbi.nlm.nih.gov/blast/db/taxdb.tar.gz | tar -xzvf -
 
 cd ../..
 ```
-Note: NanoCLUST may or may not work with never databases from NCBI without some manual modifications. (TODO: add link to issue)
+Note: NanoCLUST may or may not work with never databases from NCBI without some manual modifications. (TODO: add link to issue) I used a database from 2022.02.16 (TODO: confirm).
 
 #### Test
 Run with docker as a test
@@ -343,47 +335,58 @@ conda activate nextflow # nextflow version 20.10.0
 
 nextflow run main.nf -profile test,docker
 ```
-Finished without error.
+Confirm this finishes without errors.
 
 #### Update
-Update the version used for medaka so that it can use the SUP model. To do this, I need to initialize the docker container and then make a modified version with updated medaka. The docker container should already be there given that the test was run.
+Update the version used for medaka so that it can use the SUP model. To do this, I'll need to initialize the docker container and then make a modified version with updated medaka. The docker container should already be there given that the test was run.
 ```bash
-# TODO - see previous notes
-# hecrp/nanoclust-medaka_pass
+# Start the medaka docker container used by NanoCLUST
+docker run -it hecrp/nanoclust-medaka_pass /bin/bash
 ```
 
-Inside the docker container
+Within the docker container
 ```bash
-# TODO - see previous notes
+# Update medaka
+conda update -n base conda -y
+conda env remove -n medaka_pass
+conda create -y -n medaka_pass -c bioconda -c conda-forge medaka=1.5.0
+conda clean -a -y
 ```
 
-Then, outside the docker container, before shutting down the container, commited the modified Docker container as `microeco/nanoclust-medaka_pass`:
+OUTSIDE the docker repo, while the repo is running, i.e., in a separate terminal window, commit a new docker image
 ```bash
-# TODO - see previous notes
+docker ps # see the ID of the currently running container and add it below.
+
+container_id=7f90a01c879e # set manually after checking via docker ps
+
+docker commit "${container_id}" microeco/nanoclust-medaka_pass
 ```
-The container can now be shut down from the inside using `exit`. # <- TODO: confirm command
 
-Lastly, modify the NanoCLUST nextflow files to use the updated container and SUP model
+Then exit the container from the original window
 ```bash
-cd "/Analysis/jmtsuji/projects/culture/2022_12_28_Chx_Nanopore_16S_summary_NatMicro/NanoCLUST"
+exit
+```
 
+Finally, update the medaka model and docker image target in the NanoCLUST code. In the NanoCLUST Github folder cloned above, run:
+```bash
 # Add the SUP model to NanoCLUST
-sed -i 's/r941_min_high_g303/r941_min_sup_g507/g' main.nf
+mv main.nf main.nf.backup
+sed 's/r941_min_high_g303/r941_min_sup_g507/g' main.nf.backup > main.nf
 
 # Add the docker container to NanoCLUST
-sed -i 's\hecrp/nanoclust-medaka_pass\microeco/nanoclust-medaka_pass\g' nextflow.config
+mv nextflow.config nextflow.config.backup
+sed 's\hecrp/nanoclust-medaka_pass\microeco/nanoclust-medaka_pass\g' nextflow.config.backup > nextflow.config
 ```
-
-Now ready to go!
+You're now ready to go!
 
 ### Run NanoCLUST
 All samples used the 16S barcoding kit on a R9.4.1 Flongle flow cell with q-score limit of 7 and super high accuracy basecalling.
 
 ```bash
-work_dir="/Analysis/jmtsuji/projects/culture/2022_12_28_Chx_Nanopore_16S_summary_NatMicro"
-input_dir="${work_dir}/02_combined_fastq"
-output_dir="${work_dir}/03b_NanoCLUST_c10"
-nanoclust_dir="${work_dir}/NanoCLUST"
+# Make sure you run these commands from inside the main `16S_rRNA_gene_amplicon/NanoCLUST` subfolder (not `16S_rRNA_gene_amplicon/NanoCLUST/NanoCLUST` where the Github repo is, for example)
+input_dir="$(realpath input)" # put the downloaded FastQ files for the samples here
+output_dir="$(realpath nc_output)"
+nanoclust_dir="NanoCLUST" # Github repo dir
 min_cluster_size=10
 
 conda activate nextflow
@@ -416,7 +419,7 @@ for input_fastq in "${input_fastqs[@]}"; do
     > "${sample_name}.log" 2>&1
 
   mv results "${output_dir}/${sample_name}"
-  mv "${sample_name}.log" "${output_dir}" #/${sample_name}
+  mv "${sample_name}.log" "${output_dir}"
 
   # Clear the NanoCLUST history
   rm -rf .nextflow work
@@ -460,21 +463,21 @@ for input_fastq in "${input_fastqs[@]}"; do
 
 done
 ```
-Done. All finished successfully based on NanoCLUST logs.
+Done. Check everything finished successfully based on NanoCLUST logs.
 
-### Installations
+### Additional installations before subsequent analyses steps
 Will use `uchime2_ref` as described here: https://drive5.com/usearch/manual/cmd_uchime2_ref.html (accessed Dec 28th, 2022)
 
 #### Chimera DB
 Prepare chimera DB
 ```bash
-mkdir -p "/Analysis/jmtsuji/projects/culture/2022_12_28_Chx_Nanopore_16S_summary_NatMicro/chimera_ref_db" && cd "$_"
+mkdir -p "chimera_db" && cd "$_"
 
-conda activate general2
+conda activate general # install the following software in this conda env:
 # blast 2.12.0
 # seqtk 1.3-r106
 
-# Download NCBI 16S DB on Dec 28 2022; DB last updated 2022-12-15
+# Downloaded NCBI 16S DB (on Dec 28 2022; DB last updated 2022-12-15)
 mkdir -p 2022_12_28_NCBI_16S && cd "$_"
 wget https://ftp.ncbi.nlm.nih.gov/blast/db/16S_ribosomal_RNA.tar.gz
 wget https://ftp.ncbi.nlm.nih.gov/blast/db/16S_ribosomal_RNA.tar.gz.md5
@@ -524,14 +527,14 @@ Then added to the 16S DB:
 cp 16S_ribosomal_RNA.fasta 16S_ribosomal_RNA_with_Chx.fasta
 
 seqtk seq -l 80 Chx_16S.fasta >> 16S_ribosomal_RNA_with_Chx.fasta
+
+cd ..
 ```
 The `16S_ribosomal_RNA_with_Chx.fasta` file will be used as a reference for chimera searching. 26810 entries including Chlorohelix.
 
 #### UCHIME
 Download UCHIME2 (free version)
 ```bash
-cd "/Analysis/jmtsuji/projects/culture/2022_12_28_Chx_Nanopore_16S_summary_NatMicro"
-
 # usearch11.0.667_i86linux32
 wget https://drive5.com/downloads/usearch11.0.667_i86linux32.gz
 
@@ -542,11 +545,11 @@ chmod 755 usearch11.0.667_i86linux32
 ### Adapter trimming
 Trim primers and adapters off the ends of both sequences. Flip sequences to the forward orientation at the same time.
 ```bash
-source_dir="${work_dir}/03b_NanoCLUST_c10"
+mkdir -p "trim" && cd "$_"
+
+source_dir="../nc_output"
 fwd_primer_27f="AGAGTTTGATCMTGGCTCAG" # Lane, 1991
 rev_primer_1492r="TACGGYTACCTTGTTACGACTT" # Lane, 1991
-
-mkdir -p "/Analysis/jmtsuji/projects/culture/2022_12_28_Chx_Nanopore_16S_summary_NatMicro/04b_c10_analyzed" && cd "$_"
 
 # Gather inputs
 mkdir -p "01_inputs" && cd "$_"
@@ -557,15 +560,16 @@ find "${source_dir}" -mindepth 2 -maxdepth 2 -name "cluster_counts.tsv" | sort -
 find "${source_dir}" -mindepth 2 -maxdepth 2 -name "cluster_counts.tsv" | sort -h | \
   xargs tail -q -n +2 >> cluster_counts_raw.tsv
 cd ..
+# Note: saved a copy of these in the `intermediate` folder for reference
 
 # Get 1492r reverse complement sequence
-conda activate general2 # seqtk 1.3-r106
+conda activate general # seqtk 1.3-r106
 rev_primer_1492r_revcomp=$(printf ">1492r\n${rev_primer_1492r}\n" | seqtk seq -r | tail -n 1)
 conda deactivate
 
 # Trim
-mkdir -p "02_cutadapt" && cd "$_"
-conda activate cutadapt_3.4
+mkdir -p "cutadapt" && cd "$_"
+conda activate cutadapt_3.4 # install cutadapt 3.4 in this env
 # This code should work in theory to make the env, although the env was pre-existing: conda create -n cutadapt -c bioconda cutadapt=3.4
 # cutadapt 3.4 with Python 3.9.6
 # Setting O (minlength) to 15 instead of default 3 because I know the full primers should be there
@@ -595,16 +599,16 @@ ln -s cluster_sequences_trimmed_rev.fasta cluster_sequences_trimmed_complete.fas
 conda deactivate
 cd ..
 ```
+Put a copy of `cluster_sequences_trimmed_complete.fasta` into the `intermediate` folder.
 
 ### OTU clustering
 ```bash
-cd "/Analysis/jmtsuji/projects/culture/2022_12_28_Chx_Nanopore_16S_summary_NatMicro/04b_c10_analyzed"
-mkdir -p "03_cluster" && cd "$_"
+mkdir -p "cluster" && cd "$_"
 
-conda activate general2
+conda activate general # install:
 # mmseqs 13.45111
 
-mmseqs easy-cluster ../02_cutadapt/cluster_sequences_trimmed_complete.fasta p99c99 tmp \
+mmseqs easy-cluster ../trim/cluster_sequences_trimmed_complete.fasta p99c99 tmp \
   -c 0.99 --cov-mode 5 --cluster-mode 2 --min-seq-id 0.99 --threads 2 2>&1 | \
   tee p99c99.log
 
@@ -615,71 +619,51 @@ ln -s p99c99_rep_seq.fasta repseqs.fasta
 conda deactivate
 cd ..
 ```
+Saved a copy of `p99c99_cluster.tsv` in the `intermediate` folder.
 
 ### Chimera filtration
-Using UCHIME2 with the NCBI+Chx 16S DB made in the `Pre-prep` section of the `Processed outputs` region of this README file.
+Using UCHIME2 with the NCBI+Chx 16S DB downloaded above.
 
 ```bash
-db_filepath="../../chimera_ref_db/16S_ribosomal_RNA_with_Chx.fasta"
-usearch_filepath="../../usearch11.0.667_i86linux32"
+mkdir -p "chimera_filter" && cd "$_"
 
-mkdir -p "/Analysis/jmtsuji/projects/culture/2022_12_28_Chx_Nanopore_16S_summary_NatMicro/04b_c10_analyzed/04_chimera_removal" && cd "$_"
+db_filepath="../chimera_db/16S_ribosomal_RNA_with_Chx.fasta"
+usearch_filepath="../usearch11.0.667_i86linux32"
 
-"${usearch_filepath}" -uchime2_ref "../03_cluster/repseqs.fasta" -db "${db_filepath}" \
+"${usearch_filepath}" -uchime2_ref "../cluster/repseqs.fasta" -db "${db_filepath}" \
   -mode high_confidence -strand plus -uchimeout chimera_report.tsv 2>&1 | \
   tee uchime2.log
 ```
 
-Results (cleaned version of UCHIME2 output) (`cat chimera_report.tsv | sed 's/ Geothrix fermentans strain H5 16S ribosomal RNA, partial sequence//g' | sed 's/ Holophaga foetida strain TMBS4 16S ribosomal RNA, partial sequence//g' | sed 's/ 16S ribosomal RNA//g' | column -s $'\t' -t`):
-```
-20211112_barcode21_cluster0       0.0000   N  *                    *                    Chx_allophototropha                                                      dqt=0;
-20220216_barcode12_cluster5       0.0000   ?  *                    *                    NR_180005.1 Acinetobacter oryzae strain B23, partial sequence            dqt=5;why=nodiv;
-20220216_barcode08_cluster1       0.5267   ?  NR_036779.1          NR_036891.1          (L)                                                                      dqt=25;dqm=28;L=64,13,15(1436);R=12,0,0(12);div=-1.0%;
-20220216_barcode08_cluster2       30.9145  Y  Chx_allophototropha  NR_036779.1          (L)                                                                      dqt=154;dqm=12;L=216,0,0(749);R=151,10,3(689);div=10.1%;
-20220216_barcode11_cluster6       30.9949  Y  Chx_allophototropha  NR_036779.1          (R)                                                                      dqt=161;dqm=13;L=162,0,0(510);R=204,10,4(954);div=10.2%;
-20220216_barcode08_cluster6 rc    16.7630  Y  Chx_allophototropha  NR_036779.1          (R)                                                                      dqt=103;dqm=28;L=89,0,0(252);R=262,12,17(1206);div=5.3%;
-20220216_barcode11_cluster8       25.9251  Y  Chx_allophototropha  NR_036779.1          (L)                                                                      dqt=107;dqm=12;L=263,0,0(1022);R=104,10,3(380);div=6.8%;
-20220216_barcode08_cluster7 rc    17.4133  Y  Chx_allophototropha  NR_036779.1          (L)                                                                      dqt=69;dqm=13;L=302,0,0(1189);R=66,11,3(275);div=4.1%;
-20220216_barcode08_cluster12 rc   34.9517  Y  NR_036779.1          Chx_allophototropha  (L)                                                                      dqt=173;dqm=27;L=195,6,21(784);R=161,0,0(668);div=10.2%;
-20220216_barcode08_cluster3       33.9782  Y  NR_036779.1          Chx_allophototropha  (R)                                                                      dqt=157;dqm=26;L=137,6,20(486);R=220,0,0(960);div=9.1%;
-20220216_barcode08_cluster4       41.9234  Y  NR_036779.1          Chx_allophototropha  (R)                                                                      dqt=88;dqm=11;L=81,4,7(252);R=291,0,0(1206);div=5.5%;
-20220216_barcode13_cluster4       35.2690  Y  NR_036779.1          Chx_allophototropha  (L)                                                                      dqt=192;dqm=27;L=176,6,21(662);R=180,0,0(791);div=11.5%;
-20220216_barcode12_cluster0       0.0000   ?  *                    *                    NR_026163.1 Microbacterium testaceum strain DSM 20166, partial sequence  dqt=10;why=nodiv;
-20220216_barcode14_cluster0 rc    0.0000   ?  *                    *                    NR_116570.1 Sphingomonas hankookensis strain ODN7, partial sequence      dqt=7;why=nodiv;
-```
-9/14 sequences were identified as chimeras. 5 remain.
+Results: 9/14 sequences were identified as chimeras. 5 remain.
 
 Summarized the chimera-filtered sequence set (i.e., the sequences not identified as chimeras):
 ```bash
 # This was done manually. TODO - automate if doing this in high-throughput in the future.
 printf "20211112_barcode21_cluster0\n20220216_barcode12_cluster5\n20220216_barcode08_cluster1\n20220216_barcode12_cluster0\n20220216_barcode14_cluster0\n" > chimera_filtered.list
 
-conda activate general2
+conda activate general
 # seqtk 1.3-r106
 
-seqtk subseq "../03_cluster/repseqs.fasta" chimera_filtered.list > chimera_filtered.fasta
+seqtk subseq "../cluster/repseqs.fasta" chimera_filtered.list > chimera_filtered.fasta
 ```
+Saved a copy of this `chimera_filtered.fasta` file and the `chimera_report` in the `intermediate` folder for reference.
 
-Validate the remaining two sequences against the known Chx and G1 reference seqs, prepared in this folder as `culture_refs.fasta`
-```bash
-# blast 2.12.0
-blastn -query culture_refs.fasta -subject chimera_filtered.fasta
-```
-Result: 
+### Post processing
+#### Relative abundances
+Calculated relative abundances: did so using `summary/relative-abundance-calculations.ipynb`. 
+
+Saved the output files in the same `summary` folder: `otu_table_counts.tsv` and `cluster_stats.tsv`. Added Excel-analyzed versions of both.
+
+#### Sequence identification
+In my analysis, the 5 representative sequences corresponded to the folllowing:
 - `20211112_barcode21_cluster0`: 100% identical to Chx
-one of the two is 100% identical to Chx. The other is 100% identical to one of the two Geothrix 16S seqs (and just has 3 mismatches to the other)
 - `20220216_barcode08_cluster1`: 100% identical to G1 rRNA gene `GEOCFX_001163`
-- `20220216_barcode12_cluster5`: unclear
-- `20220216_barcode12_cluster0`: unclear
-- `20220216_barcode14_cluster0 rc`: unclear
+- `20220216_barcode12_cluster5`: based on web BLASTN: near 100% identity to NR_180005.1	Acinetobacter oryzae
+- `20220216_barcode12_cluster0`: based on web BLASTN: near 100% identity to NR_026163.1	Microbacterium testaceum
+- `20220216_barcode14_cluster0 rc`: based on web BLASTN: near 100% identity to NR_116570.1	Sphingomonas hankookensis
 
-#### Interpretation of unclear sequences
-Then ran the 5 chimera-filtered seqs against NCBI 16S DB via web BLAST (Dec 28 2022). Results for the 3 latter genes with "unclear" classification when compared to Chx and G1 via BLAST above:
-- `20220216_barcode12_cluster5`: near 100% identity to NR_180005.1	Acinetobacter oryzae
-- `20220216_barcode12_cluster0`: near 100% identity to NR_026163.1	Microbacterium testaceum
-- `20220216_barcode14_cluster0 rc`: near 100% identity to NR_116570.1	Sphingomonas hankookensis
-
-Low relative abundances, looking at the `cluster_counts_raw.tsv` file:
+The sequences that are now Chx or G1 have low relative abundances, looking at the `cluster_counts_raw.tsv` file:
 ```
 sample	id	reads_in_cluster	used_for_consensus	reads_after_corr	draft_id	sciname	taxid	length	per_ident
 20220216_barcode12	5	18	100	17	576ab204-ef44-4968-b7e4-9b39ee2af8de id=9	Acinetobacter johnsonii	40214	1501	99.467
@@ -688,5 +672,6 @@ sample	id	reads_in_cluster	used_for_consensus	reads_after_corr	draft_id	sciname	
 ```
 Reads in cluster ranged from 18-43 out of 40-50k total reads. This is less than 0.1% relative abundance.
 
-### Relative abundance calculations
-TODO
+These data were added into Extended Data Table 1.
+
+Done!

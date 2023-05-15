@@ -1,59 +1,23 @@
 # Lake survey metagenome/metatranscriptome analysis
 Part of the larger '*Ca.* Chlorohelix allophototropha' Type I reaction center paper  
-Copyright Jackson M. Tsuji, Neufeld Research Group, 2021
+Copyright Jackson M. Tsuji, Neufeld Research Group, 2023
 
-**NOTE: for each code section provided below, the code ought to be run from within this `lake_survey` directory.**
+**NOTE: for each code section provided below, the code ought to be run from within this `lake_omics` directory.**
 
-This README describes how lake metagenome/metatranscriptome survey data were analyzed, including generation of 
-figures and supplementary data files.
+This README describes how lake metagenome/metatranscriptome survey data were analyzed, including generation of selected figures and supplementary data files.
 
 ## Data download
-You can download the metagenome data using the provided TSV file by running the following code in Bash in your working folder:
-
-```bash
-accession_data_filepath="metagenome_data_accessions_ncbi.tsv"
-output_dir="downloads"
-
-mkdir -p "${output_dir}"
-
-# Read selected table columns
-sample_ids=($(cat "${accession_data_filepath}" | cut -f 2 | tail -n +2))
-r1_urls=($(cat "${accession_data_filepath}" | cut -f 6 | tail -n +2))
-r2_urls=($(cat "${accession_data_filepath}" | cut -f 7 | tail -n +2))
-
-# Iternatively download the FastQ files
-for i in $(seq 1 ${#sample_ids[@]}); do
-  # Make a zero-ordered counter
-  j=$((${i}-1))
-
-  # Get variables
-  sample_id=${sample_ids[${j}]}
-  r1_url=${r1_urls[${j}]}
-  r2_url=${r2_urls[${j}]}
-
-  # Download
-  echo "[$(date -u)]: Downloading '${sample_id}'"
-  wget -O "${output_dir}/${sample_id}_R1.fastq.gz" "${r1_url}"
-  wget -O "${output_dir}/${sample_id}_R2.fastq.gz" "${r2_url}"
-done
-
-echo "[$(date -u)]: Finished."
-```
-
-You now have FastQ files for several of the metagenome datasets.  
-
-Unfortunately, some of the metagenomes are stored in the JGI database, and there is not a simple programmatic way to download these. 
-See `metagenome_data_accessions_jgi.tsv` for the IMG Genome IDs of each of these metagenomes, if you wish to manually download them. 
-In my case, when I downloaded the files, they were in interleaved FastQ format, and I had to de-interleave the FastQ files before starting ATLAS.
-
-To download the metatranscriptome data from NCBI, repeat the above code block using the `metatranscriptome_data_accessions.tsv` file 
-in place of `metagenome_data_accessions_ncbi.tsv`.
+For info on the datasets that were analyzed, see the `source_data` folder, specifically the `README` and the following info files:
+- `lake_metagenome_data_accessions_jgi.tsv`
+- `lake_metagenome_data_accessions_ncbi.tsv`
+- `lake_metatranscriptome_data_accessions.tsv`
 
 ## Lake metagenome analysis
-In this paper, the main purpose of the lake metagenome analyses was to:
+In the manuscript, the main purpose of the lake metagenome analyses was to:
 - Recover metagenome-assembled genomes (MAGs) from the lakes to search for RCI-encoding relatives of "_Ca_. Chx. allophototropha"
   - Those MAGs will then be used as the basis for RNA read mapping work with metatranscriptome data
 - Determine the relative abundances of "_Ca_. Chx. allophototropha" relatives in Boreal Shield lakes
+- Detect relative abundances of phototrophic "_Ca_. Chx. allophototropha" relatives at the unassembled read level to cross check MAG-based data
 
 To analyze the metagenomes, I ran them through the [ATLAS](https://github.com/metagenome-atlas/atlas) pipeline and then did 
 a few post-run analyses.
@@ -303,7 +267,224 @@ cd ../..
 `MAG_table_DNA_to_assembled.tsv` was then opened in Excel, and the visual appearance of the table was cleaned up to make Supplementary Data 3. 
 This table nicely summarizes the taxonomy of all MAGs and their percent relative abundances in all metagenome samples.
 
-Done! Metagenome assembly work is done.
+### Unassembled read search for "_Ca_. Chx. allophototropha"-like RCI genes
+As a cross-comparison to the MAG-based data above, the QC'ed metagenome data were searched at the unassembled read level for the "_Ca_. Chx. allophototropha" like RCI gene.
+
+#### Predict short amino acids
+Install software - here, I create a custom conda environment for a modified version of FragGeneScanPlusPlus
+```bash
+# Install bbmap and build dependencies for FGSpp
+conda create -n FGSpp_471fdf7 -c conda-forge -c bioconda bbmap=38.91 meson ninja
+conda activate FGSpp_471fdf7
+# bbmap version 38.91
+
+# Now install FGSpp
+git clone https://github.com/LeeBergstrand/FragGeneScanPlusPlus.git
+cd FragGeneScanPlusPlus
+git checkout 471fdf7 # after fixing the segmentation violation
+meson build
+ninja -C build
+
+cp -r train build/FGS++ "${CONDA_PREFIX}/bin"
+
+cd ..
+rm -rf FragGeneScanPlusPlus # if desired
+
+conda deactivate
+```
+
+Install personal code wrapper for FGS++/bbmap, `predict_short_orfs.sh `, v1.3.4
+```bash
+git clone https://github.com/jmtsuji/basic-sequence-analysis.git
+cd basic-sequence-analysis
+git checkout v1.3.4
+
+conda activate FGSpp_471fdf7
+
+cp -r scripts/* "${CONDA_PREFIX}/bin"
+cd .. && rm -rf basic-sequence-analysis
+
+conda deactivate
+```
+
+Gather the QC'ed reads
+```bash
+mkdir -p "unassembled_read_search" && cd "$_"
+mkdir -p 01_metagenome_R1_files && cd "$_"
+
+# TODO - get atlas dir name
+find "../../lake_metagenomes" -maxdepth 3 -mindepth 3 -type f -name "*_QC_R1.fastq.gz" | \
+  xargs -I {} ln -s {} .
+
+find "../../lake_metagenomes" -maxdepth 3 -mindepth 3 -type f -name "*_QC_R1.fastq.gz" | \
+  sort -h | \
+  sed 's\../../lake_metagenomes/.*/sequence_quality_control/\\g' | \
+  sed 's/_QC_R1.fastq.gz//g' \
+  > samples.list
+
+cd ..
+```
+Note that the IDs here might be a bit different than in the MAG table, e.g., underscores are used instead of dashes, and depth numbers might have leading zeros.
+
+Predict amino acids - this could take time, so it is good to run inside a `screen`:
+```bash
+mkdir -p "02_orfs" && cd "$_"
+mkdir -p logs
+
+conda activate FGSpp_471fdf7
+
+r1_filepaths=($(find -L "../01_metagenome_R1_files" -type f -name "*_QC_R1.fastq.gz" | sort -h))
+
+for r1_filepath in ${r1_filepaths[@]}; do
+
+  sample_basename="${r1_filepath##*/}"
+  sample_basename="${sample_basename%_QC_R1.fastq.gz}"
+  echo "[ $(date -u) ]: ${sample_basename}"
+  logfile="logs/${sample_basename}.log"
+  
+  predict_short_orfs.sh -p 50 -t illumina_10 -l "${logfile}" "${r1_filepath}" > "${sample_basename}.faa"
+  
+  if [ $? != 0 ]; then
+    echo "[ $(date -u) ]: ${sample_basename}: run FAILED. Moving on... but keeping output"
+  fi
+
+done
+
+echo "[ $(date -u) ]: Done."
+
+cd ..
+```
+
+#### Scan for functional genes
+
+Download HMMs of interest
+```bash
+mkdir -p "03_hmms" && cd "$_"
+
+### Download HMMs of interest
+curl -LOJ http://fungene.cme.msu.edu/hmm_download.spr?hmm_id=31 # rpoB.hmm - June 2009, FunGene
+# v2.0.1 of Github repo
+wget https://raw.githubusercontent.com/jmtsuji/Ca-Chlorohelix-allophototropha-RCI/v2.0.1/genome_bin_analysis/hidden_markov_models/fmoA_Chloroheliales.hmm
+wget https://raw.githubusercontent.com/jmtsuji/Ca-Chlorohelix-allophototropha-RCI/v2.0.1/genome_bin_analysis/hidden_markov_models/pscA_Chloroheliales.hmm
+
+# Lengths (based on the LEN flag at the top of the flags)
+# fmoA:  373
+# pscA:  596
+# rpoB: 2842
+
+cd ..
+```
+
+Scan using hmmsearch
+```bash
+mkdir -p 04_hmmsearch && cd "$_"
+conda activate general # install hmmsearch 3.3.2 in this env
+
+# Variables
+hmmsearch_outfile=hmmsearch.tsv
+evalue="1e-10"
+
+##### FUNCTION #####
+hmmsearch_beautify() {
+  faa_file=$1
+  hmm_file=$2
+  evalue=$3
+  cpu=4
+  
+  sample_basename="${faa_file##*/}"
+  sample_basename="${sample_basename%.faa}"
+
+  echo "[ $(date -u) ]: '${sample_basename}.faa': starting search using HMM '${hmm_file##*/}'" >&2
+  
+  # hmmsearch 3.3.2
+  hmmsearch -o /dev/null --tblout /dev/stdout -E "${evalue}" --cpu ${cpu} "${hmm_file}" "${faa_file}" | \
+    grep -v "^#" | \
+    tr -s " " "\t" | \
+    cut -f 1,3,5,6,7 | \
+    sed "s/^/${sample_basename}\t/g"
+    
+  echo "[ $(date -u) ]: '${sample_basename}.faa': finished search using HMM '${hmm_file##*/}'" >&2
+}
+export -f hmmsearch_beautify
+#####################
+
+find "../02_orfs" -type f -name "*.faa" | sort -h > faa_files.list
+find "../03_hmms" -type f -name "*.hmm" | sort -h > hmm_files.list
+
+# This command is super cool! It is the equivalent of a nested for loop.
+printf "sample\tquery\thmm\tevalue\tscore\tbias\n" > "${hmmsearch_outfile}"
+parallel -j 12 hmmsearch_beautify {1} {2} ${evalue} :::: faa_files.list hmm_files.list :::  \
+  >> "${hmmsearch_outfile}" 2> hmmsearch.log
+
+# Check totals
+# cat hmmsearch.tsv | cut -f 1,3 | tail -n +2 | uniq -c | column -t | sort -h
+
+# Made hmm lengths table
+printf "hmm\tlength\n" > hmm_lengths.tsv
+printf "fmoA_Chx\t373\n" >> hmm_lengths.tsv
+printf "pscA_Chx\t596\n" >> hmm_lengths.tsv
+printf "rpoB\t2842\n" >> hmm_lengths.tsv
+```
+
+To filter to reliable "_Ca_. Chx. allophototropha"-like RCI genes, run BLASTP. I will check fmoA at the same time:
+```bash
+blastp_check() {
+  faa_file=$1
+  hmmsearch_table=$2
+  query_id=$3
+  query_file=$4
+
+  sample_id="${faa_file##*/}"
+  sample_id="${sample_id%.faa}"
+  
+  echo "[ $(date -u) ]: '${sample_id}.faa': '${query_id}': starting search." >&2
+  
+  grep "${query_id}" "${hmmsearch_table}" | grep ${sample_id} | cut -f 2 > ${sample_id}_${query_id}.list
+
+  if [[ $(cat ${sample_id}_${query_id}.list | wc -l) -ge 1 ]]; then
+  
+    # seqtk 1.3-r106
+    seqtk subseq "${faa_file}" ${sample_id}_${query_id}.list > ${sample_id}_${query_id}.faa
+    rm ${sample_id}_${query_id}.list
+
+    # blastp 2.10.1+ (to stdout)
+    blastp -query "${query_file}" -subject ${sample_id}_${query_id}.faa \
+      -outfmt "6 qseqid sseqid pident evalue bitscore qcovhsp qstart qend qlen sstart send slen" | \
+      sed "s/^/${query_id}\t/g" | \
+      sed "s/^/${sample_id}\t/g"
+
+    rm ${sample_id}_${query_id}.faa
+    echo "[ $(date -u) ]: '${sample_id}.faa': '${query_id}': finished search." >&2
+  
+  else
+
+    echo "[ $(date -u) ]: '${sample_id}.faa': '${query_id}': no hits to search; finished." >&2
+    rm ${sample_id}_${query_id}.list
+
+  fi
+  
+}
+export -f blastp_check
+
+# Make sure you run the following commands in a conda env where seqtk 1.3-r106 and blast 2.10.1 are installed.
+
+# Github repo v2.0.1
+wget https://raw.githubusercontent.com/jmtsuji/Ca-Chlorohelix-allophototropha-RCI/v2.0.1/genome_bin_analysis/sequences_of_interest/pscA.faa
+wget https://raw.githubusercontent.com/jmtsuji/Ca-Chlorohelix-allophototropha-RCI/v2.0.1/genome_bin_analysis/sequences_of_interest/fmoA.faa
+
+printf "sample\thmm\tqseqid\tsseqid\tpident\tevalue\tbitscore\tqcovhsp\tqstart\tqend\tqlen\tsstart\tsend\tslen\n" > pscA_fmoA_blastp.tsv
+parallel -j 50 blastp_check {1} hmmsearch.tsv {2}_Chx {2}.faa :::: faa_files.list ::: pscA fmoA \
+  >> pscA_fmoA_blastp.tsv 2> pscA_fmoA_blastp.log
+```
+Used this to filter based on pident / evalue in Jupyter lab, in `summarize_hmmsearch_results.ipynb`
+
+Made figure: `pscA_abundances.pdf`. This will be modified to make Figure 4b.
+
+Two TSV-format tables are also included here that summarize some raw data:
+- `counts-per-sample-blast-filtered.tsv`: raw counts of pscA and fmoA after BLAST filtration for each metagenome
+- `percent-per-lake-blast-filtered-length-normalized-max.tsv`: percent relative abundances following normalization to rpoB hits and to HMM length. Max. percent value for each lake is shown. These data should be the same as shown in the Figure 4b plot.
+
+Done! On to metatranscriptome work.
 
 ## Lake metatranscriptome analysis
 Lake metatranscriptome data was mapped to the set of MAGs generated from metagenome data (above) to determine the relative gene expression 
@@ -481,21 +662,24 @@ summed to 100% for each sample (i.e., were normalized based on the total read co
 normalized based on the total number of metatranscriptome reads for each sample).
 I also performed some simple mean/standard deviation stats on these output tables in Excel when making Supplementary Data 4.
 
-## Generation of Figure 3
+## Generation of selected panels of Figure 4
 
-### Figure 3a: Bubble plot of relative expression of MAGs
-The Jupyter notebook, `data_viz_Fig3a/Fig_3a_plotter.ipynb`, summarizes read mapping stats and generates Fig. 3a. 
-Input files are in `data_viz_Fig3a/input_data`.
+### Figure 4b: relative abundances of "_Ca_. Chx. allophototropha"-like RCI genes based on unassembled reads
+See description in the lake metagenomes section above (at the end of the section). Calculations are shown in a Jupyter notebook in the `unassembled_read_search` folder, along with intermediate data.
 
-After production, the resulting raw PDF `Figure_3a_raw.pdf` was edited in Inkscape (e.g., to clean up axis labels and modify the bubble colour scheme).
+### Figure 4d: Bubble plot of relative expression of MAGs
+The Jupyter notebook, `data_viz_Fig4d/Fig_3d_plotter.ipynb`, summarizes read mapping stats and generates Fig. 3d. 
+Input files are in `data_viz_Fig4d/input_data`.
 
-### Figure 3b (and Extended Data Fig. 7): up/down regulation of genes in the two "_Ca._ Chloroheliales" MAGs
-The Jupyter notebook, `data_viz_Fig3b/Fig_3b_plotter.ipynb`, summarizes read count normalization methods and plotting of both figures.  
+After production, the resulting raw PDF `Figure_4d_raw.pdf` was edited in Inkscape (e.g., to clean up axis labels and modify the bubble colour scheme).
+
+### Figure 4e (and Extended Data Fig. 7): up/down regulation of genes in the two "_Ca._ Chloroheliales" MAGs
+The Jupyter notebook, `data_viz_Fig4e/Fig_3e_plotter.ipynb`, summarizes read count normalization methods and plotting of both figures.  
 
 Input files need to be downloaded (as a `.tar.gz` file) from the Zenodo repo [using this link](https://zenodo.org/record/5131685/files/lake_survey_Ca_Chloroheliales_MAGs_info.tar.gz?download=1). 
-The tarball should be extracted, and the contents should be saved in `data_viz_Fig3b/input_data`. You're then ready to run the Jupyter notebook.
+The tarball should be extracted, and the contents should be saved in `data_viz_Fig4e/input_data`. You're then ready to run the Jupyter notebook.
 
-The resulting raw PDFs, `Figure_3b_raw.pdf` and `Figure_ED7_raw.pdf`, are in the folder. These received minor edits via Inkscape to finalize.
+The resulting raw PDFs, `Figure_4e_raw.pdf` and `Figure_ED7_raw.pdf`, are in the folder. These received minor edits via Inkscape to finalize.
 
 Data from these analyses were also summarized to make Supplementary Data 5.
 

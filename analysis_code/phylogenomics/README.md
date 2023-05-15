@@ -1,8 +1,8 @@
 # Comparative genomics
 Part of the larger '_Ca._ Chlorohelix allophototropha' Type I reaction center paper  
-Copyright Jackson M. Tsuji, Neufeld Research Group, 2021
+Copyright Jackson M. Tsuji, Neufeld Research Group, 2023
 
-**NOTE: for each code section provided below, the code ought to be run from within this `comparative_genomics` directory.**
+**NOTE: for each code section provided below, the code ought to be run from within this `phylogenomics` directory.**
 
 ## Genome datatset download
 Download all genomes used for the comparative genomics analyses below.

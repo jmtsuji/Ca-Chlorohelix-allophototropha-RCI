@@ -1,10 +1,22 @@
-# Metagenome analysis
+# Culture metagenome analysis
 Part of the larger '_Ca._ Chlorohelix allophototropha' Type I reaction center paper  
-Copyright Jackson M. Tsuji, Neufeld Research Group, 2021
+Copyright Jackson M. Tsuji, Neufeld Research Group, 2023
 
-**NOTE: for each code section provided below, the code ought to be run from within this `metagenome_analysis` directory.**
+**NOTE: for each code section provided below, the code ought to be run from within this `culture_metagenomics` directory.**
 
-## Install ATLAS
+## Overview
+This analysis folder describes:
+- Metagenome analysis of early to mid-phase enrichment cultures of "_Ca_. Chloroheliales" members
+  - Note that the Ca. Chx. allophototropha genome was ultimately derived from a different dataset than this. See `genomics/Chlorohelix_genome_final`
+  - However, these analyses resulted in the final genome bin for strain L227-5C that was further analyzed in the manuscript.
+- Semi-related, minor analysis: searching for evidence of the "_Ca_. Chx. allophototropha"-like pscA-like gene in environmental metagenomes from other studies
+
+## Short read or read cloud metagenomes for early- to mid-stage enrichment cultures
+
+### Data download
+See the `source_data` folder for details, specifically `culture_early_metagenome_data_accessions.tsv` and the `README` there.
+
+### Install ATLAS
 [ATLAS](https://github.com/metagenome-atlas/atlas) is a metagenome QC, assembly, and binning workflow.  
 
 Here, we'll install and use version 2.2.0.
@@ -36,11 +48,10 @@ sed -i '/new_d\.to_csv/c\        new_d.to_csv(output[0],sep='\t',header=False)' 
 Done. Before running ATLAS, make sure to activate the environment by running `conda activate atlas_2.2.0`.
 
 
-## Process the metagenome data
+### Process the metagenome data
 If it is your first time using ATLAS, note that a large amount of database files will be auto-downloaded during the run.
 
-
-### Ca. Chloroheliaceae bin L227-5C
+#### Ca. Chloroheliaceae bin L227-5C
 Config files for the run have already been created. 
 If you want to create config files for yourself, you can use the `atlas init` command as documented in the ATLAS repo.  
 
@@ -61,13 +72,13 @@ atlas run -w . -c config.yaml -j 50 all --reason 2>&1 | tee atlas_run.log
 cd ..
 ```
 
-### Ca. Chx. allophototropha
+#### Ca. Chx. allophototropha
 Config files are also provided.
 
 This case is slightly more complicated, though. 
 We will use the Tell-Read QC processor and Tell-Link assembler to assemble the data ahead of time and then put these data into ATLAS partway through.
 
-#### Assemble read cloud data separately
+##### Assemble read cloud data separately
 Download the raw MiSeq output (not yet demultiplexed into FastQ files) from the Zenodo repo corresponding to this publication:
 ```bash
 zenodo_url="https://zenodo.org/record/3930111/files/Capt_S15_sequencer_data_raw.tar.gz"
@@ -123,7 +134,7 @@ zenodo_url="https://zenodo.org/record/3930111/files/scaffold.full.fasta.gz"
 wget -O - "${zenodo_url}" | gunzip > scaffolds.full.fasta
 ```
 
-#### Run ATLAS
+##### Run ATLAS
 Notes:
 - make sure you modify the config.yaml file in the `atlas_L227_5C` folder so that `database_dir` is a real directory on your machine.
 - you might have to modify the filepaths for the samples in the `samples.tsv` file so that they are correct on your system.
@@ -134,7 +145,8 @@ Notes:
 
 cd "atlas_Chx_allophototropha"
 
-# Finish the QC step
+# Finish the QC step - note this should use the downloaded short reads from NCBI rather than those processed via Tell-Link
+# TODO - confirm that the short read in NCBI are the ones demultiplexed via Picard (I think they are)
 atlas run -w . -c config.yaml -j 50 all --reason -p \
   --until finished_QC \
   2>&1 | tee atlas_run_Qc.log
@@ -160,185 +172,20 @@ cd ..
 You now have a set of uncurated genome bins for both enrichments under the `genomes/genomes` folder within each ATLAS run folder.
 
 
-## Genome bin relative abundances
-```bash
-# Installed the MAG table generator
-git clone https://github.com/jmtsuji/atlas2-helpers.git
-cd atlas2-helpers
-git checkout 1e08f0a
-PATH=${PATH}:${PWD}/scripts
-
-cd ..
-
-# Create and activate a simple conda env containing pandas
-conda create -y -n pandas -c anaconda pandas
-conda activate pandas
-
-# Generated MAG tables based on assembled read counts
-source_dir_1="atlas_Chx_allophototropha"
-source_dir_2="atlas_L227_5C"
-output_dir="relative_abundances"
-output_filepath_1="${output_dir}/Capt_MAG_table_to_assembled.tsv"
-output_filepath_2="${output_dir}/L227_5C_MAG_table_to_assembled.tsv"
-
-mkdir -p "${output_dir}"
-
-generate_MAG_table.py -o "${output_filepath_1}" \
-  -a "${source_dir_1}" \
-  -R "${source_dir_1}/stats/combined_contig_stats.tsv" \
-  -t "${source_dir_1}/genomes/taxonomy/gtdb/gtdbtk.bac120.summary.tsv" \
-  2>&1 | tee "${output_filepath_1%.tsv}.log"
-
-generate_MAG_table.py -o "${output_filepath_2}" \
-  -a "${source_dir_2}" \
-  -R "${source_dir_2}/stats/combined_contig_stats.tsv" \
-  -t "${source_dir_2}/genomes/taxonomy/gtdb/gtdbtk.bac120.summary.tsv" \
-  2>&1 | tee "${output_filepath_2%.tsv}.log"
-```
-The output MAG abundance tables are provided in that folder for reference and are used to generate Extended Data Fig. 1 (see below).
-
-## Curation of the genome bins
-I identified the two '_Ca_. Chloroheliales' genome bins from the above ATLAS run folders by looking for the bins classified to the _Chloroflexota_ phylum 
-based on the `genomes/taxonomy/gtdb/gtdbtk.bac120.summary.tsv` file in each folder.
+### Curation of the genome bins
+I identified the two '_Ca_. Chloroheliales' genome bins from the above ATLAS run folders by looking for the bins classified to the _Chloroflexota_ phylum based on the `genomes/taxonomy/gtdb/gtdbtk.bac120.summary.tsv` file in each folder.
 
 Then, I manually removed suspect scaffolds as described in the paper.
 
-Curated genomes are available from NCBI (see the `Ca_Chloroheliales_genome_analysis` folder in this repo for more details).
+Curated genomes are available from NCBI, annotated using PGAP during submission. 
+**Note**: the Ca. Chx. allophototropha genome analyzed in the manuscript was ultimately derived from a different dataset than this. See `genomics/Chlorohelix_genome_final`.
 
 
-## Unassembled read-based analyses
-Install FragGeneScanPlusPlus:
-```bash
-conda create -n FGSpp_Aug2019_9a203d8 -c bioconda bbmap=38.75
-conda activate FGSpp_9a203d8
+Done! These data will be used again later in the `genomics` folder under `culture_MAGs_intermediate`.
 
-# Make a share folder
-mkdir -p "${CONDA_PREFIX}/share"
-cd "${CONDA_PREFIX}/share"
-
-# Add the repo
-git clone https://github.com/unipept/FragGeneScanPlusPlus.git
-cd FragGeneScanPlusPlus
-# commit 9a203d8 (Aug. 22, 2019)
-git checkout 9a203d8
-
-make
-
-# Final binary is `FGSpp` in this folder
-# Add the repo to the PATH
-mkdir -p "${CONDA_PREFIX}/etc/conda/activate.d"
-if [[ ! -f "${CONDA_PREFIX}/etc/conda/activate.d/env_vars.sh" ]]; then
-echo '#!/bin/sh' > "${CONDA_PREFIX}/etc/conda/activate.d/env_vars.sh"
-fi
-echo "export PATH=\${PATH}:${CONDA_PREFIX}/share/FragGeneScanPlusPlus" >> \
-"${CONDA_PREFIX}/etc/conda/activate.d/env_vars.sh"
-chmod 755 "${CONDA_PREFIX}/etc/conda/activate.d/env_vars.sh"
-# Now restart the env
-
-conda activate FGSpp_9a203d8
-```
-
-Predicted ORFs directly from short read data:
-```bash
-# Activate the conda env
-# conda activate FGSpp_9a203d8
-
-set -euo pipefail # So the code will fail if any of the FGS jobs have an error; code can be a bit sensitive.
-
-work_dir="unassembled_read_analysis"
-source_dir=downloads
-output_dir="${work_dir}/faa_files"
-logfile="${output_dir}/FGSpp.log"
-threads=20
-chunk_size=100 # number of sequences in a chunk; increase for faster run but more RAM requirement
-
-mkdir -p "${output_dir}"
-cd "${output_dir}"
-
-echo "[ $(date -u) ]: Predicting amino acid sequences of short read FastQ files" | tee "${logfile}"
-
-# Auto-set the location of the training files (same directory as the FGSpp binary)
-if [[ ! -d train ]]; then
-  echo "[ $(date -u) ]: Linking the training file directory" | tee -a "${logfile}"
-  train_file_dir="$(which FGSpp)"
-  train_file_dir="${train_file_dir%FGSpp}train"
-  ln -s "${train_file_dir}" .
-fi
-
-
-fastq_filepaths=($(find -L "${source_dir}" -type f -name "*_R1.fastq.gz" | sort -h))
-echo "[ $(date -u) ]: Scanning ${#fastq_filepaths[@]} FastQ files:" | tee -a "${logfile}"
-
-for fastq_filepath in ${fastq_filepaths[@]}; do
-  output_filepath="${output_dir}/${fastq_filepath##*/}"
-  output_filepath="${output_filepath%.fastq.gz}.frag.faa"
-
-  echo "[ $(date -u) ]: ${fastq_filepath##*/}" | tee -a "${logfile}"
-
-  reformat.sh in="${fastq_filepath}" out=stdout.fa t=${threads} fastawrap=0 trimreaddescription=t 2>/dev/null | \
-    FGSpp -s stdin -o stdout -w 0 -t illumina_10 -c ${chunk_size} -p ${threads} > "${output_filepath}"
-done
-
-echo "[ $(date -u) ]: Done." | tee -a "${logfile}"
-
-cd ../..
-# You might need to re-start your bash session to get rid of some of the annoying effects of `set -euo pipefail` on normal Terminal work..
-```
-
-Get HMM files
-```bash
-mkdir -p unassembled_read_analysis/hmm_files
-
-# Get rpoB from FunGene
-curl -LOJ http://fungene.cme.msu.edu/hmm_download.spr?hmm_id=31
-# Saves as 'rpoB.hmm'; Nov. 2009 version
-
-mv rpoB.hmm unassembled_read_analysis/hmm_files
-```
-
-Run MetAnnotate v0.9.2
-```bash
-work_dir="unassembled_read_analysis"
-# **MANUALLY provide the MetAnnotate data directory. If you haven't used MetAnnotate before, 
-# you'll need to download this as described in [the README](https://github.com/MetAnnotate/MetAnnotate/tree/develop)
-refseq_dir="/Analysis/metannotate/data"
-orf_dir="${work_dir}/faa_files"
-hmm_dir="${work_dir}/hmm_files"
-output_dir="${work_dir}/metannotate"
-
-mkdir -p "${output_dir}"
-cd "${output_dir}"
-
-# Enter the MetAnnotate Docker container (note that the Docker container will auto-install when you run this command; you just need to have docker on your server)
-wget https://github.com/MetAnnotate/MetAnnotate/releases/download/0.9.2/enter-metannotate
-./enter-metannotate "${refseq_dir}" "${orf_dir}" "${hmm_dir}" "${output_dir}"
-
-# Now, inside the docker container:
-threads=10
-echo ${threads} > MetAnnotate/concurrency.txt
-ref_UID=$(stat -c "%u" /home/linuxbrew/output)
-sudo chown -R linuxbrew output
-metannotate-wrapper-docker sequence orf_files hmm_files 2>&1 | tee output/metannotate_wrapper_docker.log
-sudo chown -R $ref_UID /home/linuxbrew/output
-
-exit
-
-cd ../..
-```
-Will now have a rpoB taxonomy file at `unassembled_read_analysis/hmm_files/rpoB_[number]_all_annotations_[random_code].tsv`.  
-In this folder, you'll find the file `relative_abundances/rpoB_all_annotations.tsv` as a reference copy of that file.
-
-Relative abundances of taxa from the enrichment cultures using both unassembled read-based methods and read mapping to genome bins (above) are used in Extended Data Fig. 1.
-
-## Relative abundance plot
-Extended Data Fig. 1 shows the relative abundances of taxa in the enrichment cultures based on the unassembled read-based profiles and the MAG-based 
-read mapping profiles generated above. To make Extended Data Fig. 1, the R script `Figure_ED1_plotter.R` was used, which is in the 
-`relative_abundances` folder.
 
 ## Scanning metagenomes containing potential '_Ca._ Chloroheliales' members for photosynthesis genes
-This was only briefly mentioned in the paper, but because two genomes from the GTDB were classified to the same order as '_Ca_. Chx. allophototropha', 
-I examined the corresponding raw metagenome files that those two genome bins were derived from to search for signs of Type I reaction center-associated 
-genes. I used the custom HMMs developed as decribed in the `genome_bin_analysis` folder.
+This was only briefly mentioned in the paper, but because two genomes from the GTDB were classified to the same order as '_Ca_. Chx. allophototropha', I examined the corresponding raw metagenome files that those two genome bins were derived from to search for signs of Type I reaction center-associated genes. I used the custom HMMs developed as decribed in the `genome_bin_analysis` folder.
 
 Downloaded the metagenomes
 ```bash

@@ -1,0 +1,47 @@
+topology: 'circular'
+organism:
+    genus_species: 'Chloroflexus'
+    strain: 'L227-S17'
+contact_info:
+    last_name: 'Tsuji'
+    first_name: 'Jackson'
+    organization: 'University of Waterloo'
+    department: 'Biology'
+authors:
+    - author:
+        last_name: 'Tsuji'
+        first_name: 'Jackson'
+        middle_initial: 'M'
+    - author:
+        last_name: 'Shaw'
+        first_name: 'Nicolette'
+        middle_initial: 'A'
+    - author:
+        last_name: 'Nagashima'
+        first_name: 'Sakiko'
+    - author:
+        last_name: 'Venkiteswaran'
+        first_name: 'Jason'
+        middle_initial: 'J'
+    - author:
+        last_name: 'Schiff'
+        first_name: 'Sherry'
+        middle_initial: 'L'
+    - author:
+        last_name: 'Watanabe'
+        first_name: 'Tomohiro'
+    - author:
+        last_name: 'Fukui'
+        first_name: 'Manabu'
+    - author:
+        last_name: 'Hanada'
+        first_name: 'Satoshi'
+    - author:
+        last_name: 'Tank'
+        first_name: 'Marcus'
+    - author:
+        last_name: 'Neufeld'
+        first_name: 'Josh'
+        middle_initial: 'D'
+bioproject: 'PRJNA909349'
+locus_tag_prefix: 'OZ401'

@@ -1,0 +1,6 @@
+fasta: 
+    class: File
+    location: L227G1.fasta
+submol:
+    class: File
+    location: submol.yaml

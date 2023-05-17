@@ -277,7 +277,9 @@ TODO - add download info once everything is available on NCBI.
 Save the data to the `input` folder.
 
 ### Short read QC
-TODO - add
+These reads are the same ones that were QC processed in the `culture_metagenomics` section, specifically the `Capt_S15` sample. See the README in `culture_metagenomics` for more. QC was performed using ATLAS 2.2.0.
+
+Copy the two main QC'ed files (R1 and R2) to `short_read_qc` as `ChxS15_QC_R1.fastq.gz` and `ChxS15_QC_R2.fastq.gz`.
 
 ### Hybrid genome assembly
 Assumes rotary was already installed...

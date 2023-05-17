@@ -1,0 +1,15 @@
+genome	Domain	Phylum	Class	Order	Family	Genus	Species	Completeness	Contamination	Strain_heterogeneity
+L227-G1	Bacteria	Acidobacteriota	Holophagae	Holophagales	Holophagaceae	Geothrix	Unresolved_Geothrix			
+Cfx3-06	Bacteria	Bacteroidota	Bacteroidia	Bacteroidales	BBW3	UBA8529	Unresolved_UBA8529	98.1	2.33	0.0
+Cfx3-09	Bacteria	Bacteroidota	Bacteroidia	Bacteroidales	FEN-979	Unresolved_FEN-979	Unresolved_FEN-979	97.31	2.69	0.0
+Cfx3-02	Bacteria	Bacteroidota	Bacteroidia	Bacteroidales	Lentimicrobiaceae	UBA4417	Unresolved_UBA4417	97.04	2.15	0.0
+Cfx3-03	Bacteria	Bacteroidota	Bacteroidia	Bacteroidales	Lentimicrobiaceae	Unresolved_Lentimicrobiaceae	Unresolved_Lentimicrobiaceae	98.91	6.94	55.56
+L227-S17	Bacteria	Chloroflexota	Chloroflexia	54-19	54-19	Unresolved_54-19	Unresolved_54-19			
+Cfx3-08	Bacteria	Desulfuromonadota	Desulfuromonadia	Geobacterales	Geobacteraceae	Unresolved_Geobacteraceae	Unresolved_Geobacteraceae	96.13	0.0	0.0
+Cfx3-07	Bacteria	Patescibacteria	Paceibacteria	UBA9983_A	UBA9973	UBA8515	Unresolved_UBA8515	60.75	3.4	0.0
+Cfx3-05	Bacteria	Proteobacteria	Alphaproteobacteria	Rhizobiales	Xanthobacteraceae	Rhodopseudomonas	Unresolved_Rhodopseudomonas	98.4	1.41	0.0
+Cfx3-10	Bacteria	Proteobacteria	Gammaproteobacteria	Burkholderiales	Burkholderiaceae	Rhodoferax	Unresolved_Rhodoferax	69.87	3.74	0.0
+Cfx2-01	Bacteria	Bacteroidota	Bacteroidia	Bacteroidales	CG2-30-32-10	Unresolved_CG2-30-32-10	Unresolved_CG2-30-32-10	96.4	3.05	0.0
+L227-5C	Bacteria	Chloroflexota	Chloroflexia	54-19	54-19	Unresolved_54-19	Unresolved_54-19	96.33	1.56	0.0
+Cfx2-04	Bacteria	Desulfuromonadota	Desulfuromonadia	Geobacterales	Pelobacteraceae	Pelobacter_C	Unresolved_Pelobacter_C	97.4	0.97	0.0
+Cfx2-03	Bacteria	Proteobacteria	Alphaproteobacteria	Rhizobiales	Xanthobacteraceae	Rhodoplanes	Unresolved_Rhodoplanes	98.42	1.11	25.0

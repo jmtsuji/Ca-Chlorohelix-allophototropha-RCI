@@ -1,0 +1,14 @@
+20211112_barcode21_cluster0 	0.0000	N	*	*	Chx_allophototropha 16S ribosomal RNA	dqt=0;
+20220216_barcode12_cluster5 	0.0000	?	*	*	NR_180005.1 Acinetobacter oryzae strain B23 16S ribosomal RNA, partial sequence	dqt=5;why=nodiv;
+20220216_barcode08_cluster1 	0.5267	?	NR_036779.1 Geothrix fermentans strain H5 16S ribosomal RNA, partial sequence	NR_036891.1 Holophaga foetida strain TMBS4 16S ribosomal RNA, partial sequence	(L)	dqt=25;dqm=28;L=64,13,15(1436);R=12,0,0(12);div=-1.0%;
+20220216_barcode08_cluster2 	30.9145	Y	Chx_allophototropha 16S ribosomal RNA	NR_036779.1 Geothrix fermentans strain H5 16S ribosomal RNA, partial sequence	(L)	dqt=154;dqm=12;L=216,0,0(749);R=151,10,3(689);div=10.1%;
+20220216_barcode11_cluster6 	30.9949	Y	Chx_allophototropha 16S ribosomal RNA	NR_036779.1 Geothrix fermentans strain H5 16S ribosomal RNA, partial sequence	(R)	dqt=161;dqm=13;L=162,0,0(510);R=204,10,4(954);div=10.2%;
+20220216_barcode08_cluster6 rc 	16.7630	Y	Chx_allophototropha 16S ribosomal RNA	NR_036779.1 Geothrix fermentans strain H5 16S ribosomal RNA, partial sequence	(R)	dqt=103;dqm=28;L=89,0,0(252);R=262,12,17(1206);div=5.3%;
+20220216_barcode11_cluster8 	25.9251	Y	Chx_allophototropha 16S ribosomal RNA	NR_036779.1 Geothrix fermentans strain H5 16S ribosomal RNA, partial sequence	(L)	dqt=107;dqm=12;L=263,0,0(1022);R=104,10,3(380);div=6.8%;
+20220216_barcode08_cluster7 rc 	17.4133	Y	Chx_allophototropha 16S ribosomal RNA	NR_036779.1 Geothrix fermentans strain H5 16S ribosomal RNA, partial sequence	(L)	dqt=69;dqm=13;L=302,0,0(1189);R=66,11,3(275);div=4.1%;
+20220216_barcode08_cluster12 rc 	34.9517	Y	NR_036779.1 Geothrix fermentans strain H5 16S ribosomal RNA, partial sequence	Chx_allophototropha 16S ribosomal RNA	(L)	dqt=173;dqm=27;L=195,6,21(784);R=161,0,0(668);div=10.2%;
+20220216_barcode08_cluster3 	33.9782	Y	NR_036779.1 Geothrix fermentans strain H5 16S ribosomal RNA, partial sequence	Chx_allophototropha 16S ribosomal RNA	(R)	dqt=157;dqm=26;L=137,6,20(486);R=220,0,0(960);div=9.1%;
+20220216_barcode08_cluster4 	41.9234	Y	NR_036779.1 Geothrix fermentans strain H5 16S ribosomal RNA, partial sequence	Chx_allophototropha 16S ribosomal RNA	(R)	dqt=88;dqm=11;L=81,4,7(252);R=291,0,0(1206);div=5.5%;
+20220216_barcode13_cluster4 	35.2690	Y	NR_036779.1 Geothrix fermentans strain H5 16S ribosomal RNA, partial sequence	Chx_allophototropha 16S ribosomal RNA	(L)	dqt=192;dqm=27;L=176,6,21(662);R=180,0,0(791);div=11.5%;
+20220216_barcode12_cluster0 	0.0000	?	*	*	NR_026163.1 Microbacterium testaceum strain DSM 20166 16S ribosomal RNA, partial sequence	dqt=10;why=nodiv;
+20220216_barcode14_cluster0 rc 	0.0000	?	*	*	NR_116570.1 Sphingomonas hankookensis strain ODN7 16S ribosomal RNA, partial sequence	dqt=7;why=nodiv;

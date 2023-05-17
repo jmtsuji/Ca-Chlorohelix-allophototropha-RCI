@@ -1,0 +1,15 @@
+genome	Domain	Phylum	Class	Order	Family	Genus	Species	Completeness	Contamination	Strain_heterogeneity	L227-5C_S00	L227-S17_S01	L227-S17_S15	L227-S17_S15c_long	L227-S17_S19	L227-S17_S19_long
+Cfx2-01	Bacteria	Bacteroidota	Bacteroidia	Bacteroidales	CG2-30-32-10	Unresolved_CG2-30-32-10	Unresolved_CG2-30-32-10	96.4	3.05	0.0	3.757059556503284	0.00038482664977210163	2.4546361756670198e-05	0.0	0.0	0.0
+Cfx2-03	Bacteria	Proteobacteria	Alphaproteobacteria	Rhizobiales	Xanthobacteraceae	Rhodoplanes	Unresolved_Rhodoplanes	98.42	1.11	25.0	29.634797502699396	0.0017722279923715206	4.9092723513340396e-05	0.2220870898659546	0.0	0.0007618699335649418
+Cfx2-04	Bacteria	Desulfuromonadota	Desulfuromonadia	Geobacterales	Pelobacteraceae	Pelobacter_C	Unresolved_Pelobacter_C	97.4	0.97	0.0	4.1594329002312245	0.2548058772346276	0.0	0.019829204452317374	0.0	0.0
+Cfx3-02	Bacteria	Bacteroidota	Bacteroidia	Bacteroidales	Lentimicrobiaceae	UBA4417	Unresolved_UBA4417	97.04	2.15	0.0	0.030605908532561683	8.610607685838865	0.0	0.0	0.0	0.0
+Cfx3-03	Bacteria	Bacteroidota	Bacteroidia	Bacteroidales	Lentimicrobiaceae	Unresolved_Lentimicrobiaceae	Unresolved_Lentimicrobiaceae	98.91	6.94	55.56	0.011057047880260722	0.5290151192314485	7.035337065116712	0.04759009068556169	1.8440049983212345	0.06552081428658499
+Cfx3-05	Bacteria	Proteobacteria	Alphaproteobacteria	Rhizobiales	Xanthobacteraceae	Rhodopseudomonas	Unresolved_Rhodopseudomonas	98.4	1.41	0.0	0.019482518365019394	5.833161849177118	0.00030069293151920994	0.19300425666922244	0.0	0.0
+Cfx3-06	Bacteria	Bacteroidota	Bacteroidia	Bacteroidales	BBW3	UBA8529	Unresolved_UBA8529	98.1	2.33	0.0	0.012206980859807837	5.529979211259298	0.0	0.0	0.0	0.0
+Cfx3-07	Bacteria	Patescibacteria	Paceibacteria	UBA9983_A	UBA9973	UBA8515	Unresolved_UBA8515	60.75	3.4	0.0	0.006774284667973069	0.45152318438786637	0.0	0.0	0.0	0.0
+Cfx3-08	Bacteria	Desulfuromonadota	Desulfuromonadia	Geobacterales	Geobacteraceae	Unresolved_Geobacteraceae	Unresolved_Geobacteraceae	96.13	0.0	0.0	0.029057921829325175	10.833325906854126	0.0031235245335362828	0.003965840890463475	0.01523547626611178	0.0
+Cfx3-09	Bacteria	Bacteroidota	Bacteroidia	Bacteroidales	FEN-979	Unresolved_FEN-979	Unresolved_FEN-979	97.31	2.69	0.0	0.05064127929159411	5.86419102956927	0.00010432203746584834	0.0	0.00036167302708870695	0.0007618699335649418
+Cfx3-10	Bacteria	Proteobacteria	Gammaproteobacteria	Burkholderiales	Burkholderiaceae	Rhodoferax	Unresolved_Rhodoferax	69.87	3.74	0.0	0.009000436974532228	1.7352745069762996	0.00044183451162006353	0.4045157708272744	3.013941892405891e-05	0.0
+L227-5C	Bacteria	Chloroflexota	Chloroflexia	54-19	54-19	Unresolved_54-19	Unresolved_54-19	96.33	1.56	0.0	12.29891652724958	0.07799828569854544	0.0003866051976675556	0.0	0.0	0.0
+L227-G1	Bacteria	Acidobacteriota	Holophagae	Holophagales	Holophagaceae	Geothrix	Unresolved_Geothrix				0.046719712976728306	0.09200395034683008	15.140380029227352	49.52806493403485	0.0004219518649368248	0.0
+L227-S17	Bacteria	Chloroflexota	Chloroflexia	54-19	54-19	Unresolved_54-19	Unresolved_54-19				0.06588526263584689	28.823627465118502	18.592973088473556	46.519313645136556	96.64056994846763	99.90019503870299

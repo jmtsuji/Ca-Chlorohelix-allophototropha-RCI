@@ -146,7 +146,7 @@ Notes:
 cd "atlas_Chx_allophototropha"
 
 # Finish the QC step - note this should use the downloaded short reads from NCBI rather than those processed via Tell-Link
-# TODO - confirm that the short read in NCBI are the ones demultiplexed via Picard (I think they are)
+# Note that the short read in NCBI are the ones demultiplexed via Picard
 atlas run -w . -c config.yaml -j 50 all --reason -p \
   --until finished_QC \
   2>&1 | tee atlas_run_Qc.log

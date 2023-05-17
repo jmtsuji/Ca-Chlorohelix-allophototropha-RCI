@@ -8,6 +8,7 @@ This folder contains (or points to) supplementary data files referenced in the m
 - `hidden_markov_models`: contains custom **profile hidden Markov models (HMMs)** for the RCI protein and FMO protein of "_Ca_. Chx. allophototropha" that were used to perform sequence searches for the manuscript.
 - `homology_models`: contains PDB-format **predicted protein strutures** for key photosynthesis genes; the "_Ca_. Chx. allophototropha" pscA-like gene's predicted structure was visualized in an Extended Data figure in the manuscript.
 - `BchXYZ_phylogenies`: individual phylogenies (Newick format) and sequence alignments, with and without masking of non-informative regions, for BchX, BchY, and BchZ genes as described in the manuscript text.
+  - As indicated below, detailed phylogeny files for all gene phylogenies shown in the manuscript (e.g., Fig. 5) can be found in the `analysis_code/phylogenomics/alignments_and_phylogenies` folder in this repo.
 - `sequences_of_interest`: sequences of key photosynthesis-associated gene homologs from "_Ca_. Chloroheliales" members. Nucleotide gene sequences and predicted protein sequences are included.
 
 ## Other files of interest

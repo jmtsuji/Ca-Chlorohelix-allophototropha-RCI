@@ -303,8 +303,6 @@ sample-id	culture-id
 ```
 Save as `sample-metadata.tsv`.
 
-TODO - make the reduced version shown above as a file in the repo directly.
-
 ### Install NanoCLUST
 #### Downloads
 Download the Git repo:
@@ -325,7 +323,7 @@ wget -O - https://ftp.ncbi.nlm.nih.gov/blast/db/taxdb.tar.gz | tar -xzvf -
 
 cd ../..
 ```
-Note: NanoCLUST may or may not work with never databases from NCBI without some manual modifications. (TODO: add link to issue) I used a database from 2022.02.16 (TODO: confirm).
+Note: NanoCLUST may or may not work with never databases from NCBI without some manual modifications. (TODO: add link to issue) In the end, I do not use classifications from NanoCLUST for this work, so you might also be able to find a way to bypass this classification step entirely if you'd like.
 
 #### Test
 Run with docker as a test

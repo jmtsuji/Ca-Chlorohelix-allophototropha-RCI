@@ -312,7 +312,6 @@ Gather the QC'ed reads
 mkdir -p "unassembled_read_search" && cd "$_"
 mkdir -p 01_metagenome_R1_files && cd "$_"
 
-# TODO - get atlas dir name
 find "../../lake_metagenomes" -maxdepth 3 -mindepth 3 -type f -name "*_QC_R1.fastq.gz" | \
   xargs -I {} ln -s {} .
 

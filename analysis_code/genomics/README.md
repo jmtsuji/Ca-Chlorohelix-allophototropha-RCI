@@ -558,8 +558,6 @@ cd ../../..
 #### Get contig IDs
 Got contig IDs associated with each MAG
 
-TODO - confirm no contigs have the same ID
-
 ```bash
 mkdir -p "input/genomes_clustered/final" && cd "$_"
 
@@ -832,17 +830,16 @@ cd ../..
 ```
 
 #### Notes about the purity of the Chx S19 culture
-TODO - clean this up to make it easier to understand.
-
 After finishing the above read mapping, I checked the S19 short read culture sample more carefully to see how pure the culture was. 
-I noticed that a few contigs (I guess 40 or something) from other genome bins had mapped reads from the Chx S19 metagenome. Could this be a sign that the S19 culture was not "pure", or could it mean that those genome bins had contamination in them from the true Chx genome? 
-Checked the contigs in question, and they are almost all <5 kb and have >99% identity across >90% of the sequence to the closed Chx genome. Thus, I conclude they must be cross-binning contamination of Chx genome fragments into the old MAG set.
+I noticed that a few contigs (I guess 40 or something) from other genome bins (especially bin Chx3-03) had mapped reads from the Chx S19 metagenome. Could this be a sign that the S19 culture was not "pure", or could it mean that those genome bins had contamination in them from the true Chx genome? 
 
-I searched the fragments against the Chx genome. All have a top hit of at least 96.845% identity and 100% query coverage. Many have multiple copies. So maybe they were repetitive elements that didn't assemble well in the Chx genome?
+I checked the ~40 contigs in question, and they are almost all <5 kb and have >99% identity across >90% of the sequence to the closed Chx genome. Thus, they are likely cross-binning contamination of Chx genome fragments into the old MAG set.
+
+I searched the fragments against the Chx genome. Almost all have a top hit of >=96.845% identity and 100% query coverage. Many have multiple copies. So maybe they were repetitive elements that didn't assemble well in the Chx genome?
 
 Also, note that only 28 reads mapped to the L227-G1 genome. This is 0.00086% of the mapped reads... very low.
 
-See the Excel file in this folder, `Chx-S19-short-contamination-check`, where I show that >99.9% of reads mapping to Cfx3-03 in the end are coming from these possible Chlorohelix contigs. Within that read set, I also show that contigs with >99% identity across 100% of their sequence to Chlorohelix allophototropha make up 96.86% of reads mapping to Cfx-03.
+See the Excel file in this folder, `Chx-S19-short-contamination-check`, where I show that >99.9% of reads mapping to Cfx3-03 in the end are coming from these possible Chlorohelix contigs. Within that read set, I also show that contigs with >99% identity across 100% of their sequence to Chlorohelix allophototropha make up 96.86% of reads mapping to the Cfx-03 genome bin from the Chx S19 sample.
 
 Conclusion: I can have high confidence that the Chx S19 metagenome was almost entirely Chx.
 

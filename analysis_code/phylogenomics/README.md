@@ -898,6 +898,137 @@ cd ../..
 ```
 The resuting tree file `BchXYZ_aligned_masked.treefile` is plotted in Extended Data Fig. 10.
 
+### (Bacterio)chlorophyll synthase (ChlG/BchG)
+This analysis forms part of the supplementary materials and was done a bit differently/independently of the analyses above.
+
+Here, genes were independently collected/downloaded and were then analyzed. See the unaligned input sequences in the `input` sub-folder.
+
+#### Setup
+Install needed software
+
+```bash
+conda create -n phylogenies -c bioconda -c conda-forge seqtk=1.3 clustalo=1.2.4 gblocks=0.91b iqtree=2.2.0.3 blast=2.12.0
+```
+
+#### Candidate genes from the L227-S17 and L227-5C genomes
+Based on a BLASTP search of the Chlorobaculum tepidum ChlG sequence (AAM72500.1) against the strain L227-S17 genome:
+```bash
+conda activate phylogenies
+
+# Save AAM72500.1 as AAM72500.1_ChlG.faa
+
+# Assumes you have downloaded the closed genome of strain L227-S17 as described in the README in the source_data section. Make a copy here.
+blastp -query AAM72500.1_ChlG.faa -subject L227-S17.faa -outfmt "6 qseqid sseqid pident evalue bitscore qcovhsp qlen qstart qend slen sstart send" -evalue 1e-1
+```
+
+Results
+```
+qseqid      sseqid                  pident  evalue   bits qcov qlen qst qend slen sst send notes
+AAM72500.1  gnl|extdb|OZ401_002374  34.251  4.15e-57  186  87  367  41  359  333  15  329 # ChlG?
+AAM72500.1  gnl|extdb|OZ401_001677  36.301  6.15e-56  183  78  367  75  362  323  30  320 # BchG based on BackBLAST previously
+AAM72500.1  gnl|extdb|OZ401_002285  34.722  9.26e-45  153  76  367  75  353  306  7   287 # BchK based on BackBLAST previously
+AAM72500.1  gnl|extdb|OZ401_003162  34.014  6.53e-40  141  78  367  75  359  321  23  308 # Extra gene? UbiA?
+```
+(More evidence than just this, e.g., previous BackBLAST searches, were also used to identify these 4 gene candidates)
+
+Equivalents in L227-5C were also identified in Extended Data Table 2 and by BLASTP.
+
+Summary of candidates by locus tag:
+```
+gene-candidate  L227-S17      L227-5C
+chlG?           OZ401_002374  HXX20_02935
+bchG            OZ401_001677  HXX20_04355
+bchK            OZ401_002285  HXX20_10895
+Second bchK?    OZ401_003162  HXX20_17010
+```
+
+These candidates will be added into the unaligned input files in the `input` folder below.
+
+#### ChlG/BchG phylogeny that also includes BchK
+This first phylogeny was done to confirm whether one of the chlorophyll synthases in the strain L227-S17 genome (and L227-5C genome) was 
+likely BchK.
+
+Align
+```bash
+conda activate phylogenies
+
+# strip off comments
+seqtk seq -C input/ChlG_BchG_BchK.faa > ChlG_BchG_BchK_ren.faa
+
+# clustalo 1.2.4
+clustalo -v -v -i ChlG_BchG_BchK_ren.faa -o ChlG_BchG_BchK_aln.faa 2>&1 | tee ChlG_BchG_BchK_aln.log
+
+# Gblocks v0.91b
+Gblocks ChlG_BchG_BchK_aln.faa -t=p -b3=40 -b4=4 -b5=h -e=_GB01 \
+  2>&1 | tee ChlG_BchG_BchK_mask.log
+mv ChlG_BchG_BchK_aln.faa_GB01 ChlG_BchG_BchK_mask.faa
+```
+
+Gblocks output summary
+```
+Original alignment: 451 positions
+Gblocks alignment:  215 positions (47 %) in 9 selected block(s)
+```
+
+Make tree
+```bash
+mkdir -p ChlG_BchG_BchK
+iqtree -s "ChlG_BchG_BchK_mask.faa" -T 4 --prefix "ChlG_BchG_BchK/masked" -B 1000 -m TEST --boot-trees
+# Best-fit model: LG+F+I+G4 chosen according to BIC
+
+# Supplement: try tree again with no mask for comparison
+iqtree -s "ChlG_BchG_BchK_ren.faa" -T 4 --prefix "ChlG_BchG_BchK/unmasked" -B 1000 -m TEST --boot-trees
+# Best-fit model: LG+F+I+G4 chosen according to BIC
+```
+
+Results:
+- The topology is stable between masked and unmasked. Bootstraps are reasonable.
+- Confirmed as BchK based on phylogeny: OZ401_002285, HXX20_10895
+ - Also seem to be BchK-like: OZ401_003162, HXX20_17010
+- ChlG seems paraphyletic. Separate clades for oxygenic, anoxygenic (Ctepi+CAB), and anoxygenic (Chx). I wonder if BchK arose from within the ChlG clade, disrupting the phylogeny? Removing the BchK clade might help.
+
+#### ChlG/BchG phylogeny (BchK-free)
+Also omitted the 2 L227-S17 and 2 L227-5C sequences associated with the BchK group.
+
+Align
+```bash
+conda activate phylogenies
+
+# strip off comments
+seqtk seq -C input/ChlG_BchG.faa > ChlG_BchG_ren.faa
+
+# clustalo 1.2.4
+clustalo -v -v -i ChlG_BchG_ren.faa -o ChlG_BchG_aln.faa 2>&1 | tee ChlG_BchG_aln.log
+
+# Gblocks v0.91b
+Gblocks ChlG_BchG_aln.faa -t=p -b3=40 -b4=4 -b5=h -e=_GB01 \
+  2>&1 | tee ChlG_BchG_mask.log
+mv ChlG_BchG_aln.faa_GB01 ChlG_BchG_mask.faa
+```
+
+Gblocks output summary
+```
+Original alignment: 416 positions
+Gblocks alignment:  255 positions (61 %) in 7 selected block(s)
+```
+
+Make tree
+```bash
+mkdir -p ChlG_BchG
+iqtree -s "ChlG_BchG_mask.faa" -T 4 --prefix "ChlG_BchG/masked" -B 1000 -m TEST --boot-trees
+# Best-fit model: LG+F+G4 chosen according to BIC
+
+# Supplement: try tree again with no mask for comparison
+iqtree -s "ChlG_BchG_ren.faa" -T 4 --prefix "ChlG_BchG/unmasked" -B 1000 -m TEST --boot-trees
+# Best-fit model: LG+F+I+G4 chosen according to BIC
+```
+
+This time:
+- ChlG and BchG are well separated
+- Topology seems stable between phylogenies made with masked and unmasked alignments
+
+Loaded in Dendroscope to make Supplementary Figure 2.
+
 ## Annotree GTDB visualization
 From the Annotree website, I exported a phylogeny of the Genome Tree Database, release 89, summarized to the class level, for an overview of 
 the tree of life. The raw SVG is available in `annotree/annotree_GTDB_r89_class_raw.svg`.

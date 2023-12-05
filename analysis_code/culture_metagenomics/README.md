@@ -178,8 +178,9 @@ I identified the two '_Ca_. Chloroheliales' genome bins from the above ATLAS run
 Then, I manually removed suspect scaffolds as described in the paper.
 
 Curated genomes are available from NCBI, annotated using PGAP during submission. 
+See download instructions in the README file in `source_data` section of this repo, specifically in the part of the 
+README file that mentions the `culture_early_genome_bin_data_accessions.tsv` TSV file.
 **Note**: the Ca. Chx. allophototropha genome analyzed in the manuscript was ultimately derived from a different dataset than this. See `genomics/Chlorohelix_genome_final`.
-
 
 Done! These data will be used again later in the `genomics` folder under `culture_MAGs_intermediate`.
 

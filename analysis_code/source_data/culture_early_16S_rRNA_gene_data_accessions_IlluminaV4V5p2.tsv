@@ -1,0 +1,2 @@
+Name	ID	BioProject	BioSample	run_accession	R1_read_URL	R2_read_URL
+"16S rRNA gene amplicon sequencing (MiSeq) of the ""Ca. Chlorohelix allophototropha"" enrichment culture: subculture 13.2a-3"	Chx-S13.2a-3-16S-MiSeq	PRJNA640240	SAMN36013618	SRR25048743	ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR250/043/SRR25048743/SRR25048743_1.fastq.gz	ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR250/043/SRR25048743/SRR25048743_2.fastq.gz

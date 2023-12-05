@@ -11,11 +11,14 @@ As described in the paper, 16S rRNA gene amplicon sequencing data was analyzed i
 The code for all three analysis methods is shown here.
 
 ## AXIOME3
-Code will be run within the `AXIOME3` directory unless indicated otherwise.
+[AXIOME3](https://github.com/neufeld/axiome3) is a convenient workflow for analyzing gene amplicon sequencing data using QIIME2.
 
-### Install AXIOME3
-[AXIOME3](https://github.com/neufeld/axiome3) is a convenient workflow for analyzing gene amplicon sequencing data using QIIME2.  
+Two separate AXIOME3-based runs were used to analyze V4-V5 region data.
 
+### Run 1: early enrichment cultures
+Code will be run within the `AXIOME3_run1` directory unless indicated otherwise.
+
+#### Install AXIOME3
 Here, we'll install and use commit 1ec1ea6 based on QIIME version 2019.10.
 
 Note that you will need to have pre-installed [miniconda (e.g., miniconda3)](https://docs.conda.io/en/latest/miniconda.html).
@@ -33,11 +36,15 @@ conda env create --name axiome3_1ec1ea6 --file conda_env_file/qiime2-2019.10_AXI
 
 Done. Before running AXIOME3, make sure to activate the environment by running `conda activate axiome3_1ec1ea6`.
 
-### Get the data
-See the `source_data` directory, specifically `culture_early_16S_rRNA_gene_data_accessions.tsv`, for download details (along with the README).
+#### Get the data
+See the `source_data` directory's README, specifically the section that mentions the file 
+`culture_early_16S_rRNA_gene_data_accessions_IlluminaV4V5p1.tsv`, for download instructions.
 
-### Analyze the data
-Analysis is done within the AXIOME3 folder cloned from Github above (a subfolder of the main `AXIOME3` directory).
+The `qiime2_manifest.tsv` file in this folder will need to be edited to contain the real absolute paths to the 
+downloaded files.
+
+#### Analyze the data
+Analysis is done within the AXIOME3 folder cloned from GitHub above (a subfolder of the main `AXIOME3_run1` directory).
 
 For classification, you will need to download and train the Silva classifier, which is described 
 [here](https://docs.qiime2.org/2019.10/tutorials/feature-classifier/) but not shown in this code summary.
@@ -45,7 +52,7 @@ For classification, you will need to download and train the Silva classifier, wh
 Make the config file
 ```bash
 # Actiavte the environment by running:
-# conda activate axiome3_Jun2020_1ec1ea6
+# conda activate axiome3_1ec1ea6
 
 # Generate the run config using the provided manifest file in this repo
 python luigi_config_generator.py \
@@ -60,26 +67,87 @@ Configure `configuration/luigi.cfg` by editing it in a text editor:
 - Denoise: n_threads = 10
 - Taxonomic Classification: n_jobs = 10
 - Make sure to point AXIOME3 to the location of the classifier file you made
-- Left everything else as DEFAULTS
+- Leave everything else as defaults
 
 Then run AXIOME3
 ```bash
 python 16S_pipeline.py Core_Analysis --local-scheduler 2>&1 | tee ../axiome3.log
 ```
-Once finished, the ASV table will be available at `AXIOME3/AXIOME3/output/exported/ASV_table_combined.tsv`.
+Once finished, the ASV table will be available at `AXIOME3_run1/AXIOME3/output/exported/ASV_table_combined.tsv`.
 
-**In lieu of uploading all intermediate analysis files, a summary of the non-rarefied amplicon sequencing variant (ASV) table is provided at `ASV_table_non_rarefied.tsv`. **
+**In lieu of uploading all intermediate analysis files, a summary of the non-rarefied amplicon sequencing variant (ASV) table is provided at `ASV_table_non_rarefied.tsv`.**
 **ASV table data was used to generate Supplementary Data 1 in the manuscript.**
+
+### Run 2: mid-phase enrichment culture
+Code will be run within the `AXIOME3_run2` directory unless indicated otherwise. The code will be very similar to run1, 
+but a different version of AXIOME3 will be used.
+
+#### Install AXIOME3
+Here, we'll install and use commit e35959d based on QIIME version 2019.10.
+
+```bash
+git clone https://github.com/neufeld/AXIOME3.git
+
+cd AXIOME3
+
+git checkout e35959d
+
+# This step (creating the environment) could take time...
+conda env create --name axiome3_e35959d --file conda_env_file/qiime2-2019.10_AXIOME3.yml
+```
+
+Done. Before running AXIOME3, make sure to activate the environment by running `conda activate axiome3_e35959d`.
+
+#### Get the data
+See the `source_data` directory's README, specifically the section that mentions the file 
+`culture_early_16S_rRNA_gene_data_accessions_IlluminaV4V5p2.tsv`, for download instructions.
+
+The `qiime2_manifest.tsv` file in this folder will need to be edited to contain the real absolute paths to the 
+downloaded files.
+
+#### Analyze the data
+Analysis is done within the AXIOME3 folder cloned from GitHub above (a subfolder of the main `AXIOME3_run2` directory).
+
+For classification, you will need to download and train the Silva classifier, which is described 
+[here](https://docs.qiime2.org/2019.10/tutorials/feature-classifier/) but not shown in this code summary.
+
+Make the config file
+```bash
+# Activate the environment by running:
+# conda activate axiome3_e35959d
+
+# Generate the run config using the provided manifest file in this repo
+python luigi_config_generator.py \
+	--manifest ../qiime2_manifest.tsv \
+	--sample-type SampleData[PairedEndSequencesWithQuality] \
+	--input-format PairedEndFastqManifestPhred33V2
+```
+Note that, in reality, I ran this sample in a larger data analysis run with other 16S rRNA gene amplicon samples. 
+This makes little difference on the output ASVs, however.
+
+Configure `configuration/luigi.cfg` by editing it in a text editor:
+- Denoise: n_threads = 30
+- Taxonomic Classification: n_jobs = 30
+- Make sure to point AXIOME3 to the location of the classifier file you made
+- Leave everything else as defaults
+
+Then run AXIOME3
+```bash
+python 16S_pipeline.py Core_Analysis --local-scheduler 2>&1 | tee ../axiome3.log
+```
+Once finished, the ASV table will be available at `AXIOME3_run1/AXIOME3/output/exported/ASV_table_combined.tsv`.
+
+**In lieu of uploading all intermediate analysis files, a summary of the non-rarefied amplicon sequencing variant (ASV) table is provided at `ASV_table_non_rarefied.tsv`.**
+**ASV table data was integrated into Extended Data Table 1 in the manuscript.**
 
 ## Direct use of QIIME2
 Code will be run within the `direct_QIIME2` directory.
 
 ### Get the data
-Data files will be made available online at BioProject PRJNA640240 before the paper is published.
+See download instructions for the files in the README in the `source_data` directory, specifically the section that 
+mentions the file `culture_early_16S_rRNA_gene_data_accessions_IlluminaV4.tsv`.
 
-TODO - add download instructions once publicly available.
-
-After download, put files `Chx_S21.2c_R1.fastq.gz` and `Chx_S21.2c_R2.fastq.gz` here.
+After download, put files `Chx-S21.2c-16S-MiSeq_R1.fastq.gz` and `Chx-S21.2c-16S-MiSeq_R2.fastq.gz` here.
 
 ### Analyze with QIIME2
 Assumes you have already installed QIIME2 2022.8 based on the instructions on the QIIME2 website (link [here](https://docs.qiime2.org/2022.8/install/native/#miniconda))
@@ -87,7 +155,7 @@ Assumes you have already installed QIIME2 2022.8 based on the instructions on th
 Make manifest
 ```
 sample-id	forward-absolute-filepath	reverse-absolute-filepath
-CS21	input/Chx_S21.2c_R1.fastq.gz	input/Chx_S21.2c_R2.fastq.gz
+CS21	input/Chx-S21.2c-16S-MiSeq_R1.fastq.gz	input/Chx-S21.2c-16S-MiSeq_R2.fastq.gz
 ```
 Note that you might need absolute paths instead of relative paths.
 
@@ -259,12 +327,14 @@ Workflow overview:
 - Calculate relative abundances
 
 ### Get the data
-The basecalled reads will be available at BioProject PRJNA640240 upon publication.
+The basecalled reads are available at BioProject PRJNA640240.
 
-TODO: add info and download instructions once ready.
+These reads can be downloaded using the instructions in the README in the `source_data` directory, specifically 
+referring to section that mentions the `culture_early_16S_rRNA_gene_data_accessions_nanopore.tsv` file
 
 #### A note on basecalling
-The basecalled reads will be downloaded directly from NCBI, but here I'll leave a few notes about how basecalling was performed that are outside of what is mentioned in the manuscript text.
+The basecalled reads can be downloaded directly from NCBI (see above), but here I'll leave a few notes about how 
+basecalling was performed that are outside of what is mentioned in the manuscript text.
 
 Most samples were basecalled real-time using Guppy 5.1.12 with the SUP model.
 

@@ -51,7 +51,7 @@ Note that I had to modify two of the ATLAS code files in order to run the sample
 (Both of these issues were addressed in future releases of ATLAS.)
 
 ### Process the metagenome data
-A config file and sampel ID file for the run have already been created at `lake_metagenomes/config.yaml` and `lake_metagenomes/samples.tsv`.   
+A config file and sample ID file for the run have already been created at `lake_metagenomes/config.yaml` and `lake_metagenomes/samples.tsv`.   
 If you want to create config files for yourself, you can use the `atlas init` command as documented in the ATLAS repo.  
 
 Notes:
@@ -230,6 +230,9 @@ I also included a few raw output files in the `lake_metagenomes/summary` folder 
 - `completeness_checkm.tsv`: CheckM stats for dereplicated metagenome-assembled genome (MAG)
 - `raw_counts_genomes.tsv`: reads mapped to each MAG
 - `gtdbtk.bac120.summary.tsv` and `gtdbtk.ar122.summary.tsv`: GTDB taxonomy for the bacterial and archaeal MAGs, respectively
+
+The genome bins are also in the process of being deposited on NCBI at BioProject accession PRJNA1003647. 
+TODO - update this repo with download information after the genomes are finished processing at NCBI.
 
 ### Summary statistics
 To generate Supplementary Data 3 with the relative abundances of the MAGs, I ran a simple personal script to combine various ATLAS output files and calculate relative abundances:

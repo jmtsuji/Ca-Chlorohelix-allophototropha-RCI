@@ -12,9 +12,15 @@ The genome of "_Ca_ Chx. allophototropha" L227-S17 was closed using short and lo
 Note: all code for this section should be run in the `Chlorohelix_genome_final` folder.
 
 ### Get the read data
-TODO - add download information once it is available in NCBI.
+Raw read data can be downloaded as described in the README in the `source_data` section of this repo, specifically the 
+part of the README that mentions the `Chx_closed_genome_raw_data_accessions.tsv` file.
 
-Save reads to the `input` folder.
+If you just want to see the final genome, you can download it from GenBank accession `GCA_030389965.1` on NCBI.
+
+Save downloaded raw reads to the `input` folder. Make sure the downloaded files are named as follows:
+- `ChxS19_R1.fastq.gz`: R1 short read file
+- `ChxS19_R2.fastq.gz`: R2 short read file
+- `ChxS19_Nanopore.fastq.gz`: long read file
 
 ### QC of short read data
 #### Adapter trimming
@@ -272,17 +278,30 @@ This is a slightly more complicated version of the above analysis. Unlike the ab
 Note: all code in this section should be run from the `Geothrix_genome_bin_final` folder.
 
 ### Get the read data
-TODO - add download info once everything is available on NCBI.
+Download instructions are available in the README file in the `source_data` section of this Github repo.
 
-Save the data to the `input` folder.
+Short read metagenome read files, from the `Capt_S15` metagenome, need to be downloaded using the subsection of the 
+README that mentions the `culture_early_metagenome_data_accessions.tsv` file. For this section, we will assume that you 
+have already downloaded these files and performed short read QC on them as described in the `culture_metagenomics` 
+section of this repo - see below.
+
+Meanwhile, the long read (Nanopore) data from the `ChxS15c_nanopore` metagenome, need to be downloaded using the 
+subsection of the README that mentions the `Geothrix_closed_genome_bin_raw_data_accessions.tsv` file.
+
+Save the raw Nanopore read data to the `input` folder.
+
+(Note: if you just want to get the final assembled L227-G1 genome, you can download it from GenBank accession 
+`GCA_030219325.1` on NCBI.)
 
 ### Short read QC
-These reads are the same ones that were QC processed in the `culture_metagenomics` section, specifically the `Capt_S15` sample. See the README in `culture_metagenomics` for more. QC was performed using ATLAS 2.2.0.
+These reads are the same ones that were QC processed in the `culture_metagenomics` section, specifically the `Capt_S15` 
+sample, as mentioned above. See the README in `culture_metagenomics` for more. Here, we will use the QC'ed `Capt_S15` 
+read files that should have been generated in the `culture_metagenomics` section of the code via ATLAS 2.2.0.
 
 Copy the two main QC'ed files (R1 and R2) to `short_read_qc` as `ChxS15_QC_R1.fastq.gz` and `ChxS15_QC_R2.fastq.gz`.
 
 ### Hybrid genome assembly
-Assumes rotary was already installed...
+Assumes rotary was already installed during the Chx genome analysis above.
 
 Update rotary version
 ```bash
@@ -467,7 +486,6 @@ cp ../../rotary/binning/L227G1.fasta .
 
 # See https://github.com/ncbi/pgap/wiki/Input-Files - used template there
 # See input.yaml and submol.yaml files added to the Geothrix_genome_bin_final folder.
-# TODO - update submol.yaml once locus tag is reserved
 
 # Now at PGAP version 2022-04-14.build6021 (was previously at 2022-02-10.build5872)
 
@@ -483,10 +501,17 @@ Done! You can go ahead and copy `post-analysis/pgap/L227G1/annot.fna` to `Geothr
 ## Relative abundance calculations of culture members over time
 Unless otherwise indicated, please run all code in this section in the `culture_MAGs_intermediate` folder.
 
-### Note: downloading the genome bins from culture metagenome analyses
-To calculate relative abundances, you will need to download the sequences of the genome bins obtained from culture metagenomes that were analyzed in this study. You'll also need to download raw read files for the metagenomes. To do so, please see the `README` file in the `source_data` folder, along with the `culture_early_genome_bin_data_accessions.tsv` and `culture_early_metagenome_data_accessions.tsv` files in that folder. Note that links to the closed L227-S17 and L227-G1 genomes and their source files are not yet available. (TODO: add this info and download instructions once available on NCBI.)
+### Download the metagenome and genome bin data
+To calculate relative abundances, you will need to download the sequences of the genome bins obtained from culture 
+metagenomes that were analyzed in this study. You'll also need to download raw read files for the metagenomes. To do 
+so, please see the `README` file in the `source_data` folder, along with the 
+`culture_early_genome_bin_data_accessions.tsv` and `culture_early_metagenome_data_accessions.tsv` files in that folder.
+Please also download the L227-S17 and L227-G1 final genome bins as described in the `source_data` README file, and save 
+the fna.gz files with meaningful names: `L227-S17-closed.fna.gz` and `L227-G1-closed.fna.gz`, respectively.
 
-Please download all of the genome bins and save them to `input/genomes`. Download all of the source metagenome files and save them to `input/reads`.
+After finishing download:
+- Genome bins files: save to `input/genomes`. 
+- Source metagenome read files: save to `input/reads`.
 
 ### Cluster and organize the MAGs
 #### Calculate ANI
@@ -509,8 +534,8 @@ cd ../../..
 ```
 
 Based on the output (`fastani_ren.tsv`), only two genome pairs had >99% ANI:
-- `Ca_Chx_allophototropha_L227-S17` and `Chloroflexi_bacterium__GCA_013390565.1` (99.9607% ANI) # L227-S17 genome
-- `Geothrix_L227-G1` and `Geothrix_sp___GCA_013390615.1` (99.9677% ANI) # L227-G1 genome
+- `L227-S17-closed` and `L227-S17` (99.9607% ANI) # L227-S17 genome
+- `L227-G1-closed` and `Cfx3-01` (99.9677% ANI) # L227-G1 genome
 
 For both of these, I will take the closed genome as the representative.
 
@@ -520,37 +545,22 @@ mkdir -p "input/genomes_clustered/clustered" && cd "$_"
 
 # Manually weed out the two old MAGs of Chx and Geo
 ln -s ../../genomes/*.fna.gz .
-rm Chloroflexi_bacterium__GCA_013390565.1.fna.gz Geothrix_sp___GCA_013390615.1.fna.gz
+rm L227-S17.fna.gz Cfx3-01.fna.gz
 
 cd ../../..
 ```
 14 total
 
-#### Rename MAGs based on strain ID
+#### Rename MAGs
+Just clarify the `-closed` MAGs by removing this suffix
+
 ```bash
 mkdir -p "input/genomes_clustered/final" && cd "$_"
 
-# TODO - add this file after NCBI download info is available
-gca_ids=($(cut -f 1 ../../../cluster_naming_MAGs.tsv))
-strain_ids=($(cut -f 2 ../../../cluster_naming_MAGs.tsv))
+ln -s ../clustered/*.fna.gz .
 
-for i in $(seq 1 ${#gca_ids[@]}); do
-  j=$((${i}-1))
-  gca_id="${gca_ids[${j}]}"
-  strain_id="${strain_ids[${j}]}"
-
-  echo "[ $(date -u) ]: ${gca_id} --> ${strain_id}"
-
-  genomes=($(find -L ../clustered -maxdepth 1 -name "*_${gca_id}.fna.gz"))
-
-  if [[ ${#genomes[@]} != 1 ]]; then
-    echo " [ $(date -u) ]: WARNING: more than one search hit for ${gca_id}; skipping."
-    continue
-  fi
-
-  ln -s "${genomes[0]}" "${strain_id}.fna.gz"
-
-done
+mv L227-S17-closed.fna.gz L227-S17.fna.gz
+mv L227-G1-closed.fna.gz L227-G1.fna.gz
 
 cd ../../..
 ```
@@ -605,68 +615,7 @@ cd ../..
 ```
 
 ### Prepare reads for mapping
-#### Download reads from NCBI
-For the old metagenome data for S0, S1, and S15 of the cultures
-
-TODO - improve this section after the new data download files are ready; this will work for now.
-```bash
-mkdir -p "input/reads" && cd "$_"
-
-# Guide file from v2.0.1 of repo
-wget https://raw.githubusercontent.com/jmtsuji/Ca-Chlorohelix-allophototropha-RCI/v2.0.1/metagenome_analysis/metagenome_data_accessions.tsv
-mv metagenome_data_accessions.tsv metagenome_data_accessions-original.tsv
-
-# Had to make one modification to the download URLs (I wonder if the folder organization structure has changed a tiny bit,  or if I was incorrect before?)
-cat metagenome_data_accessions-original.tsv | \
-  sed 's\SRR120/00\SRR120/03\g' > metagenome_data_accessions.tsv
-
-# Code below is from v2.0.1 of repo as well
-accession_data_filepath="metagenome_data_accessions.tsv"
-output_dir="downloads"
-
-mkdir -p "${output_dir}"
-
-# Read selected table columns
-sample_ids=($(cat "${accession_data_filepath}" | cut -f 2 | tail -n +2))
-r1_urls=($(cat "${accession_data_filepath}" | cut -f 6 | tail -n +2))
-r2_urls=($(cat "${accession_data_filepath}" | cut -f 7 | tail -n +2))
-
-# Iternatively download the FastQ files
-for i in $(seq 1 ${#sample_ids[@]}); do
-  # Make a zero-ordered counter
-  j=$((${i}-1))
-
-  # Get variables
-  sample_id=${sample_ids[${j}]}
-  r1_url=${r1_urls[${j}]}
-  r2_url=${r2_urls[${j}]}
-
-  # Download
-  echo "[$(date -u)]: Downloading '${sample_id}'"
-  wget -O "${output_dir}/${sample_id}_R1.fastq.gz" "${r1_url}"
-  wget -O "${output_dir}/${sample_id}_R2.fastq.gz" "${r2_url}"
-done
-
-echo "[$(date -u)]: Finished."
-```
-
-S15 existed as a single FastQ file (interleaved?), so the first download failed. Had to redo manually:
-```bash
-wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR120/036/SRR12042536/SRR12042536.fastq.gz
-mv SRR12042536.fastq.gz Capt_S15.fastq.gz
-
-mamba create -n sratools -c bioconda -c conda-forge sra-tools
-conda activate sratools
-# sra toolkit version 3.0.3
-
-prefetch SRR12042536 > prefetch.log 2>&1
-fasterq-dump SRR12042536 > fasterq-dump.log 2>&1
-rm -r SRR12042536
-
-gzip -c SRR12042536_1.fastq > downloads/Capt_S15_R1.fastq.gz
-gzip -c SRR12042536_2.fastq > downloads/Capt_S15_R2.fastq.gz
-rm SRR12042536_1.fastq SRR12042536_2.fastq
-```
+(Note: Source metagenome reads should be saved to `input/reads` - see the download section above)
 
 #### Redo QC on the downloaded reads
 ```bash
@@ -697,7 +646,7 @@ cd ../..
 ```
 Finished without errors.
 
-#### Get QC'ed reads from projects already analyzed in this folder
+#### Get QC'ed reads from projects already analyzed in this section of the GitHub repo
 ```bash
 mkdir -p "qc/short_batch2" && cd "$_"
 
@@ -734,6 +683,8 @@ Just use R1 and R2 files for short reads.
 
 I will also standardize the file names here with the correct subculture codes
 
+Note - please manually confirm that the names shown below are correct for your analysis before performing these 
+commands. For example, `Capt-S01` might be named `Capt_S01` in your analysis.
 ```bash
 mkdir -p "qc/short_summary" && cd "$_"
 

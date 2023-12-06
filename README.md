@@ -34,6 +34,7 @@ Three key folders contain the content you might have come to this repo for:
 The `analysis_code` folder is further divided into the following sub-folders:
 
 - `source_data` - contains links to the different publicly available sequences datasets we used
+- `physiology` - contains code and some small data files for analysis of spectroscopy data
 - `16S_rRNA_gene_amplicon` - shows the three different methods used to process 16S rRNA gene amplicon sequencing data 
   in this work, and includes count table data.
 - `culture_metagenomics` - includes code used to obtain genome bins from metagenomes of early enrichment cultures

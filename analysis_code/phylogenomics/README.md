@@ -980,6 +980,7 @@ iqtree -s "ChlG_BchG_BchK_mask.faa" -T 4 --prefix "ChlG_BchG_BchK/masked" -B 100
 iqtree -s "ChlG_BchG_BchK_ren.faa" -T 4 --prefix "ChlG_BchG_BchK/unmasked" -B 1000 -m TEST --boot-trees
 # Best-fit model: LG+F+I+G4 chosen according to BIC
 ```
+Saved the masked phylogeny in the repo as `ChlG_BchG_BchK_mask.tre`
 
 Results:
 - The topology is stable between masked and unmasked. Bootstraps are reasonable.
@@ -1022,6 +1023,7 @@ iqtree -s "ChlG_BchG_mask.faa" -T 4 --prefix "ChlG_BchG/masked" -B 1000 -m TEST 
 iqtree -s "ChlG_BchG_ren.faa" -T 4 --prefix "ChlG_BchG/unmasked" -B 1000 -m TEST --boot-trees
 # Best-fit model: LG+F+I+G4 chosen according to BIC
 ```
+Saved the masked phylogeny in the repo as `ChlG_BchG_mask.tre`
 
 This time:
 - ChlG and BchG are well separated

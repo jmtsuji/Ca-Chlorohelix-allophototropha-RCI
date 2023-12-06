@@ -19,10 +19,7 @@ _Chloroflexota_ phylum, and this has important implications for the evolution of
 manuscript mentioned above for more details.)
 
 ## Repo contents
-Three key folders contain the content you might have come to this repo for:
-- `tables_figures_etc` - raw versions of the tables, figures, and supplementary data files shown in the paper. These 
-  are helpful if you want to directly view the vector-format versions of our graphics or want to directly copy and 
-  paste from tables that aren't in a PDF.
+The following folders contain the content you might have come to this repo for:
 - `supporting_files` - contains some key files used in the paper that aren't included in the supplementary data, like 
   custom HMMs built for photosynthesis proteins associated with "_Ca_. Chx. allophototropha".
   - Some supporting files are too large for Github and are instead stored on Zenodo 
@@ -48,7 +45,6 @@ The `analysis_code` folder is further divided into the following sub-folders:
 Each of the major subfolders above contains a README file details about the folder contents and/or code. Some key 
 usage cases for the repo include:
 - Find supplementary files not included in the supplemental data in the paper
-- Obtain slightly more raw (e.g., vector format or Word/Excel format) data presentations
 - Find how to download the datasets used in this paper
 - Check how a certain analysis was performed
 - Analyze a specific intermediate data file included in the repo

@@ -408,7 +408,9 @@ wget -O - https://ftp.ncbi.nlm.nih.gov/blast/db/taxdb.tar.gz | tar -xzvf -
 
 cd ../..
 ```
-Note: NanoCLUST may or may not work with never databases from NCBI without some manual modifications. (TODO: add link to issue) In the end, I do not use classifications from NanoCLUST for this work, so you might also be able to find a way to bypass this classification step entirely if you'd like.
+Note: NanoCLUST may or may not work with newer databases from NCBI without some manual modifications (see issues in the
+NanoCLUST GitHub repo). In the end, I do not use classifications from NanoCLUST for this work, so you might also be able
+to find a way to bypass this classification step entirely, if you'd like.
 
 #### Test
 Run with docker as a test

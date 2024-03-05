@@ -361,9 +361,22 @@ find ../raw -name "*.fast5" | sort -h > fast5_input.list
 ```
 
 #### Prepare metadata
-Sample metadata - TODO - make sure this matches the NCBI download names once the files are available online.
+Sample metadata
 ```
 sample-id	culture-id
+Chx-S19.9-16S-Nanopore	Chx-S19.9
+Chx-S21.2c-16S-Nanopore	Chx-S21.2c
+Chx-S22.2a-16S-Nanopore	Chx-S22.2a
+Chx-S22.2b-16S-Nanopore	Chx-S22.2b
+Chx-S22.2c-16S-Nanopore	Chx-S22.2c
+Chx-S22.2d-16S-Nanopore	Chx-S22.2d
+L227-G1-S5.1b-16S-Nanopore	G1-5.1b
+```
+Save as `sample-metadata.tsv`.
+
+Note: when the analyses below were done, the following old sample IDs were used:
+```
+sample-id-old	culture-id
 20211112_barcode21	Chx-S19.9
 20220216_barcode08	Chx-S21.2c
 20220216_barcode11	Chx-S22.2a
@@ -372,7 +385,8 @@ sample-id	culture-id
 20220216_barcode14	Chx-S22.2d
 20221116_barcode08	G1-5.1b
 ```
-Save as `sample-metadata.tsv`.
+These old sample IDs are provided to make it easier to understand some intermediate results described in this repo,
+because some results files use the old IDs.
 
 ### Install NanoCLUST
 #### Downloads

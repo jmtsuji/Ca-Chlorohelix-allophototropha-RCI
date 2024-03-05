@@ -365,10 +365,11 @@ You now have FastQ files for several of the metagenome datasets.
 
 In addition, some of the metagenomes are stored in the JGI database. 
 See `lake_metagenome_data_accessions_jgi.tsv` for the IMG Genome IDs of each of these metagenomes; you can manually 
-download the metagenome reads from JGI using these IDs if you would like. 
+download the metagenome reads from JGI using these IDs if you would like.
 In my case, when I downloaded the files, they were in interleaved FastQ format, and I had to de-interleave the FastQ 
-files before starting ATLAS. 
-TODO - there is also a way to download the raw files from NCBI now - post instructions on how to do this.
+files before starting ATLAS.
+Alternatively, you should be able to click through the IMG Genome page and find the NCBI accession number of each
+metagenome. You can then download the metagenome from NCBI.
 
 To download the metatranscriptome data from NCBI, repeat the above code block using the 
 `lake_metatranscriptome_data_accessions.tsv` file in place of `lake_metagenome_data_accessions_ncbi.tsv`.

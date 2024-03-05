@@ -1,6 +1,7 @@
 # Phototrophic physiology
-Part of the larger '_Ca._ Chlorohelix allophototropha' Type I reaction center paper  
-Copyright Jackson M. Tsuji, Neufeld Research Group, 2023
+Part of the larger '_Ca._ Chlorohelix allophototropha' Type I reaction center paper
+
+Copyright Jackson M. Tsuji, Neufeld Research Group, 2024
 
 This folder contains analysis code and some small raw data files for spectroscopic analyses of the 
 "_Ca_. Chx. allophototropha" L227-S17 culture compared to reference strains. Three major spectroscopic 

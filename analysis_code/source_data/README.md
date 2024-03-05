@@ -1,6 +1,7 @@
 # Sequencing data availability
-Part of the larger '*Ca.* Chlorohelix allophototropha' Type I reaction center paper  
-Copyright Jackson M. Tsuji, Neufeld Research Group, 2023
+Part of the larger '*Ca.* Chlorohelix allophototropha' Type I reaction center paper
+
+Copyright Jackson M. Tsuji, Neufeld Research Group, 2024
 
 ## 16S rRNA gene amplicon data
 ### V4-V5 region amplicon data for early enrichment cultures

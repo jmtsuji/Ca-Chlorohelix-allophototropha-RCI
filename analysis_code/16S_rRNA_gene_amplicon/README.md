@@ -1,6 +1,7 @@
 # 16S ribosomal RNA gene amplicon analysis
-Part of the larger '_Ca._ Chlorohelix allophototropha' Type I reaction center paper  
-Copyright Jackson M. Tsuji, Neufeld Research Group, 2023
+Part of the larger '_Ca._ Chlorohelix allophototropha' Type I reaction center paper
+
+Copyright Jackson M. Tsuji, Neufeld Research Group, 2024
 
 ## Overview
 As described in the paper, 16S rRNA gene amplicon sequencing data was analyzed in three different ways depending on the sample:

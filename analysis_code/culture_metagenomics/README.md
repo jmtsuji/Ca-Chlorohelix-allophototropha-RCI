@@ -1,6 +1,7 @@
 # Culture metagenome analysis
-Part of the larger '_Ca._ Chlorohelix allophototropha' Type I reaction center paper  
-Copyright Jackson M. Tsuji, Neufeld Research Group, 2023
+Part of the larger '_Ca._ Chlorohelix allophototropha' Type I reaction center paper
+
+Copyright Jackson M. Tsuji, Neufeld Research Group, 2024
 
 **NOTE: for each code section provided below, the code ought to be run from within this `culture_metagenomics` directory.**
 

@@ -1,6 +1,7 @@
 # Supplementary files/data
-Part of the larger '_Ca._ Chlorohelix allophototropha' Type I reaction center paper  
-Copyright Jackson M. Tsuji, Neufeld Research Group, 2023
+Part of the larger '_Ca._ Chlorohelix allophototropha' Type I reaction center paper
+
+Copyright Jackson M. Tsuji, Neufeld Research Group, 2024
 
 This folder contains (or points to) supplementary data files referenced in the manuscript (or supplementary) text that aren't included in the Extended Data files of the manuscript.
 

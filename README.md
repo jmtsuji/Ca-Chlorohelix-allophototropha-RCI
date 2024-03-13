@@ -66,6 +66,12 @@ have added more experimental data. The following Github repo versions correspond
 - repo [v1.0.0](https://github.com/jmtsuji/Ca-Chlorohelix-allophototropha-RCI/tree/v1.0.0): corresponds to the initial
   bioRxiv submission [here](https://www.biorxiv.org/content/10.1101/2020.07.07.190934v1) (2020)
 
+## Citation
+To cite this repo, please cite our main publication:
+
+> Tsuji JM, Shaw NA, Nagashima S, Venkiteswaran JJ, Schiff SL, Watanabe T, Fukui M, Hanada S, Tank M, Neufeld JD. Anoxygenic 
+> phototroph of the Chloroflexota uses a type I reaction centre. Nature (2024). https://doi.org/10.1038/s41586-024-07180-y
+
 ## Issues
 To make this repo, I streamlined several aspects of the raw code to make it more presentable and easy to follow. As 
 such, it is possible that syntax errors were introduced along the way. If you notice that any code block does not run, 

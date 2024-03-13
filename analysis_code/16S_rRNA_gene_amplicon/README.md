@@ -1,6 +1,7 @@
 # 16S ribosomal RNA gene amplicon analysis
-Part of the larger '_Ca._ Chlorohelix allophototropha' Type I reaction center paper  
-Copyright Jackson M. Tsuji, Neufeld Research Group, 2023
+Part of the larger '_Ca._ Chlorohelix allophototropha' Type I reaction center paper
+
+Copyright Jackson M. Tsuji, Neufeld Research Group, 2024
 
 ## Overview
 As described in the paper, 16S rRNA gene amplicon sequencing data was analyzed in three different ways depending on the sample:
@@ -360,9 +361,22 @@ find ../raw -name "*.fast5" | sort -h > fast5_input.list
 ```
 
 #### Prepare metadata
-Sample metadata - TODO - make sure this matches the NCBI download names once the files are available online.
+Sample metadata
 ```
 sample-id	culture-id
+Chx-S19.9-16S-Nanopore	Chx-S19.9
+Chx-S21.2c-16S-Nanopore	Chx-S21.2c
+Chx-S22.2a-16S-Nanopore	Chx-S22.2a
+Chx-S22.2b-16S-Nanopore	Chx-S22.2b
+Chx-S22.2c-16S-Nanopore	Chx-S22.2c
+Chx-S22.2d-16S-Nanopore	Chx-S22.2d
+L227-G1-S5.1b-16S-Nanopore	G1-5.1b
+```
+Save as `sample-metadata.tsv`.
+
+Note: when the analyses below were done, the following old sample IDs were used:
+```
+sample-id-old	culture-id
 20211112_barcode21	Chx-S19.9
 20220216_barcode08	Chx-S21.2c
 20220216_barcode11	Chx-S22.2a
@@ -371,7 +385,8 @@ sample-id	culture-id
 20220216_barcode14	Chx-S22.2d
 20221116_barcode08	G1-5.1b
 ```
-Save as `sample-metadata.tsv`.
+These old sample IDs are provided to make it easier to understand some intermediate results described in this repo,
+because some results files use the old IDs.
 
 ### Install NanoCLUST
 #### Downloads
@@ -393,7 +408,9 @@ wget -O - https://ftp.ncbi.nlm.nih.gov/blast/db/taxdb.tar.gz | tar -xzvf -
 
 cd ../..
 ```
-Note: NanoCLUST may or may not work with never databases from NCBI without some manual modifications. (TODO: add link to issue) In the end, I do not use classifications from NanoCLUST for this work, so you might also be able to find a way to bypass this classification step entirely if you'd like.
+Note: NanoCLUST may or may not work with newer databases from NCBI without some manual modifications (see issues in the
+NanoCLUST GitHub repo). In the end, I do not use classifications from NanoCLUST for this work, so you might also be able
+to find a way to bypass this classification step entirely, if you'd like.
 
 #### Test
 Run with docker as a test

@@ -1,6 +1,7 @@
 # Comparative genomics
-Part of the larger '_Ca._ Chlorohelix allophototropha' Type I reaction center paper  
-Copyright Jackson M. Tsuji, Neufeld Research Group, 2023
+Part of the larger '_Ca._ Chlorohelix allophototropha' Type I reaction center paper
+
+Copyright Jackson M. Tsuji, Neufeld Research Group, 2024
 
 **NOTE: for each code section provided below, the code ought to be run from within this `phylogenomics` directory.**
 
@@ -65,11 +66,10 @@ Save unzipped files in `downloads/genome_collection/manual_downloads` with the e
 These genomes were prepared as part of this specific study. Get the predicted amino acid files:
 
 - `Ca_Chx_allophototropha_L227-S17`: using the PGAP annotated version of the complete genome
+  - Note: this genome can be downloaded from NCBI assembly accession `GCA_030389965.1`
 
 - `Ca_Chloroheliaceae_bin_L227_5C`: using the PGAP annotated version of the manually curated genome bin
   - Note: this genome can now also be downloaded from NCBI assembly accession `GCA_013390945.1`
-
-TODO: in future, point to how to download the L227-S17 genome from here.
 
 As above, save unzipped files in `downloads/genome_collection/manual_downloads` with the extension `.faa` for the code below to work.
 

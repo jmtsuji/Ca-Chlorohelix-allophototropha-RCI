@@ -1,6 +1,7 @@
 # Lake survey metagenome/metatranscriptome analysis
-Part of the larger '*Ca.* Chlorohelix allophototropha' Type I reaction center paper  
-Copyright Jackson M. Tsuji, Neufeld Research Group, 2023
+Part of the larger '*Ca.* Chlorohelix allophototropha' Type I reaction center paper
+
+Copyright Jackson M. Tsuji, Neufeld Research Group, 2024
 
 **NOTE: for each code section provided below, the code ought to be run from within this `lake_omics` directory.**
 
@@ -235,7 +236,7 @@ The genome bins are also in the process of being deposited on NCBI at BioProject
 TODO - update this repo with download information after the genomes are finished processing at NCBI.
 
 ### Summary statistics
-To generate Supplementary Data 3 with the relative abundances of the MAGs, I ran a simple personal script to combine various ATLAS output files and calculate relative abundances:
+To generate Supplementary Data 4 with the relative abundances of the MAGs, I ran a simple personal script to combine various ATLAS output files and calculate relative abundances:
 
 ```bash
 cd lake_metagenomes/summary`
@@ -267,7 +268,7 @@ atlas2-helpers/scripts/generate_MAG_table.py \
 
 cd ../..
 ```
-`MAG_table_DNA_to_assembled.tsv` was then opened in Excel, and the visual appearance of the table was cleaned up to make Supplementary Data 3. 
+`MAG_table_DNA_to_assembled.tsv` was then opened in Excel, and the visual appearance of the table was cleaned up to make Supplementary Data 4. 
 This table nicely summarizes the taxonomy of all MAGs and their percent relative abundances in all metagenome samples.
 
 ### Unassembled read search for "_Ca_. Chx. allophototropha"-like RCI genes
@@ -631,7 +632,7 @@ I included key ATLAS output files and post-analysis files in the `lake_metatrans
   - This file contains the raw gene counts for each metatranscriptome against each protein-coding gene in each of the 756 MAGs.
 
 ### Summary statistics
-To generate Supplementary Data 4 with the relative expressions of the MAGs, I ran a simple, personal script to combine various ATLAS 
+To generate Supplementary Data 5 with the relative expressions of the MAGs, I ran a simple, personal script to combine various ATLAS 
 output files and calculate relative abundances of MAGs based on RNA-seq data:
 
 ```bash
@@ -658,11 +659,11 @@ cd ../..
 Note: in reality the L227 samples were done independently here, and the resulting MAG tables were merged, but this is shown as a single 
 command for simplicity (should not change the result).
 
-The resulting `MAG_table_RNA_to_unassembled.tsv` became the basis for Supplementary Data 4. 
+The resulting `MAG_table_RNA_to_unassembled.tsv` became the basis for Supplementary Data 5. 
 Like mentioned in the paper, I re-normalized `MAG_table_RNA_to_unassembled.tsv` in Excel, such that MAG relative abundances 
 summed to 100% for each sample (i.e., were normalized based on the total read counts to all MAGs instead of being 
 normalized based on the total number of metatranscriptome reads for each sample).
-I also performed some simple mean/standard deviation stats on these output tables in Excel when making Supplementary Data 4.
+I also performed some simple mean/standard deviation stats on these output tables in Excel when making Supplementary Data 5.
 
 ## Generation of selected panels of Figure 4
 
@@ -683,6 +684,6 @@ The tarball should be extracted, and the contents should be saved in `data_viz_F
 
 The resulting raw PDFs, `Figure_4e_raw.pdf` and `Figure_ED7_raw.pdf`, are in the folder. These received minor edits via Inkscape to finalize.
 
-Data from these analyses were also summarized to make Supplementary Data 5.
+Data from these analyses were also summarized to make Supplementary Data 6.
 
 Done!

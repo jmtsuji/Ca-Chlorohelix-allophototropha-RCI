@@ -1,12 +1,14 @@
-# Code repository for the cultivation of '_Ca._ Chlorohelix allophototropha'
+# Code repository for the discovery and cultivation of '_Ca._ Chlorohelix allophototropha' strain L227-S17
 
 [![DOI](https://zenodo.org/badge/273164101.svg)](https://zenodo.org/badge/latestdoi/273164101)
-[![biorxiv](https://img.shields.io/badge/biorxiv-10.1101%2F2020.07.07.190934-green)](https://doi.org/10.1101/2020.07.07.190934)
+[![Nature](https://img.shields.io/badge/Nature-10.1038%2Fs41586--024--07180--y-green)](https://doi.org/10.1038/s41586-024-07180-y)
+[![biorxiv](https://img.shields.io/badge/biorxiv-10.1101%2F2020.07.07.190934-grey)](https://doi.org/10.1101/2020.07.07.190934)
 
-Copyright Jackson M. Tsuji, Neufeld Research Group, 2023
+Copyright Jackson M. Tsuji, Neufeld Research Group, 2024
 
 This Github repository provides supplementary data files and code related to the publication by Tsuji and colleagues, 
-2023, "Anoxygenic phototrophic _Chloroflexota_ member uses a Type I reaction center," which is currently deposited in 
+2024, "Anoxygenic phototroph of the _Chloroflexota_ uses a type I reaction centre," which is published in
+[Nature](https://doi.org/10.1038/s41586-024-07180-y). The pre-print version of the paper is also available on
 [bioRxiv](https://doi.org/10.1101/2020.07.07.190934).
 
 This repo also relies on a supplementary Zenodo data repository containing larger files, available 
@@ -16,7 +18,7 @@ The main focus of this repo is the genomic analysis of "_Candidatus_ Chlorohelix
 representative of a novel order (the "_Ca_. Chloroheliales") within the _Chloroflexota_ phylum. "_Ca_. Chx. 
 allophototropha" uses Type I photosynthetic reaction centers instead of Type II RC's like other phototrophs in the 
 _Chloroflexota_ phylum, and this has important implications for the evolution of photosynthesis. (Take a look at the 
-manuscript mentioned above for more details.)
+paper linked above for more details.)
 
 ## Repo contents
 The following folders contain the content you might have come to this repo for:
@@ -54,13 +56,14 @@ this repo.
 
 ## Versions of this repo
 The Chlorohelix manuscript has been updated several times since the initial discovery of this exciting strain as we 
-have added more experimental data. The following Github repo versions correspond to major bioRxiv versions of the 
-manuscript:
-- repo [v3.0.0](https://github.com/jmtsuji/Ca-Chlorohelix-allophototropha-RCI/tree/v3.0.0): corresponds to a second 
+have added more experimental data. The following Github repo versions correspond to major versions of the manuscript:
+- repo [v4.0.0](https://github.com/jmtsuji/Ca-Chlorohelix-allophototropha-RCI/tree/v4.0.0): corresponds to the published
+  version of the manuscript in Nature, available [here](https://www.biorxiv.org/content/10.1101/2020.07.07.190934v4) (2024)
+- repo [v3.0.0](https://github.com/jmtsuji/Ca-Chlorohelix-allophototropha-RCI/tree/v3.0.0): corresponds to a second
   major manuscript revision [here](https://www.biorxiv.org/content/10.1101/2020.07.07.190934v4) (2023)
-- repo [v2.0.1](https://github.com/jmtsuji/Ca-Chlorohelix-allophototropha-RCI/tree/v2.0.1): corresponds to a major 
+- repo [v2.0.1](https://github.com/jmtsuji/Ca-Chlorohelix-allophototropha-RCI/tree/v2.0.1): corresponds to a major
   manuscript revision [here](https://www.biorxiv.org/content/10.1101/2020.07.07.190934v3) (2021)
-- repo [v1.0.0](https://github.com/jmtsuji/Ca-Chlorohelix-allophototropha-RCI/tree/v1.0.0): corresponds to the initial 
+- repo [v1.0.0](https://github.com/jmtsuji/Ca-Chlorohelix-allophototropha-RCI/tree/v1.0.0): corresponds to the initial
   bioRxiv submission [here](https://www.biorxiv.org/content/10.1101/2020.07.07.190934v1) (2020)
 
 ## Issues
